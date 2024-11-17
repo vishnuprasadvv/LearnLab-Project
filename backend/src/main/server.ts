@@ -6,6 +6,7 @@ import { connectDB } from '../infrastructure/repositories/dbConnection';
 import authRoutes from '../interfaces/routes/authRoutes'
 import bodyParser from 'body-parser'
 import { errorMiddleWare } from '../interfaces/middlewares/errorMiddleWare';
+import protectedRoutes from '../interfaces/routes/protectedRoutes';
 
 
 const app = express();
@@ -42,6 +43,7 @@ app.get('/', (req: Request , res:Response, next : NextFunction) => {
 })
 //authroutes 
 app.use('/api/auth', authRoutes)
+app.use('/api/protected', protectedRoutes)
 
 //unknown routes 
 app.all('*', (req: Request, res: Response, next : NextFunction) => {

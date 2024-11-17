@@ -6,6 +6,8 @@ export interface IUser extends Document {
     password: string;
     email : string;
     role : 'admin' | 'student' | 'instructor';
+    isVerified: boolean;
+    avatar : {public_id: string, url : string}
 
 }
 
@@ -14,8 +16,12 @@ const UserSchema : Schema = new Schema({
     lastName : {type : String, required : true},
     email : {type: String, required : true, unique :true},
     password : {type : String, required : true},
-    role : {type: String , enum : ['admin', 'student', 'instructor'], default : 'student'} 
+    role : {type: String , enum : ['admin', 'student', 'instructor'], default : 'student'} ,
+    isVerified : {type :Boolean, default: false},
+    
+    avatar : {public_id: String, url : String}
 },{timestamps: true});
+
 
 export default mongoose.model<IUser>('User', UserSchema);
 

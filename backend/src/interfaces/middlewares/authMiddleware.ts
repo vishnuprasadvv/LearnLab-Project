@@ -1,36 +1,44 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from 'jsonwebtoken';
+import { verifyAccessToken } from "../../utils/jwtHelper";
 
 interface AuthenticatedRequest extends Request {
-    user?: {userId : string}
+    user?: {
+        id: string;
+        role: string;
+      };
 }
 
-const SECRET_KEY = process.env.JWT_SECRET || 'default_secret';
+export const isAuthenticated = (req: AuthenticatedRequest, res: Response, next: NextFunction) : void => {
+    const token = req.cookies?.accessToken;
+    if(!token){
+        res.status(401).json({message : 'Unauthorized'})
+        return;
+    }
 
-export const authMiddleware = (
-    req: AuthenticatedRequest,
-    res: Response, 
-    next : NextFunction
-) => {
-    try{
-        const authHeader = req.headers.authorization;
-
-        if(!authHeader || !authHeader.startsWith('Bearer ')){
-            return res.status(401).json({message: 'Authorization token missing or invalid'})
+        try {
+            const decoded = verifyAccessToken(token)
+            req.user = decoded;
+            console.log(req.user)
+            next();
+        } catch (error) {
+            res.status(401).json({message : 'Invalid token'})
+            return;
         }
-        const token = authHeader.split(' ')[1];
+}
 
-        //verify token
-        const decodedToken = jwt.verify(token, SECRET_KEY) as {userId : string};
+//role based authorization
+
+export const authorizeRole = (roles : string[]) =>{
+    return (req: AuthenticatedRequest, res: Response, next : NextFunction) :void => {
+        if(!req.user){
+           res.status(401).json({message : 'Unauthorized'})
+           return;
+        }
         
-        //attach the decoded user information to the request object
-        req.user = {userId : decodedToken.userId}
-
+        if(!roles.includes(req.user.role)){
+            res.status(403).json({message : 'Forbidden'})
+            return;
+        }
         next();
-
-    }catch(error){
-        res.status(401).json({message : 'Invalid or expired token'})
     }
 }
-
-
