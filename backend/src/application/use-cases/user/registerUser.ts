@@ -4,7 +4,8 @@ import { CustomError } from '../../../interfaces/middlewares/errorMiddleWare';
 
 export const registerUser = async (userData : IUser) => {
 
-    const {firstName , lastName, email, password} = userData;
+    const {firstName , lastName, email, password, phone} = userData;
+    console.log(userData)
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -17,7 +18,8 @@ export const registerUser = async (userData : IUser) => {
         throw new CustomError('User already exists', 400)
     }
     const hashedPassword = await bcrypt.hash(password,10)
-    const user = new User ({firstName, lastName, email, role : 'student', password: hashedPassword})
+    const user = new User ({firstName, lastName, email, role : 'student', password: hashedPassword, phone})
+    
     
     return user.save();
 }

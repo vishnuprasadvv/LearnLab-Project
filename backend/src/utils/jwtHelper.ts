@@ -8,6 +8,10 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret
 //     return jwt.sign({id}, SECRET_KEY, {expiresIn : '1h'})
 // }
 
+interface DecodedToken {
+    id: string;
+    role: string;
+}
 
 
 export const generateAccessToken = (payload : object) : string => {
@@ -19,9 +23,9 @@ export const generateRefreshToken = (payload : object) : string => {
 }
 
 
-export const verifyAccessToken = (token : string) :any => {
+export const verifyAccessToken = (token : string) :DecodedToken | null => {
     try {
-        return jwt.verify(token, ACCESS_TOKEN_SECRET)
+        return jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken
         
     } catch (error) {
         return null;

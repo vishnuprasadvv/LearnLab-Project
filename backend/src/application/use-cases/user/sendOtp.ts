@@ -6,6 +6,7 @@ export const sendOtp = async (email : string) => {
     const otpCode = await generateOtp(email);
     console.log('send otp to email')
     // await sendEmail(email, 'Your OTP code', `Your OTP code is : ${otpCode}`);
+    
     await sendEmail(email, 'Your OTP code', 
         
 `Subject: Your OTP Verification Code

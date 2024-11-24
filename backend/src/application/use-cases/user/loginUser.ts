@@ -14,5 +14,5 @@ export const loginUser = async (email : string, password: string) => {
     const accessToken = generateAccessToken({id:user._id, role:user.role})
     const refreshToken = generateRefreshToken({id : user._id})
     
-    return {accessToken, refreshToken, user:{ id: user._id, firstName : user.firstName, lastName: user.lastName, email: user.email}}
+    return {accessToken, refreshToken, user:{ id: user._id, firstName : user.firstName, lastName: user.lastName, email: user.email, role: user.role}}
 }

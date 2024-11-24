@@ -7,10 +7,26 @@ import authRoutes from '../interfaces/routes/authRoutes'
 import bodyParser from 'body-parser'
 import { errorMiddleWare } from '../interfaces/middlewares/errorMiddleWare';
 import protectedRoutes from '../interfaces/routes/protectedRoutes';
+import adminRouter from '../interfaces/routes/adminRoutes';
 
+
+import session from 'express-session';
+import passport from 'passport';
+import '../utils/passport' // passport configuration
 
 const app = express();
 dotenv.config();
+
+//cookie parser 
+app.use(cookieParser());
+
+//CORS setup 
+app.use(cors({
+    origin:process.env.CLIENT_URL,
+    allowedHeaders:['Content-Type', 'Authorization'],
+    methods:["GET", "POST", "DELETE", "PUT"],
+    credentials: true
+}));
 
 //bodyparser for cloudinary
 
@@ -22,16 +38,19 @@ app.use(bodyParser.urlencoded({
     extended: true
   }));
 
-//cookie parser 
-app.use(cookieParser());
 
+//middleware for sessions
+app.use(
+    session({
+        secret: 'your-secret-key',
+        resave: false,
+        saveUninitialized: false,
+    })
+);
 
-
-
-//CORS setup 
-app.use(cors({
-    origin:process.env.ORIGIN
-}));
+// Initialize Passport and session
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 //api test
@@ -44,6 +63,7 @@ app.get('/', (req: Request , res:Response, next : NextFunction) => {
 //authroutes 
 app.use('/api/auth', authRoutes)
 app.use('/api/protected', protectedRoutes)
+app.use('/api/admin', adminRouter)
 
 //unknown routes 
 app.all('*', (req: Request, res: Response, next : NextFunction) => {
