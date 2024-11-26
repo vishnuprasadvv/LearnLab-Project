@@ -1,22 +1,27 @@
 import { useAppSelector, useAppDispatch } from "@/app/hooks";
 import { Button } from "@/components/ui/button";
 import { sendOtp, verifyAccount } from "@/features/authSlice";
-import React, { useState, useRef } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
 const OTPVerification = () => {
 
-  //const user = useAppSelector((state) => state.auth.user)
-  const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
+  const [email, setEmail] = useState<string>('')
 
-  const email = location.state.user.email ;
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [message, setMessage] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+ 
+  //set email 
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem('userEmail')
+    if(storedEmail){
+      setEmail(storedEmail)
+    }
+  },[])
 
   // Handle input change for each OTP field
   const handleInputChange = (index: number, value: string) => {
@@ -43,15 +48,13 @@ const OTPVerification = () => {
   const handleVerify = async () => {
     setMessage('')
     const otpValue = otp.join("");
-    console.log(email)
     if (otpValue.length === 4) {
 
       try {
         const response = await dispatch(verifyAccount({email : email ,otp:otpValue})).unwrap()
         console.log(response)
-        
-        navigate('/login')
         toast.success('Account verification successfull')
+        navigate('/login')
         
       } catch (error:any ) {
         const errorMessage = error?.message || 'An error occured during verification'
@@ -62,24 +65,32 @@ const OTPVerification = () => {
 
     } else {
       setMessage("Please enter a valid 4-digit OTP.");
+      toast.error("Please enter a valid 4-digit OTP.");
     }
   };
 
   const handleResendOtp = async() => {
       try {
-        const response = await dispatch(sendOtp({email}))
-        console.log('resend otp front end', response)
-      } catch (error) {
-        setMessage('Error sending OTP')
+        const response = dispatch(sendOtp({email})).unwrap();
+        await toast.promise(response, {
+          loading: 'Sening OTP...',
+          success:(data) => {
+            return data.message || 'OTP sent successfully'},
+            error: (err) => {
+              return err?.message || 'Signup failed'
+            }
+          })
+          console.log('resend otp front end',await response)
+      } catch (error:any) {
+        setMessage(error?.error || 'Error sending OTP')
         console.log(error)
       }
   }
 
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}  className='w-1/3 items-center mx-auto pt-10 border rounded-md p-6 mt-10'>
-      <Toaster/>
+    <div style={{ padding: "2rem", textAlign: "center" }}  className='sm:w-1/2 md:w-1/3 lg:w-1/4 items-center mx-auto pt-10 border rounded-md p-6 mt-10'>
+
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Verify Your Account</h1>
-      <p>Please enter the 4-digit OTP sent to your email.</p>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }} className="pt-5">
         {otp.map((value, index) => (
           <input

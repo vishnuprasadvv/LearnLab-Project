@@ -10,6 +10,7 @@ import dotenv from 'dotenv'
 import { verifyAccessTokenUseCase } from "../../application/use-cases/user/verifyToken";
 import { resetPassword, sendResetOtp, verifyResendOtp } from "../../application/use-cases/user/resetPassword";
 import { CustomError } from "../middlewares/errorMiddleWare";
+import { generateAccessToken } from "../../utils/jwtHelper";
 
 dotenv.config()
 
@@ -40,31 +41,24 @@ export const refreshTokenOptions : ITokenOptions = {
     sameSite: 'strict'
 }
 
-export const signUp = async (req: Request, res: Response , next: NextFunction) => {
-    try{
-        
-        console.log(req.body)   
-        
-    const user:any = await registerUser(req.body);
-        const {password, ...rest} = user._doc
-        
-        //send otp 
-        const sentOTP = await sendOtp(user.email)
-        console.log(sentOTP)
-       res.status(201).json(rest);
-
-    }catch(error : any){
-        // res.status(500).json({error: error.message})
-        next(error)
-        //console.log(error)
-    }
-};   
 //only set secure for production
 if(process.env.NODE_ENV === 'production'){
     accessTokenOptions.secure = true;
 }
 
-
+export const signUp = async (req: Request, res: Response , next: NextFunction) => {
+    try{ 
+    const user:any = await registerUser(req.body);
+        const {password, ...rest} = user._doc
+        //send otp 
+        const sentOTP = await sendOtp(user.email)
+        console.log(sentOTP)
+       res.status(201).json({success: true, user: rest});
+    }catch(error : any){
+        // res.status(500).json({error: error.message})
+        next(error)
+    }
+};   
 
 export const sendOtpHandler = async (req: Request, res: Response) => {
     try{
@@ -98,7 +92,6 @@ export const loginHandler = async (req: Request, res : Response, next: NextFunct
         const {email, password} = req.body;
         const response = await loginUser(email, password);
         console.log(response)
-
         
         res.cookie('refreshToken', response.refreshToken, refreshTokenOptions )
         res.cookie('accessToken', response.accessToken, accessTokenOptions)
@@ -163,7 +156,7 @@ export const resetPasswordOtpSendHandler = async(req: Request, res: Response, ne
          if(!email) throw new CustomError('Email required', 404 )
 
          const sendOtp = await sendResetOtp(email)
-         console.log(sendOtp)
+         console.log(email, sendOtp)
 
          res.status(200).json(sendOtp.message)
          
@@ -184,6 +177,7 @@ export const resetPasswordOtpVerifyHandler = async (req: Request, res: Response,
             }
             
         const verifyOtpResponse = await verifyResendOtp(email, otp)
+        console.log(email,otp)
         res.status(200).json(verifyOtpResponse)
         
     } catch (error) {
@@ -205,10 +199,8 @@ export const resetPasswordHandler = async (req: Request, res: Response, next : N
         }
 
         const verifyOtp = await verifyResendOtp(email, otp)
-        //console.log(verifyOtp)
-
         const resettedUser = await resetPassword(email, password)
-       // console.log(resettedUser)
+       console.log( email, 'password reset success')
         res.status(200).json({message: 'Password reset successful'})
     } catch (error) {
         next(error)
@@ -216,3 +208,45 @@ export const resetPasswordHandler = async (req: Request, res: Response, next : N
 
 }
 
+
+interface AuthenticatedRequest extends Request {
+    user?: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        role: string;
+    };
+}
+
+export const googleLoginSuccess = (req: AuthenticatedRequest, res: Response)  => {
+  const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const jwtToken = generateAccessToken(user); // Function to generate JWT (your logic)
+
+    // Set the JWT token in a cookie
+    res.cookie('accessToken', jwtToken, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', // use secure cookies in production (over HTTPS)
+      maxAge: 3600000 // 1 hour expiration
+    });
+
+  res.json({
+    user: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role || 'student',  // Adjust role as necessary
+    },
+    token: jwtToken
+  });
+};
+
+export const googleLoginFailure = (req: Request, res: Response) => {
+  res.status(401).json({ message: 'Google login failed' });
+};

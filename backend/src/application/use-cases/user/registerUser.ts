@@ -17,6 +17,9 @@ export const registerUser = async (userData : IUser) => {
     if(userExist){
         throw new CustomError('User already exists', 400)
     }
+    if(!password){
+        throw new CustomError('password required', 400)
+    }
     const hashedPassword = await bcrypt.hash(password,10)
     const user = new User ({firstName, lastName, email, role : 'student', password: hashedPassword, phone})
     

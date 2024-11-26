@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI} from "@/api/auth";
+import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin} from "@/api/auth";
 interface AuthState {
     user: {
         id: string;
         firstName: string;
+        lastName: string;
+        phone : string;
         email : string ;
         role : string;
     } | null;
@@ -90,6 +92,17 @@ export const resetPasswordThunk = createAsyncThunk('auth/reset-password', async(
     return rejectWithValue(error.response.data)
   }
 })
+export const googleLoginThunk = createAsyncThunk('auth/google', async(data: {token : string},{rejectWithValue}) => {
+
+  try {
+    const response = await handleGoogleLogin(data.token)
+    return response
+  } catch (error : any) {
+    return rejectWithValue(error.response.data)
+  }
+})
+
+
 
 //slice
 
@@ -110,7 +123,7 @@ const authSlice = createSlice({
       authSuccess(
         state,
         action: PayloadAction<{
-          user: { id: string; email: string; role: string , firstName:string};
+          user: { id: string; email: string; role: string , firstName:string , lastName: string, phone: string};
         }>
       ) {
         state.loading = false;
@@ -137,6 +150,7 @@ const authSlice = createSlice({
       },
       
     },
+      
     
   
 })

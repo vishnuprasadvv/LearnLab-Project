@@ -11,10 +11,12 @@ import adminRouter from '../interfaces/routes/adminRoutes';
 
 
 import session from 'express-session';
-import passport from 'passport';
-import '../utils/passport' // passport configuration
+
+
 
 const app = express();
+app.use(express.json());
+
 dotenv.config();
 
 //cookie parser 
@@ -24,7 +26,7 @@ app.use(cookieParser());
 app.use(cors({
     origin:process.env.CLIENT_URL,
     allowedHeaders:['Content-Type', 'Authorization'],
-    methods:["GET", "POST", "DELETE", "PUT"],
+    methods:["GET", "POST", "DELETE", "PUT","PATCH"],
     credentials: true
 }));
 
@@ -32,7 +34,7 @@ app.use(cors({
 
 // app.use(express.json({limit : "50mb"}))
 
-app.use(express.json());
+
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -42,15 +44,14 @@ app.use(bodyParser.urlencoded({
 //middleware for sessions
 app.use(
     session({
-        secret: 'your-secret-key',
+        secret: process.env.SESSION_SECRET as string,
         resave: false,
         saveUninitialized: false,
+        cookie: { secure: process.env.NODE_ENV === 'production' }
     })
 );
 
-// Initialize Passport and session
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 
 //api test

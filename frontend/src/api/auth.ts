@@ -20,11 +20,8 @@ export const register = async( firstName : string, lastName : string, email : st
 }
 
 export const verifyAccount = async( email: string, otp : string ) => {
-    
-        const response = await axios.post(`${API_URL}/auth/verify-otp`, {email, otp})
-        return response.data; 
-    
-    
+    const response = await axios.post(`${API_URL}/auth/verify-otp`, {email, otp})
+    return response.data; 
 }
 
 export const sendOtp = async( email: string ) => {
@@ -46,8 +43,14 @@ export const resetPasswordAPI = async (email: string, otp: string, password : st
     return response.data;
 }
 
+ export const handleGoogleLogin = async (token: string) => {
+    console.log(token)
+    try {
+      const response = await axios.post(`${API_URL}/auth/google`, { token });
+      console.log("Login Success:", response.data);
+      return response.data
+    } catch (error: any) {
+      console.error("Login Error:", error.response?.data || error.message);
 
-export const googleLoginAPI = async (token: string) => {
-    const response = await axios.post(`${API_URL}/auth/google-login`, {token});
-    return response.data;
-}
+    }
+  };

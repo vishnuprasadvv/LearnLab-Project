@@ -1,22 +1,46 @@
-import React from 'react';
-import { GoogleLogin } from '@react-oauth/google';
-import {googleLoginAPI} from '../api/auth'
-import axios from 'axios';
+import { useAppDispatch } from '@/app/hooks';
+import { authSuccess, googleLoginThunk } from '@/features/authSlice';
+import { useGoogleLogin } from '@react-oauth/google';
+import { FcGoogle } from 'react-icons/fc';
+import toast, {Toaster} from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 
-  const GoogleLoginButton = () => {
-    const handleSuccess = async (response : any) => {
-      try {
-        const result = await axios.post('http://localhost:5000/api/auth/google-login', {
-          token: response.credential,
-        });
-        console.log('Login Success:', result.data);
-      } catch (error:any) {
-        console.error('Login Failed:', error.response.data);
-      }
-    };
+  const GoogleLoginButton : React.FC = () => {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate()
+    const login = useGoogleLogin({
+      onSuccess: async (tokenResponse : any) => {
+        try {
+          // Send the Google OAuth token to your backend
+          console.log(tokenResponse)
 
-  return <GoogleLogin onSuccess={handleSuccess} onError={() => console.error('Login Failed')} />;
+          const response = await dispatch(googleLoginThunk({token:tokenResponse.access_token})).unwrap()
+          console.log(response.user)
+
+        //    // Optionally, store the token in localStorage
+        // localStorage.setItem("token", response.token);
+  
+          // Dispatch user data to Redux
+          dispatch(authSuccess({user:{id: response.user.id, email : response.user.email, role : response.user.role, firstName : response.user.firstName , lastName: response.user.lastName, phone: response.user.phone}}));
+          navigate('/home')
+          
+
+        } catch (error: any) {
+          console.error('Login failed:', error);
+          toast.error(error.message || 'Login failed')
+        }
+      },
+      onError: () => {
+        console.error('Login Failed');
+      },
+    });
+  
+  return (
+    <button onClick={() => login()} className="google-login-button">
+    <FcGoogle className='size-6'/>
+  </button>
+  )
 };
 
 export default GoogleLoginButton;

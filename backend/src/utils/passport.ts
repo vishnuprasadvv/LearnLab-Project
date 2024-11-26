@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../domain/models/User';
+import { generateAccessToken } from './jwtHelper';
 
 
 passport.use(
@@ -19,9 +20,14 @@ passport.use(
           user = await User.create({
             googleId: profile.id,
             email: profile.emails?.[0].value,
-            name: profile.displayName,
+            firstName: profile.name?.givenName,
+            lastName : profile.name?.familyName
           });
+
         }
+
+        
+
         done(null, user);
       } catch (error) {
         done(error, null);
