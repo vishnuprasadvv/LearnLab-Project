@@ -10,8 +10,7 @@ export interface IUser extends Document {
     avatar : {public_id: string, url : string},
     status: string,
     phone: string,
-    googleId : string
-
+    googleId : string,
 }
 
 const UserSchema : Schema = new Schema({

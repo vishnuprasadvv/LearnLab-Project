@@ -89,10 +89,9 @@ export const verifyOtpHandler = async (req: Request, res: Response) => {
 
 export const loginHandler = async (req: Request, res : Response, next: NextFunction) => {
     try{
-        const {email, password} = req.body;
-        const response = await loginUser(email, password);
+        const {email, password, role} = req.body;
+        const response = await loginUser(email, password, role);
         console.log(response)
-        
         res.cookie('refreshToken', response.refreshToken, refreshTokenOptions )
         res.cookie('accessToken', response.accessToken, accessTokenOptions)
         res.status(200).json({success: true, user : response.user})

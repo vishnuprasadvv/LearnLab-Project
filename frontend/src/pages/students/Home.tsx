@@ -8,10 +8,16 @@ import featured from '../../assets/featured.svg'
 function Home() {
 
   const navigate = useNavigate();
-  const isAuthenticated  = useAppSelector((state) => state.auth.isAuthenticated)
+  const {user}  = useAppSelector((state) => state.auth)
 
   return (
-    <div>
+    <div>{user && user.role ==='student' && 
+
+          <div className='bg-blue-200 p-3'>
+            <span>Want to become an instructor ? </span>
+            <button onClick={() => navigate('/instructor/register')} className='bg-blue-600 p-2 rounded-sm text-white'>Click here</button>
+          </div> 
+    }
         <div className='flex w-full'>
           <div className='w-1/2'>
 

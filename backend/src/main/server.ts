@@ -8,8 +8,6 @@ import bodyParser from 'body-parser'
 import { errorMiddleWare } from '../interfaces/middlewares/errorMiddleWare';
 import protectedRoutes from '../interfaces/routes/protectedRoutes';
 import adminRouter from '../interfaces/routes/adminRoutes';
-
-
 import session from 'express-session';
 
 
@@ -33,8 +31,6 @@ app.use(cors({
 //bodyparser for cloudinary
 
 // app.use(express.json({limit : "50mb"}))
-
-
 
 app.use(bodyParser.urlencoded({
     extended: true

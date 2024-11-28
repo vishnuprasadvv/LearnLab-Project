@@ -31,9 +31,15 @@ const UserManagement = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const users = await getUsers();
+      try {
+        const users = await getUsers();
       console.log(users)
       setUsers(users)
+      } catch (error:any) {
+        toast.error(error?.response?.data?.message || 'Failed fetching users')
+        console.error( error.message || 'something went wrong, fetching users data failed')
+      }
+      
     };
     fetchUsers();
   }, []);
@@ -68,13 +74,13 @@ const UserManagement = () => {
   }
 
   return (
-    <div className='flex flex-col min-w-full bg-blue-300 p-5'>
+    <div className='flex flex-col min-w-full p-5'>
       <div className='self-end mr-3'>
          <Button className='bg-blue-600 rounded-full hover:bg-blue-700' onClick={handleAddUser}>Add User</Button>
       </div>
       <h2 className='text-2xl font-bold text-center pb-5'> All Users</h2>
       
-      <table className='items-center m-2 table-fixed border-collapse border border-slate-200 rounded-xl' >
+      <table className='items-center m-2 table-fixed border-collapse border border-slate-200 rounded-xl bg-slate-50' >
         <thead className='bg-blue-50' >
           <tr >
             <th className='border border-blue-400 p-3 text-start max-w-4'>ID</th>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin} from "@/api/auth";
+import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor} from "@/api/auth";
+import { RegisterInstructorFormValues } from "@/types/instructor";
 interface AuthState {
     user: {
         id: string;
@@ -21,10 +22,10 @@ const initialState : AuthState = {
     error: null,
 }
 
-export const login = createAsyncThunk('auth/login', async(data: { email: string ; password: string}, { rejectWithValue }) => {
+export const login = createAsyncThunk('auth/login', async(data: { email: string ; password: string, role: string}, { rejectWithValue }) => {
    
   try{
-    const response = await loginAPI(data.email, data.password)
+    const response = await loginAPI(data.email, data.password, data.role)
     return response;
   }catch(error : any){
     return rejectWithValue(error.response.data);
@@ -96,6 +97,15 @@ export const googleLoginThunk = createAsyncThunk('auth/google', async(data: {tok
 
   try {
     const response = await handleGoogleLogin(data.token)
+    return response
+  } catch (error : any) {
+    return rejectWithValue(error.response.data)
+  }
+})
+//register instructor
+export const registerInstructorThunk = createAsyncThunk('auth/instructor-register', async({data, userId} : {data:RegisterInstructorFormValues, userId: string}, {rejectWithValue}) => {
+  try {
+    const response = await handleRegisterToInstructor(data, userId)
     return response
   } catch (error : any) {
     return rejectWithValue(error.response.data)

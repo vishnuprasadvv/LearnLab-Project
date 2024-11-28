@@ -1,13 +1,13 @@
+import { RegisterInstructorFormValues } from "@/types/instructor";
 import axios from "axios";
 
 const apiurl = import.meta.env.VITE_API_URL;
 const API_URL = apiurl  || 'http://localhost:5000/api';
 
-export const login = async (email : string, password: string) => {
-    const response = await axios.post(`${API_URL}/auth/login`, {email, password}, {withCredentials: true});
+export const login = async (email : string, password: string, role: string) => {
+    const response = await axios.post(`${API_URL}/auth/login`, {email, password, role}, {withCredentials: true});
     return response.data;
 }
-
 
 export const logout = async() => {
     const response = await axios.post(`${API_URL}/auth/logout`, {}, {withCredentials: true});
@@ -51,6 +51,32 @@ export const resetPasswordAPI = async (email: string, otp: string, password : st
       return response.data
     } catch (error: any) {
       console.error("Login Error:", error.response?.data || error.message);
-
+      throw error
     }
   };
+
+export const handleRegisterToInstructor = async (data : RegisterInstructorFormValues, userId: string) => {
+    try {
+        // const formData = new FormData()
+        // console.log(data)
+        
+        // formData.append('userId', userId)
+        // formData.append('qualifications' , data.qualifications)
+        // formData.append('expertise', data.expertise)
+        // formData.append('experience', data.experience.toString())
+        // formData.append('comment', data.comment)
+        // formData.append('password', data.password)
+        // // if(data.resume){
+        // //     formData.append('resume', data.resume)
+        // // }
+        // console.log(formData)
+        // for (const pair of formData.entries()) {
+        //     console.log(`${pair[0]}: ${pair[1]}`);
+        //   }
+        const response = await axios.post(`${API_URL}/auth/instructor-register`, {formData: data, userId}  )
+        return response.data;
+    } catch (error: any) {
+        console.error('Instructor registration failed', error.response?.data || error.message)
+        throw error
+    }
+}

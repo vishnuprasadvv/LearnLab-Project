@@ -14,11 +14,9 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
     
     try {
         const { token } = req.body;
-
         if (!token) {
             return res.status(400).json({ message: "Token is required" });
           }
-      
           const googleUserResponse = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -31,7 +29,6 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
       if (!payload) {
         return res.status(400).json({ message: "Invalid token" });
       }
-
          // Check if user exists in the database
     let user = await User.findOne({ email: payload.email });
     if (!user) {

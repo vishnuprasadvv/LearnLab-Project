@@ -18,13 +18,13 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
         try {
             const decoded = verifyAccessToken(token)
             if(!decoded){
-                res.status(401).json({message:  'Invalid token'})
+                res.status(401).json({message:  'Invalid access token'})
                 return
             }
             (req as AuthenticatedRequest).user = decoded;
             next();
         } catch (error) {
-            res.status(401).json({message : 'Invalid token'})
+            res.status(401).json({message : 'Invalid access token'})
             return;
         }
 }

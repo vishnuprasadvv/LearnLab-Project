@@ -25,9 +25,9 @@ export const generateRefreshToken = (payload : object) : string => {
 
 export const verifyAccessToken = (token : string) :DecodedToken | null => {
     try {
-        return jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken
-        
+        return jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken  
     } catch (error) {
+        console.log('verifytoken error')
         return null;
     }
 }
@@ -39,7 +39,3 @@ export const verifyRefreshToken = (token : string) : {id: string} | null => {
         return null;
     }
 }
-
-// export const verifyToken = (token : string) : {userId : string} =>{
-//     return jwt.verify(token, SECRET_KEY) as {userId : string}
-// }

@@ -20,7 +20,8 @@ import AdminEditUser from "./pages/admin/AdminEditUser";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/students/Profile";
 import { Toaster } from "react-hot-toast";
-
+import RegisterInstructor from "./pages/instructor/RegisterInstructor";
+import { AdminInstructors } from "./pages/admin/AdminInstructors";
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 
@@ -30,7 +31,7 @@ function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
         <Navbar />
-        <Toaster/>
+        <Toaster />
 
         <Routes>
           <Route path="/" element={< LandingPage />} />
@@ -83,9 +84,23 @@ function App() {
             </AdminProtectedRoute>
           } />
 
+          <Route path="/admin/instructors" element={
+            <AdminProtectedRoute requiredRole="admin">
+              <AdminInstructors />
+            </AdminProtectedRoute>
+          } />
+
+          {/* instructor routes */}
+          <Route path="/instructor/register"
+            element={
+              <ProtectedRoute>
+                < RegisterInstructor />
+              </ProtectedRoute>
+            } />
+
 
           <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="*" element={<NotFound/>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
       </Router>
