@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { startLoading, authSuccess, setError, clearError } from '../../features/authSlice';
+import { startLoading, setError, clearError } from '../../features/adminSlice';
 import { login } from '../../features/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -10,12 +10,14 @@ import { useFormik} from 'formik';
 import * as Yup from 'yup';
 import { EyeClosed, EyeIcon } from 'lucide-react';
 
-import toast, {Toaster} from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { adminLoginSuccess } from '@/features/adminSlice';
+import { adminLogin } from '@/api/adminApi';
 
 const AdminLogin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, isAuthenticated} = useAppSelector((state) => state.auth);
+  const { isLoading, isAuthenticated} = useAppSelector((state) => state.admin);
 
   useEffect(() => {
     dispatch(clearError())
@@ -42,12 +44,12 @@ const AdminLogin = () => {
       dispatch(startLoading())
       try {
         const {email, password} = values
-        const result = await dispatch(login({ email, password, role: 'admin' })).unwrap();
+        const result = await adminLogin(email, password, 'admin' )
         //navigate(result.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
         console.log(result)
         dispatch(
-          authSuccess({
-            user: result.user
+          adminLoginSuccess({
+            user: result.user,
           })
         );
         
@@ -115,7 +117,7 @@ const togglePasswordVisibility = () => {
         
       </div>
       <div className='flex justify-center pt-5'>
-        <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700' type="submit" disabled={loading}>Login</Button>
+        <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700' type="submit" disabled={isLoading}>Login</Button>
       </div>
     </form>
   );

@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 
 export const getAllUsers = async () =>{
     const users = await User.find()
+    if(!users) throw new CustomError('failed to get users list', 400)
     return users
 }
 

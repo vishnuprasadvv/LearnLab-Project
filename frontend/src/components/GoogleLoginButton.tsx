@@ -2,7 +2,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { authSuccess, googleLoginThunk } from '@/features/authSlice';
 import { useGoogleLogin } from '@react-oauth/google';
 import { FcGoogle } from 'react-icons/fc';
-import toast, {Toaster} from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
         try {
           // Send the Google OAuth token to your backend
           console.log(tokenResponse)
-
           const response = await dispatch(googleLoginThunk({token:tokenResponse.access_token})).unwrap()
           console.log(response.user)
 
@@ -24,8 +23,6 @@ import { useNavigate } from 'react-router-dom';
           // Dispatch user data to Redux
           dispatch(authSuccess({user:{id: response.user.id, email : response.user.email, role : response.user.role, firstName : response.user.firstName , lastName: response.user.lastName, phone: response.user.phone}}));
           navigate('/home')
-          
-
         } catch (error: any) {
           console.error('Login failed:', error);
           toast.error(error.message || 'Login failed')

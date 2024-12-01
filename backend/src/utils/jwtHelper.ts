@@ -1,6 +1,5 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
-const SECRET_KEY =  process.env.JWT_SECRET || 'secret'
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret'
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret'
 
@@ -14,21 +13,26 @@ interface DecodedToken {
 }
 
 
-export const generateAccessToken = (payload : object) : string => {
-    return jwt.sign(payload, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+export const generateAccessToken = (payload : {id:string, role:string}) : string => {
+    // return jwt.sign(payload, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+    const access = jwt.sign(payload, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+   const verify =  jwt.verify(access, ACCESS_TOKEN_SECRET)
+   console.log(verify)
+   return access
 }
 
-export const generateRefreshToken = (payload : object) : string => {
+export const generateRefreshToken = (payload : {id:string}) : string => {
     return jwt.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn : '1d'})
 }
 
 
-export const verifyAccessToken = (token : string) :DecodedToken | null => {
+export const verifyAccessToken = (token : string) : {id:string, role: string} | null => {
     try {
-        return jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken  
-    } catch (error) {
-        console.log('verifytoken error')
-        return null;
+        return jwt.verify(token, ACCESS_TOKEN_SECRET) as {id: string, role: string}
+         
+    } catch (error: any) {
+        console.log('verifyAccessToken error:', error)
+        throw error
     }
 }
 
@@ -36,6 +40,12 @@ export const verifyRefreshToken = (token : string) : {id: string} | null => {
     try {
         return jwt.verify(token, REFRESH_TOKEN_SECRET) as {id:string}
     } catch (error) {
-        return null;
+        console.log('verifyRefreshToken error:', error)
+        if(error instanceof TokenExpiredError){
+            throw new Error('Refresh token expired')
+        }else if(error instanceof JsonWebTokenError){
+            throw new Error('Invalid refresh token')
+        }
+        throw new Error('Unexpected error during token verification')
     }
 }

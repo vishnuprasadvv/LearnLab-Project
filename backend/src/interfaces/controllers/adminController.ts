@@ -6,6 +6,7 @@ export const getAllUsersController = async (req: Request, res: Response) => {
         const users = await getAllUsers()
         res.status(200).json(users)
     } catch (error) {
+        console.log('getuser error', error)
         res.status(400).json({ message: 'Error fetching data' })
     }
 

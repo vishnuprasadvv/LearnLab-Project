@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
-import { googleLoginThunk } from '@/features/authSlice'; 
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import {useAppSelector } from '@/app/hooks';
 
 const GoogleLoginSuccess: React.FC = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user, isAuthenticated, error } = useAppSelector((state) => state.auth);
-
-  
+  const { isAuthenticated, error } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {

@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { OAuth2Client ,} from "google-auth-library";
-import { generateAccessToken } from "../../utils/jwtHelper";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
 import User from "../../domain/models/User";
 import axios from "axios";
+import { accessTokenOptions } from "./authController";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
 const client = new OAuth2Client(GOOGLE_CLIENT_ID)
@@ -44,16 +45,20 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
     }
   
       // Create custom JWT
-      const jwtToken = generateAccessToken({
+      const accessToken = generateAccessToken({
         id: payload.sub,
         email: payload.email,
         firstName: payload.given_name!,
         lastName: payload.family_name!,
         picture: payload.picture,
       })
+      const refreshToken = generateRefreshToken({id: user.googleId})
+
+      res.cookie('accessToken', accessToken, accessTokenOptions)
+      res.cookie('refreshToken', refreshToken, accessTokenOptions)
   
       res.status(200).json({
-        token: jwtToken,
+        token: accessToken,
         user: {
           id: user.id,
           email: user.email,

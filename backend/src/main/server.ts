@@ -9,6 +9,7 @@ import { errorMiddleWare } from '../interfaces/middlewares/errorMiddleWare';
 import protectedRoutes from '../interfaces/routes/protectedRoutes';
 import adminRouter from '../interfaces/routes/adminRoutes';
 import session from 'express-session';
+import { config } from '../config/config';
 
 
 
@@ -74,7 +75,7 @@ app.all('*', (req: Request, res: Response, next : NextFunction) => {
 app.use(errorMiddleWare)
 
 //create server 
-app.listen(process.env.PORT || 5000 , () => {
+app.listen(config.app.PORT, () => {
     console.log(`server is running on port : http://localhost:${process.env.PORT}'`)
     connectDB();
 });  

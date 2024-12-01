@@ -10,7 +10,7 @@ import dotenv from 'dotenv'
 import { verifyAccessTokenUseCase } from "../../application/use-cases/user/verifyToken";
 import { resetPassword, sendResetOtp, verifyResendOtp } from "../../application/use-cases/user/resetPassword";
 import { CustomError } from "../middlewares/errorMiddleWare";
-import { generateAccessToken } from "../../utils/jwtHelper";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
 
 dotenv.config()
 
@@ -30,7 +30,8 @@ export const accessTokenOptions : ITokenOptions = {
     expires: new Date(Date.now() + accessTokenExpire  * 60* 60  * 1000),
     maxAge : accessTokenExpire * 60* 60 * 1000,
     httpOnly : true,
-    sameSite: 'strict'
+    sameSite: 'strict',
+    secure : process.env.NODE_ENV === 'production'
 }
 
 
@@ -38,7 +39,7 @@ export const refreshTokenOptions : ITokenOptions = {
     expires: new Date(Date.now() + refreshTokenExpire * 24 *60* 60 * 1000),
     maxAge : refreshTokenExpire * 24 *60* 60* 1000,
     httpOnly : true,
-    sameSite: 'strict'
+    sameSite: 'strict',
 }
 
 //only set secure for production
@@ -92,25 +93,59 @@ export const loginHandler = async (req: Request, res : Response, next: NextFunct
         const {email, password, role} = req.body;
         const response = await loginUser(email, password, role);
         console.log(response)
-        res.cookie('refreshToken', response.refreshToken, refreshTokenOptions )
-        res.cookie('accessToken', response.accessToken, accessTokenOptions)
-        res.status(200).json({success: true, user : response.user})
+            res.cookie('refreshToken', response.refreshToken, refreshTokenOptions )
+            res.cookie('accessToken', response.accessToken, accessTokenOptions)
+        
+        res.status(200).json({success: true, user : response.user, token: response.accessToken})
+    }catch(error : any){
+        next(error)
+    }
+}
+
+export const adminLoginHandler = async (req: Request, res : Response, next: NextFunction) => {
+    try{
+        const {email, password, role} = req.body;
+        const response = await loginUser(email, password, role);
+       // console.log(response)
+            res.cookie('adminRefreshToken', response.refreshToken, refreshTokenOptions )
+            res.cookie('adminAccessToken', response.accessToken, accessTokenOptions)
+
+        res.status(200).json({success: true, user : response.user, token: response.accessToken})
     }catch(error : any){
         next(error)
     }
 }
 
 //refresh access token after expire
-export const refreshTokenHandler = (req: Request, res: Response, next : NextFunction) => {
+export const refreshTokenHandler = async(req: Request, res: Response, next : NextFunction) => {
     try {
 
         const token = req.cookies.refreshToken;
-        const accessToken = refreshAccessToken(token)
+        console.log(token)
+        const accessToken =await refreshAccessToken(token)
 
         res.cookie('accessToken', accessToken, accessTokenOptions)
-        res.status(200).json({success: true})
+        res.status(200).json({success: true, data:accessToken})
         
     } catch (error) {
+        next (error)
+    }
+}
+//refresh admin access token after expire
+export const refreshAdminTokenHandler = async(req: Request, res: Response, next : NextFunction) => {
+    try {
+        const token = req.cookies.adminRefreshToken;
+        console.log('adminrefreshtoken',token)
+        const adminAccessToken = await refreshAccessToken(token)
+        
+        //console.log('admin token from controller', adminAccessToken)
+
+        res.cookie('adminAccessToken', adminAccessToken, accessTokenOptions)
+        res.status(200).json({success: true, data:adminAccessToken})
+        
+    } catch (error) {
+        res.clearCookie('adminAccessToken', { httpOnly: true,  sameSite: 'strict' })
+        res.clearCookie('AdminRefreshToken', { httpOnly: true, sameSite: 'strict' })
         next (error)
     }
 }
@@ -131,15 +166,30 @@ export const logoutHandler = async(req : Request, res: Response, next: NextFunct
         next(error)
     }
 }
+//logout handler 
+
+export const adminLogoutHandler = async(req : Request, res: Response, next: NextFunction) => {
+    try{
+        //clear cookies for access and refreshtoken
+        res.clearCookie('adminAccessToken', { httpOnly: true,  sameSite: 'strict' })
+        res.clearCookie('adminRefreshToken', { httpOnly: true, sameSite: 'strict' })
+
+        const message = logout();
+
+        res.status(200).json({success : true , message})
+    }catch(error){
+        next(error)
+    }
+}
 
 
 export const validateUser = async(req: Request, res: Response):Promise<any> =>{
     const accessToken = req.cookies.accessToken;
     if(!accessToken){
-        return res.status(401).json({message : 'Unauthorized'})
+        return res.status(401).json({message : 'Access token expired'})
     }
     try{
-        const verifyUser = await verifyAccessTokenUseCase(accessToken);
+        const verifyUser =  verifyAccessTokenUseCase(accessToken);
         console.log(verifyUser)
         return res.status(200).json({verifyUser})
     }catch(error){
@@ -220,19 +270,18 @@ interface AuthenticatedRequest extends Request {
 
 export const googleLoginSuccess = (req: AuthenticatedRequest, res: Response)  => {
   const user = req.user;
+  console.log(user)
 
   if (!user) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  const jwtToken = generateAccessToken(user); // Function to generate JWT (your logic)
+  const accessToken = generateAccessToken({id:user.id, role:user.role}); // Function to generate JWT
+ const refreshToken = generateRefreshToken({id:user.id})
 
+  res.cookie('accessToken', accessToken, accessTokenOptions)
+  res.cookie('refreshToken', refreshToken, refreshTokenOptions )
     // Set the JWT token in a cookie
-    res.cookie('accessToken', jwtToken, { 
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', // use secure cookies in production (over HTTPS)
-      maxAge: 3600000 // 1 hour expiration
-    });
 
   res.json({
     user: {
@@ -242,7 +291,7 @@ export const googleLoginSuccess = (req: AuthenticatedRequest, res: Response)  =>
       email: user.email,
       role: user.role || 'student',  // Adjust role as necessary
     },
-    token: jwtToken
+    token: accessToken
   });
 };
 

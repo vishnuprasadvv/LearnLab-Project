@@ -2,8 +2,9 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { useAppDispatch } from '@/app/hooks';
-import { logout } from '@/features/authSlice';
-import Dashboard from './Dashboard';
+import { adminLogout } from '@/api/adminApi';
+import { adminLogoutSliceAction } from '@/features/adminSlice';
+import toast from 'react-hot-toast';
 
 const Sidebar = () => {
     const navigate = useNavigate();
@@ -11,9 +12,11 @@ const Sidebar = () => {
 
     const handleLogout = async() => {
         try{
-            const response = await dispatch(logout())
+            const response = await adminLogout()
+            dispatch(adminLogoutSliceAction())
             console.log(response)
-            navigate('/admin-login')
+            toast.success(response?.data.message)
+            navigate('/admin/login')
         }catch(error){
             console.log(error)
         }
@@ -32,7 +35,8 @@ const Sidebar = () => {
         <ul>
           <li className='p-5'><Link to="/admin/dashboard" >Dashboard</Link></li>
           <li className='p-5'><Link to="/admin/users" >User Management</Link></li>
-          {/* <li className='p-5'><Button className='bg-red-600' onClick={handleLogout}>LOGOUT</Button></li> */}
+          <li className='p-5'><Link to="/admin/instructors" >Instructor Management</Link></li>
+          <li className='p-5'><Button className='bg-red-600' onClick={handleLogout}>LOGOUT</Button></li>
         </ul>
       </nav>
     </div>

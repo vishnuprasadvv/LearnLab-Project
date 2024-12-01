@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { signUp , loginHandler, sendOtpHandler, verifyOtpHandler, refreshTokenHandler, logoutHandler, validateUser, resetPasswordOtpSendHandler, resetPasswordHandler, googleLoginSuccess, googleLoginFailure, } from "../controllers/authController";
+import { signUp , loginHandler, sendOtpHandler, verifyOtpHandler, refreshTokenHandler, logoutHandler, validateUser, resetPasswordOtpSendHandler, resetPasswordHandler, googleLoginSuccess, googleLoginFailure, adminLogoutHandler, adminLoginHandler, } from "../controllers/authController";
 import passport from "passport";
 import { googleLogin } from "../controllers/googleAuthLibrary";
 import { registerInstuctorHandler } from "../controllers/instructorController";
@@ -10,6 +10,7 @@ const router = Router();
 
 router.post('/signup', signUp);
 router.post ('/login', loginHandler)
+
 router.post('/send-otp', sendOtpHandler)
 router.post('/verify-otp', verifyOtpHandler)
 router.post('/logout', logoutHandler)

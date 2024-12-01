@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { startLoading, authSuccess, setError, clearError } from '../../features/authSlice';
+import { startLoading, authSuccess, setError, clearError, sendOtp } from '../../features/authSlice';
 import { login } from '../../features/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -39,10 +39,9 @@ const Login = () => {
     }),
     onSubmit: async (values) => {
       dispatch(startLoading())
+      const { email, password } = values
       try {
-        const { email, password } = values
         const result = await dispatch(login({ email, password, role: 'student' })).unwrap();
-        //navigate(result.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
         console.log(result)
         dispatch(
           authSuccess({
@@ -52,9 +51,24 @@ const Login = () => {
         toast.success(result.message || 'Login success')
         navigate('/home', { replace: true })
       } catch (err: any) {
-        dispatch(setError(err?.message || 'Login failed.'));
-        toast.error(err.message || 'Login failed')
-        console.error('Login failed:', err);
+
+
+        if (err.message === 'User not verified') {
+          toast.error('Please verify your account')
+          try {
+            const verifyAccountResponse = await dispatch(sendOtp({ email })).unwrap()
+            toast.success(verifyAccountResponse.message || 'OTP sent successfully, Check your email')
+            navigate('/verify-account')
+          } catch (error) {
+            console.log(error)
+            toast.error('Error sending OTP')
+          }
+          //navigate('/verify-account')
+        } else {
+          dispatch(setError(err?.message || 'Login failed.'));
+          toast.error(err.message || 'Login failed')
+          console.error('Login failed:', err);
+        }
       }
     }
 

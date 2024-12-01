@@ -22,6 +22,7 @@ import Profile from "./pages/students/Profile";
 import { Toaster } from "react-hot-toast";
 import RegisterInstructor from "./pages/instructor/RegisterInstructor";
 import { AdminInstructors } from "./pages/admin/AdminInstructors";
+import { AdminInstructorApplication } from "./pages/admin/AdminInstructorApplication";
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 
@@ -39,7 +40,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
-          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
@@ -87,6 +88,11 @@ function App() {
           <Route path="/admin/instructors" element={
             <AdminProtectedRoute requiredRole="admin">
               <AdminInstructors />
+            </AdminProtectedRoute>
+          } />
+          <Route path="/admin/instructors/application/:id" element={
+            <AdminProtectedRoute requiredRole="admin">
+              <AdminInstructorApplication />
             </AdminProtectedRoute>
           } />
 

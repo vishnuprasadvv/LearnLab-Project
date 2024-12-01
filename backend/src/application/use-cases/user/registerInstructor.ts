@@ -23,7 +23,7 @@ export const instructorRegister = async(userId : string, formData: formDataInter
             throw new CustomError('You are already an instructor', 400)
         }
         //check user already applied for instructor
-        const findExistInstructorRequest = await Instructor.findOne({instructorId: userId}).populate('instructorId')
+        const findExistInstructorRequest = await Instructor.findOne({instructorId: userId , status: 'pending'}).populate('instructorId')
         if(findExistInstructorRequest){
             throw new CustomError('You are already applied for instructor', 400)
         }

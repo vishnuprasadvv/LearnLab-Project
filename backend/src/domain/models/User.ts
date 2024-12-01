@@ -17,11 +17,11 @@ const UserSchema : Schema = new Schema({
     firstName  : {type: String, required : true},
     lastName : {type : String, required : true},
     email : {type: String, required : true, unique :true},
-    phone : {type: String},
+    phone : {type: String,},
     password : {type : String, },
     role : {type: String , enum : ['admin', 'student', 'instructor'], default : 'student'} ,
     isVerified : {type :Boolean, default: false},
-    status : {type:String, enum: ['active', 'inactive']},
+    status : {type:String, enum: ['active', 'inactive'], default: 'active'},
     googleId : {type: String},
     
     avatar : {public_id: String, url : String}

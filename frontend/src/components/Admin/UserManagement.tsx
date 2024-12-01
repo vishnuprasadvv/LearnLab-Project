@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, toggleUserStatus } from '@/api/adminApi';
-import { setLoading } from '@/features/adminSlice';
 import { MdEdit } from "react-icons/md";
 import { LiaUserSlashSolid } from "react-icons/lia";
 import { LiaUserSolid } from "react-icons/lia";
@@ -18,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from '../ui/alert-dialog'
 import { Button } from '../ui/button';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { User } from '@/types/userTypes';
 
@@ -60,7 +59,7 @@ const UserManagement = () => {
       setError(error.message || 'Failed to block user')
       toast.error(error.message || 'Error blocking user')
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
  

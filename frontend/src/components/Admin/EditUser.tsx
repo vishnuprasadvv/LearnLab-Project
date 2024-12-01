@@ -20,14 +20,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { createUser, editUserGet, editUserPost } from '@/api/adminApi';
-import { setLoading } from '@/features/adminSlice';
 
 function EditUser() {
   const [role, setRole] = useState("student")
   const [userStatus, setUserStatus] = useState<string>('active')
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const { loading ,isAuthenticated} = useAppSelector((state) => state.auth);
+    const [loading, setLoading] = useState(false)
 
     
   const [isPasswordVisible, setPasswordVisible] = useState(false);

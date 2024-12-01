@@ -1,5 +1,4 @@
 import { useAppSelector } from '@/app/hooks'
-import React from 'react'
 
 function Profile() {
 

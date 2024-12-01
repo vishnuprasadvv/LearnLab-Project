@@ -7,7 +7,10 @@ export const sendEmail = async (to:string, subject : string, text : string) => {
         auth:{
             user : process.env.EMAIL_USER,
             pass : process.env.EMAIL_PASS   
-        }
+        },
+            tls: {
+              rejectUnauthorized: false, // Ignore SSL certificate errors
+            },
     })
 
     await transporter.sendMail({from : process.env.EMAIL_USER, to , subject, text})

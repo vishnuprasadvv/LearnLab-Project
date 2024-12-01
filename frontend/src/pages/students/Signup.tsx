@@ -13,6 +13,7 @@ import { EyeClosed, EyeIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast, {Toaster} from 'react-hot-toast';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
+import { error } from 'console';
 
 const Signup = () => {
  
@@ -94,6 +95,10 @@ const Signup = () => {
         console.log('user created', response.user)
       } catch (err:any) {
         dispatch(setError(err?.message))
+        if(err.message === 'Please verify your account'){
+          toast.error(err.message)
+          navigate('/verify-account')
+        }
         toast.error(err?.message || 'Signup failed')
         console.error('Signup failed:', err);
       }finally{

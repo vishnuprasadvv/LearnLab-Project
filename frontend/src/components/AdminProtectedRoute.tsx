@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
-  const { isAuthenticated ,user} = useAppSelector((state) => state.auth);
+  const { isAuthenticated ,user} = useAppSelector((state) => state.admin);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
 
@@ -17,7 +17,9 @@ const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, required
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await dispatch(validateUser());
+        //const res = await dispatch(validateUser());
+        //console.log(res)
+        
         setLoading(false);
       } catch (error) {
         setLoading(false); 
@@ -32,7 +34,7 @@ const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, required
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin-login" />; 
+    return <Navigate to="/admin/login" />; 
   }
 
   if(requiredRole && user?.role !== requiredRole){

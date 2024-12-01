@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor} from "@/api/auth";
+import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout} from "@/api/auth";
 import { RegisterInstructorFormValues } from "@/types/instructor";
 interface AuthState {
     user: {
@@ -93,8 +93,8 @@ export const resetPasswordThunk = createAsyncThunk('auth/reset-password', async(
     return rejectWithValue(error.response.data)
   }
 })
-export const googleLoginThunk = createAsyncThunk('auth/google', async(data: {token : string},{rejectWithValue}) => {
 
+export const googleLoginThunk = createAsyncThunk('auth/google', async(data: {token : string},{rejectWithValue}) => {
   try {
     const response = await handleGoogleLogin(data.token)
     return response
@@ -111,8 +111,6 @@ export const registerInstructorThunk = createAsyncThunk('auth/instructor-registe
     return rejectWithValue(error.response.data)
   }
 })
-
-
 
 //slice
 
@@ -160,11 +158,10 @@ const authSlice = createSlice({
       },
       
     },
-      
-    
-  
+ 
 })
 
+export default authSlice.reducer;
 export const {
   startLoading,
   authSuccess,
@@ -173,5 +170,3 @@ export const {
   clearError,
   endLoading
 } = authSlice.actions;
-
-export default authSlice.reducer;

@@ -1,52 +1,97 @@
 // src/features/admin/adminSlice.ts
-import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { AppDispatch } from "@/app/store";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getInstructorsAPI } from "@/api/adminApi";
 
 interface User {
   id: string;
-  name: string;
+  firstName: string;
   email: string;
   role: string;
+  phone : string;
+  lastName: string;
 }
 
 interface AdminState {
-  users: User[];
+  user: User | null;
   isLoading: boolean;
+  isAuthenticated : boolean;
+  adminToken?: string;
   error: string | null;
 }
 
+export const getInstructorsThunk = createAsyncThunk("admin/instructors", async (_, { rejectWithValue }) => {
+  try {
+   const response = await getInstructorsAPI()
+   return response;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "failed to get instructors");
+  }
+});
+
+
+
 const initialState: AdminState = {
-  users: [],
+  user: null,
   isLoading: false,
   error: null,
+  isAuthenticated: false,
+  adminToken: ''
 };
 
 const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
-    setLoading(state, action) {
-      state.isLoading = action.payload;
-    },
-    setUsers(state, action) {
-      state.users = action.payload;
+    startLoading(state) {
+      state.isLoading = true;
       state.error = null;
     },
-    setError(state, action) {
+    endLoading(state){
+      state.isLoading = false;
+      state.error = null;
+    },
+    // Successful login/signup
+    adminLoginSuccess(
+      state,
+      action: PayloadAction<{
+        user: { id: string; email: string; role: string , firstName:string , lastName: string, phone: string};
+        adminToken?: string
+      }>
+    ) {
+      state.isLoading = false;
+      state.user = action.payload.user;
+      state.error = null;
+      state.isAuthenticated = true;
+      state.adminToken = action.payload.adminToken
+    },
+    // Logout user
+    adminLogoutSliceAction(state) {
+      state.user = null;
+      state.isLoading = false;
+      state.error = null;
+      state.isAuthenticated= false;
+      state.adminToken = ''
+    },
+    // Error handling
+    setError(state, action: PayloadAction<string>) {
+      state.isLoading = false;
       state.error = action.payload;
     },
-    removeUser(state, action) {
-      state.users = state.users.filter((user) => user.id !== action.payload);
+    // Clear errors
+    clearError(state) {
+      state.error = null;
+      state.isLoading = false
     },
-    updateUser(state, action) {
-      const index = state.users.findIndex((user) => user.id === action.payload.id);
-      if (index !== -1) {
-        state.users[index] = action.payload;
-      }
-    },
+    
   },
 });
 
-export const { setLoading, setUsers, setError, removeUser, updateUser } = adminSlice.actions;
+export const {
+  startLoading,
+  adminLoginSuccess,
+  adminLogoutSliceAction,
+  setError,
+  clearError,
+  endLoading
+} = adminSlice.actions;
 export default adminSlice.reducer;
