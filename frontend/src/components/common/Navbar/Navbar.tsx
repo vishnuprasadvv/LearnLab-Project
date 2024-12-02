@@ -51,10 +51,7 @@ const Navbar = () => {
   const {isAuthenticated, user} = useAppSelector((state) => state.auth)
   return (
     <div>
-
-
-    
-    <div className="shadow-md w-full fixed top-0 left-0 h-[70px] z-50">
+    <div className="shadow-md w-full fixed top-0 left-0">
       <div className="md:flex items-center justify-between bg-blue-50 py-4 md:px-10 px-7">
         <div className="flex items-center ">
           <img src={Logo} alt="Logo" className="h-auto w-32" />
@@ -104,11 +101,10 @@ const Navbar = () => {
             </AvatarFallback>
           </Avatar> 
           <span className=" md:hidden">Profile</span>
-          </NavLink>  :  <NavLink to={'/login'} className="rounded-full text-xs bg-blue-600 hover:bg-blue-400 duration-500">
-            Login
+          </NavLink>  :  <NavLink to={'/login'} >
+            <Button className="rounded-full text-xs bg-blue-600 hover:bg-blue-400 duration-500">Login</Button>
           </NavLink>}
           
-         
         </ul>
       </div>
     </div>

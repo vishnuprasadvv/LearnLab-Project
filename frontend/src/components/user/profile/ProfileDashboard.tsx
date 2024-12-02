@@ -18,7 +18,7 @@ export default function UserProfile() {
       <div className="grid gap-6 md:grid-cols-1">
         <Card className="w-full">
           <CardHeader className="text-center">
-            <div className="relative mx-auto h-40 w-40 overflow-hidden rounded-full">
+            <div className=" mx-auto h-40 w-40 overflow-hidden rounded-full">
               <img
                 alt="User profile picture"
                 className="object-cover"

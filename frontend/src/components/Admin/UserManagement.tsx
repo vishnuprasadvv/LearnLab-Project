@@ -73,34 +73,38 @@ const UserManagement = () => {
   }
 
   return (
-    <div className='flex flex-col min-w-full p-5'>
+
+    <div className="container mx-auto px-4 py-8">
+
+    <div className='flex flex-col min-w-full p-1'>
       <div className='self-end mr-3'>
          <Button className='bg-blue-600 rounded-full hover:bg-blue-700' onClick={handleAddUser}>Add User</Button>
       </div>
       <h2 className='text-2xl font-bold text-center pb-5'> All Users</h2>
       
-      <table className='items-center m-2 table-fixed border-collapse border border-slate-200 rounded-xl bg-slate-50' >
-        <thead className='bg-blue-50' >
-          <tr >
-            <th className='border border-blue-400 p-3 text-start max-w-4'>ID</th>
-            <th className='border border-blue-400 p-3 text-start'>Name</th>
-            <th className='border border-blue-400 p-3 text-start max-w-5'>Email</th>
-            <th className='border border-blue-400 p-3 text-start'>Role</th>
-            <th className='border border-blue-400 p-3 text-start max-w-3'>Joined at</th>
-            <th className='border border-blue-400 p-3 text-start'>Status</th>
-            <th className='border border-blue-400 p-3 text-start'>Action</th>
+      <table className='text-sm text-left w-full rtl:text-right text-gray-500 dark:text-gray-400 overflow-x-scroll' >
+        <thead className=' text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400' >
+          <tr  className='bg-blue-200'>
+            <th scope='col' className='lg:px-6 px-1 py-4'>ID</th>
+            <th scope='col' className='lg:px-6 px-1 py-4'>Name</th>
+            <th scope='col' className='lg:px-6 px-1 py-4'>Email</th>
+            <th scope='col' className='lg:px-6 px-1 py-4'>Role</th>
+            <th scope='col' className='lg:px-6 px-1 py-4'>Joined at</th>
+            <th scope='col' className='lg:px-6 px-1 py-4'>Status</th>
+            <th scope='col' className='lg:px-6 px-1 py-4'>Action</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user: any) => (
-            <tr key={user._id}>
-              <td className=' p-3 text-start border border-gray-200'>{user._id}</td>
-              <td className= 'p-3 text-start border border-gray-200'>{user.firstName}</td>
-              <td className= 'p-3 text-start border border-gray-200' >{user.email}</td>
-              <td className= 'p-3 text-start border border-gray-200'>{user.role}</td>
-              <td className= 'p-3 text-start border border-gray-200'>{new Date(user.createdAt).toDateString()}</td>
-              <td className= 'p-3 text-start border border-gray-200'>{user.status}</td>
-              <td className= 'p-3 text-start border border-gray-200 place-items-center'>
+            <tr key={user._id} className='odd:bg-white  odd:dark:bg-gray-900 hover:bg-gray-100 even:bg-gray-50
+            even:dark:bg-gray-800 border-b dark:border-gray-700'>
+              <td className="lg:px-6 px-1 py-4">{user._id}</td>
+              <td scope="row" className=" lg:px-6 px-1 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{`${user.firstName} ${user.lastName}`}</td>
+              <td className="lg:px-6 px-1 py-4" >{user.email}</td>
+              <td className="lg:px-6 px-1 py-4">{user.role}</td>
+              <td className="lg:px-6 px-1 py-4">{new Date(user.createdAt).toDateString()}</td>
+              <td className="lg:px-6 px-1 py-4">{user.status}</td>
+              <td className="lg:px-6 px-1 py-4">
 
                 <div className='flex gap-2  '>
 
@@ -134,6 +138,7 @@ const UserManagement = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

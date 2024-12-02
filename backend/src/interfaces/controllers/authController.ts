@@ -11,6 +11,7 @@ import { resetPassword, sendResetOtp, verifyResendOtp } from "../../application/
 import { CustomError } from "../middlewares/errorMiddleWare";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
 import { accessTokenOptions, refreshTokenOptions } from "../../infrastructure/config/jwt";
+import { loginAdmin } from "../../application/use-cases/admin/adminLogin";
 
 
 export const signUp = async (req: Request, res: Response , next: NextFunction) => {
@@ -69,8 +70,8 @@ export const loginHandler = async (req: Request, res : Response, next: NextFunct
 
 export const adminLoginHandler = async (req: Request, res : Response, next: NextFunction) => {
     try{
-        const {email, password, role} = req.body;
-        const response = await loginUser(email, password, role);
+        const {email, password} = req.body;
+        const response = await loginAdmin(email, password);
        // console.log(response)
             res.cookie('adminRefreshToken', response.refreshToken, refreshTokenOptions )
             res.cookie('adminAccessToken', response.accessToken, accessTokenOptions)
@@ -140,7 +141,6 @@ export const adminLogoutHandler = async(req : Request, res: Response, next: Next
         res.clearCookie('adminRefreshToken', { httpOnly: true, sameSite: 'strict' })
 
         const message = logout();
-
         res.status(200).json({success : true , message})
     }catch(error){
         next(error)

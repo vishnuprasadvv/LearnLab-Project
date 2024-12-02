@@ -44,7 +44,7 @@ const AdminLogin = () => {
       dispatch(startLoading())
       try {
         const {email, password} = values
-        const result = await adminLogin(email, password, 'admin' )
+        const result = await adminLogin(email, password )
         //navigate(result.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
         console.log(result)
         dispatch(
