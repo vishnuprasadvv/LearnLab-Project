@@ -60,9 +60,9 @@ export const getEditUser = async (userId:string) => {
 }
 
 
-export const postEditUser = async (id: string,firstName: string, lastName : string, email: string, phone : string, password: string, role: string, userStatus: string) => {
+export const postEditUser = async (id: string,firstName: string, lastName : string, email: string, phone : string, role: string, userStatus: string) => {
      // Validate required fields
-  if (!id || !firstName || !lastName || !email || !phone || !password || !role || !userStatus) {
+  if (!id || !firstName || !lastName || !email || !phone || !role || !userStatus) {
     throw new CustomError('All fields are required', 400);
   }
     const user = await User.findById(id)
@@ -76,16 +76,11 @@ export const postEditUser = async (id: string,firstName: string, lastName : stri
         throw new CustomError('Enter a valid email', 400)
     }
     
-    if(!password){
-        throw new CustomError('password required', 400)
-    }
-    const hashedPassword = await bcrypt.hash(password,10)
    
     user.firstName = firstName;
   user.lastName = lastName;
   user.email = email;
   user.phone = phone;
-  user.password = hashedPassword;
   user.role = role;
   user.status = userStatus;
     

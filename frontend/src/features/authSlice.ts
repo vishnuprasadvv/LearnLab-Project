@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout, handleChangePasswordAPI} from "@/api/auth";
+import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout, handleChangePasswordAPI, handleEditUserAPI} from "@/api/auth";
 import { RegisterInstructorFormValues } from "@/types/instructor";
 interface AuthState {
     user: {
@@ -116,6 +116,15 @@ export const registerInstructorThunk = createAsyncThunk('auth/instructor-registe
 export const changePasswordThunk = createAsyncThunk('auth/profile/change-password', async(data : {oldPassword:string, newPassword: string}, {rejectWithValue}) => {
   try {
     const response = await handleChangePasswordAPI(data.oldPassword, data.newPassword)
+    return response
+  } catch (error : any) {
+    return rejectWithValue(error.response.data)
+  }
+})
+
+export const editProfileThunk = createAsyncThunk('auth/profile/edit', async(data : {firstName:string, lastName: string, email: string, phone: string}, {rejectWithValue}) => {
+  try {
+    const response = await handleEditUserAPI(data.firstName, data.lastName, data.email, data.phone)
     return response
   } catch (error : any) {
     return rejectWithValue(error.response.data)

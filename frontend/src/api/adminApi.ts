@@ -51,9 +51,9 @@ export const createUser = async (firstName: string, lastName: string, email: str
     throw error;
   }
 }
-export const editUserPost = async (firstName: string, lastName: string, email: string, phone : string, password: string, role: string, userStatus : string ,userId: string): Promise<any> => {
+export const editUserPost = async (firstName: string, lastName: string, email: string, phone : string, role: string, userStatus : string ,userId: string): Promise<any> => {
   try {
-    const response = await adminInterceptorApi.post(`${API_URL}/admin/users/edit/${userId}`, {firstName, lastName, email, phone, password, role, userStatus});
+    const response = await adminInterceptorApi.post(`${API_URL}/admin/users/edit/${userId}`, {firstName, lastName, email, phone, role, userStatus});
     return response.data;
   } catch (error:any) {
     if (axios.isAxiosError(error) && error.response) {

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { validateUser } from "../features/authSlice"; 
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
   requiredRole?: string
 }
 
-const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
   const { isAuthenticated ,user} = useAppSelector((state) => state.admin);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
@@ -41,7 +40,7 @@ const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, required
     return <Navigate to = '/unauthorized' />
   }
 
-  return <>{children}</>;
+  return <Outlet/>
 };
 
 export default AdminProtectedRoute;

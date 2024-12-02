@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { changePasswordThunk } from "@/features/authSlice";
 import { useFormik } from "formik";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const ProfileChangePassword = () => {
@@ -49,27 +50,30 @@ const ProfileChangePassword = () => {
       confirmNewPassword: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values,{resetForm}) => {
       console.log(values)
      const {oldPassword, newPassword} = values
 
       try{
-        const response = dispatch(changePasswordThunk({oldPassword, newPassword})).unwrap()
-      }catch(error){
-
+        const response = await dispatch(changePasswordThunk({oldPassword, newPassword})).unwrap()
+        toast.success(response.message || 'Password changed successfully')
+        resetForm()
+      }catch(error:any){
+        console.log('change password error',error.message)
+        toast.error(error.message || 'Change password failed')
       }
     },
   });
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid gap-6 md:grid-cols-1">
-        <Card className="w-full">
+        <Card className="w-full flex flex-col items-center">
           <CardHeader className="text-center">
             <div className="text-xl">Edit Password</div>
           </CardHeader>
-          <form onSubmit={formik.handleSubmit}>
-            <CardContent>
-              <div className="flex flex-col w-1/2 gap-5">
+          <form onSubmit={formik.handleSubmit} className="w-full">
+            <CardContent className="min-w-full place-items-center">
+              <div className="flex flex-col gap-5 md:w-1/2 w-full items-stretch">
                 <div>
                   <PasswordFieldTwo
                     className={`${
@@ -131,7 +135,7 @@ const ProfileChangePassword = () => {
                       </span>
                     )}
                 </div>
-                <div className="flex justify-end gap-2 pt-5 ">
+                <div className="flex justify-center gap-2 pt-5 ">
                   <AlertDialog>
                     <AlertDialogTrigger className={`${!formik.isValid || !formik.dirty ? 'bg-blue-300' : 'bg-blue-500'}   text-white p-2 font-semibold rounded-lg py-2`} disabled={!formik.isValid || !formik.dirty}>
                         Change Password

@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/app/hooks"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarDays, Mail,Phone, Share2, Twitter } from 'lucide-react'
+import { CalendarDays, Mail,PencilIcon,Phone, Share2, Twitter } from 'lucide-react'
 import { useNavigate } from "react-router-dom"
 
 export default function UserProfile() {
@@ -23,7 +23,7 @@ export default function UserProfile() {
                 alt="User profile picture"
                 className="object-cover"
                 height="160"
-                src="/placeholder.svg?height=160&width=160"
+                src="https://avatar.iran.liara.run/public/36"
                 style={{
                   aspectRatio: "150/150",
                   objectFit: "cover",
@@ -36,7 +36,7 @@ export default function UserProfile() {
           </CardHeader>
           <CardContent className="text-center">
             <Button className="mt-2" variant="outline">
-              <Share2 className="mr-2 h-4 w-4" />
+              <PencilIcon className="mr-2 h-4 w-4" />
               Edit image
             </Button>
           </CardContent>

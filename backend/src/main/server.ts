@@ -56,7 +56,7 @@ app.get('/', (req: Request , res:Response, next : NextFunction) => {
 
 //authroutes 
 app.use('/api/auth', authRoutes)
-app.use('/api/protected', protectedRoutes)
+app.use('/api/student', protectedRoutes)
 app.use('/api/admin', adminRouter)
 
 //unknown routes 

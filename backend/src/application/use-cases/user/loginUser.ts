@@ -16,7 +16,7 @@ export const loginUser = async (email : string, password: string , role: string)
         throw new CustomError('User registered with social login', 400)
     }
     //check role of user for login page based
-    if(user.role !== role){
+    if(user.role !== 'student' && user.role !== 'instructor'){
         throw new CustomError('You are not authorized', 400)
     }
     const isPasswordValid = await comparePassword(password, user.password)

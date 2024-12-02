@@ -47,7 +47,7 @@ export const postEditUserController = async (req: Request, res: Response, next :
     const {id} = req.params;
     const { firstName, lastName, email, phone, password, role, userStatus } = req.body;
     try {
-        const user = await postEditUser(id, firstName, lastName, email, phone, password, role,userStatus)
+        const user = await postEditUser(id, firstName, lastName, email, phone, role, userStatus)
         res.status(200).json({ success: true, message: 'User edited successfully' })
     } catch (error) {
         // res.status(400).json({success:false,  message: error })

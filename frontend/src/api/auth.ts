@@ -57,6 +57,11 @@ export const handleChangePasswordAPI = async (oldPassword: string, newPassword :
     return response.data;
 }
 
+export const handleEditUserAPI = async (firstName: string, lastName : string, email: string, phone: string) => {
+    const response = await api.post(`${API_URL}/auth/profile/edit`, {firstName,lastName, email, phone});
+    return response.data;
+}
+
 
  export const handleGoogleLogin = async (token: string) => {
     console.log(token)

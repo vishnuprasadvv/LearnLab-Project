@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik} from 'formik';
 import * as Yup from 'yup';
-import toast, {Toaster} from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { endLoading, setError, startLoading } from '@/features/authSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -22,25 +22,10 @@ import {
 import { createUser, editUserGet, editUserPost } from '@/api/adminApi';
 
 function EditUser() {
-  const [role, setRole] = useState("student")
   const [userStatus, setUserStatus] = useState<string>('active')
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
-
-    
-  const [isPasswordVisible, setPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const togglePasswordVisibility = () => {
-    setPasswordVisible((prev) => !prev)
-  } 
-  const toggleConfirmPasswordVisibility = () => {
-    setConfirmPasswordVisible((prev) => !prev)
-  } 
-
-  const handleUserStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserStatus(event.target.value);
-  };
 
 
   const { id } = useParams();
@@ -59,13 +44,11 @@ function EditUser() {
           lastName: userData.lastName || '',
           email: userData.email || '',
           phone: userData.phone || '',
-          password: '', // Reset password for security reasons
-          confirmPassword: '', // Also reset confirm password
+          //password: '', // Reset password for security reasons
+         // confirmPassword: '', // Also reset confirm password
           role: userData.role || 'student',
           userStatus: userData.status || 'active',
         });
-  
-        setRole(userData.role || 'student'); // Update role state
         setUserStatus(userData.userStatus || 'active'); // Update userStatus state
         
         setLoading(false)
@@ -80,10 +63,10 @@ function EditUser() {
     const formik = useFormik({
         initialValues: {
           email : '',
-          password: '',
+        //  password: '',
           firstName: '',
           lastName:  '',
-          confirmPassword:'',
+         // confirmPassword:'',
           phone : '',
           role: '',
           userStatus: ''
@@ -98,12 +81,12 @@ function EditUser() {
           email: Yup.string()
           .email('Invalid email adress')
           .required('Email is required'),
-          password: Yup.string()
-          .min(5, 'Password must be atleast 5 characters')
-          .required('Password is required'),
-          confirmPassword: Yup.string()
-          .oneOf([Yup.ref('password')], 'Password miss match')
-          .required('Confirm password is required'),
+          // password: Yup.string()
+          // .min(5, 'Password must be atleast 5 characters')
+          // .required('Password is required'),
+          // confirmPassword: Yup.string()
+          // .oneOf([Yup.ref('password')], 'Password miss match')
+          // .required('Confirm password is required'),
           phone: Yup.string()
           .required('Mobile number is required')
         .matches(
@@ -113,10 +96,10 @@ function EditUser() {
         }),
         onSubmit : async(values) => {
             dispatch(startLoading())
-            const {firstName, lastName, email, phone, password, role, userStatus} = values
+            const {firstName, lastName, email, phone, role, userStatus} = values
           try {
     
-             const result =  editUserPost(firstName, lastName, email, phone, password, role, userStatus, id as string)
+             const result =  editUserPost(firstName, lastName, email, phone, role, userStatus, id as string)
             await toast.promise(result, {
               loading: 'Editing user data...',
               success:" User edited",
@@ -143,7 +126,6 @@ function EditUser() {
   return (
     <div className='md:w-1/2 sm:w-1/2  items-center mx-auto border rounded-md p-6 mt-10'>
     <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Edit user</h1>
-    <Toaster/>
       <form onSubmit={formik.handleSubmit} >
     <div className='flex flex-col gap-3 mt-5'>
     <div >
@@ -196,9 +178,11 @@ function EditUser() {
           <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.phone}</div>
         ) : null}
     </div>
+
+
     <div >
 
-      <div className='flex'>
+      {/* <div className='flex'>
       <Input type={ isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='password' value={formik.values.password} onChange={formik.handleChange} className='w-full'
        style={{
           width: '100%',
@@ -219,10 +203,10 @@ function EditUser() {
 
          {formik.touched.password && formik.errors.password ? (
           <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.password}</div>
-        ) : null}
+        ) : null} */}
     </div>
     <div>
-      <div className='flex'>
+      {/* <div className='flex'>
 
       <Input type={isConfirmPasswordVisible ? "text" : "password"} id='confirmPassword' name='confirmPassword' placeholder='Confirm password' value={formik.values.confirmPassword} onChange={formik.handleChange} className='w-full'
        style={{
@@ -246,14 +230,14 @@ function EditUser() {
 
          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
           <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.confirmPassword}</div>
-        ) : null}
+        ) : null} */}
     </div>
 
     <span className='pt-5 font-bold'>Select user role</span>
     <div>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">{role}</Button>
+        <Button variant="outline">{formik.values.role}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Select user role</DropdownMenuLabel>

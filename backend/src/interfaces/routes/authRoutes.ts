@@ -3,6 +3,8 @@ import { signUp , loginHandler, sendOtpHandler, verifyOtpHandler, refreshTokenHa
 import passport from "passport";
 import { googleLogin } from "../controllers/googleAuthLibrary";
 import { registerInstuctorHandler } from "../controllers/instructorController";
+import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
+import { changePasswordHandler, editProfileHandler } from "../controllers/studentController";
 
 
 
@@ -24,6 +26,10 @@ router.post('/google', googleLogin )
 
 //instructor register
 router.post('/instructor-register', registerInstuctorHandler)
+
+//user profile
+router.post('/profile/change-password', isAuthenticated, authorizeRole(['student']), changePasswordHandler)
+router.post('/profile/edit', isAuthenticated, authorizeRole(['student']), editProfileHandler)
 
 
 export default router;
