@@ -10,7 +10,7 @@ import { registerInstructorThunk } from '@/features/authSlice';
 import { RegisterInstructorFormValues } from '@/types/instructor';
 import ArrayField from '@/components/common/ArrayField/ArrayField';
 import toast from 'react-hot-toast';
-import PasswordField from '@/components/common/PasswordField.tsx/PasswordField';
+import PasswordField from '@/components/common/PasswordField/PasswordField';
 
 
 function RegisterInstructor() {

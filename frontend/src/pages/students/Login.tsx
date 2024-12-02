@@ -34,7 +34,7 @@ const Login = () => {
         .email('Invalid email adress')
         .required('Email is required'),
       password: Yup.string()
-        .min(5, 'Password must be atleast 5 characters')
+        .min(6, 'Password must be atleast 6 characters')
         .required('Password is required')
     }),
     onSubmit: async (values) => {
@@ -86,7 +86,8 @@ const Login = () => {
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Login</h1>
       <form onSubmit={formik.handleSubmit}>
         <div className='pb-3 pt-5' >
-          <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} onChange={formik.handleChange} className='w-full'
+          <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} 
+          onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
             style={{
               width: '100%',
               padding: '8px',
@@ -101,7 +102,8 @@ const Login = () => {
         <div className='pb-3'>
 
           <div className='flex'>
-            <Input type={isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='Password' value={formik.values.password} onChange={formik.handleChange}
+            <Input type={isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='Password'
+             value={formik.values.password} onBlur={formik.handleBlur} onChange={formik.handleChange}
               style={{
                 width: '100%',
                 padding: '8px',

@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import toast, {Toaster} from 'react-hot-toast';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
 import { error } from 'console';
+import { formikPasswordValidation } from '@/utils/formikPasswordValidator';
 
 const Signup = () => {
  
@@ -60,9 +61,7 @@ const Signup = () => {
       email: Yup.string()
       .email('Invalid email adress')
       .required('Email is required'),
-      password: Yup.string()
-      .min(5, 'Password must be atleast 5 characters')
-      .required('Password is required'),
+      password: formikPasswordValidation(),
       confirmPassword: Yup.string()
       .oneOf([Yup.ref('password')], 'Password miss match')
       .required('Confirm password is required'),
@@ -73,6 +72,7 @@ const Signup = () => {
       'Mobile number must be 10 digits and start with 6, 7, 8, or 9'
     )
     }),
+    validateOnChange: true,
     onSubmit : async(values) => {
         dispatch(startLoading())
       try {
@@ -114,19 +114,21 @@ const Signup = () => {
         <form onSubmit={formik.handleSubmit} >
       <div className='flex flex-col gap-2 mt-5'>
       <div >
-        <Input type="text" id='firstName' name='firstName' placeholder='First name' value={formik.values.firstName} onChange={formik.handleChange} className='w-full'
+        <Input type="text" id='firstName' name='firstName' placeholder='First name' value={formik.values.firstName} 
+        onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
          style={{
             width: '100%',
             padding: '8px',
             marginBottom: '5px',
             border: formik.touched.firstName && formik.errors.firstName ? '1px solid red' : '1px solid #ccc',
           }}/>
-           {formik.touched.firstName && formik.errors.firstName ? (
+           {formik.touched.firstName && formik.errors.firstName && (
             <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.firstName}</div>
-          ) : null}
+          )}
       </div>
       <div >
-        <Input type="text" id='lastName' name='lastName' placeholder='Last name' value={formik.values.lastName} onChange={formik.handleChange} className='w-full'
+        <Input type="text" id='lastName' name='lastName' placeholder='Last name' value={formik.values.lastName}
+          onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
          style={{
             width: '100%',
             padding: '8px',
@@ -139,7 +141,8 @@ const Signup = () => {
       </div>
       
       <div >
-        <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} onChange={formik.handleChange} className='w-full'
+        <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} 
+        onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
          style={{
             width: '100%',
             padding: '8px',
@@ -152,7 +155,8 @@ const Signup = () => {
       </div>
       
       <div >
-        <Input type="text" id='phone' name='phone' placeholder='phone' value={formik.values.phone} onChange={formik.handleChange} className='w-full'
+        <Input type="text" id='phone' name='phone' placeholder='phone' value={formik.values.phone} 
+        onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
          style={{
             width: '100%',
             padding: '8px',
@@ -166,7 +170,8 @@ const Signup = () => {
       <div >
 
         <div className='flex'>
-        <Input type={ isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='password' value={formik.values.password} onChange={formik.handleChange} className='w-full'
+        <Input type={ isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='password' value={formik.values.password} 
+        onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
          style={{
             width: '100%',
             padding: '8px',
@@ -191,7 +196,8 @@ const Signup = () => {
       <div>
         <div className='flex'>
 
-        <Input type={isConfirmPasswordVisible ? "text" : "password"} id='confirmPassword' name='confirmPassword' placeholder='Confirm password' value={formik.values.confirmPassword} onChange={formik.handleChange} className='w-full'
+        <Input type={isConfirmPasswordVisible ? "text" : "password"} id='confirmPassword' name='confirmPassword' placeholder='Confirm password'
+         value={formik.values.confirmPassword} onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
          style={{
             width: '100%',
             padding: '8px',

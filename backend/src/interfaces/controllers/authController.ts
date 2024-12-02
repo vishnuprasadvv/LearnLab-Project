@@ -6,46 +6,12 @@ import { verifyOtpCode } from "../../application/use-cases/user/verifyOtp";
 import { sendOtp } from "../../application/use-cases/user/sendOtp";
 import { refreshAccessToken } from "../../application/use-cases/user/refreshAccessToken";
 import { logout } from "../../application/use-cases/user/logout";
-import dotenv from 'dotenv'
 import { verifyAccessTokenUseCase } from "../../application/use-cases/user/verifyToken";
 import { resetPassword, sendResetOtp, verifyResendOtp } from "../../application/use-cases/user/resetPassword";
 import { CustomError } from "../middlewares/errorMiddleWare";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
+import { accessTokenOptions, refreshTokenOptions } from "../../infrastructure/config/jwt";
 
-dotenv.config()
-
- //interface for token options
- interface ITokenOptions {
-    expires : Date,
-    maxAge : number;
-    httpOnly: boolean;
-    sameSite: 'lax' | 'strict' | 'none' | undefined;
-    secure?: boolean
-}
-
-const accessTokenExpire = parseInt(process.env.ACCESS_TOKEN_EXPIRE || '5')
-const refreshTokenExpire = parseInt(process.env.REFRESH_TOKEN_EXPIRE || '1')
-//optioins for cookies
-export const accessTokenOptions : ITokenOptions = {
-    expires: new Date(Date.now() + accessTokenExpire  * 60* 60  * 1000),
-    maxAge : accessTokenExpire * 60* 60 * 1000,
-    httpOnly : true,
-    sameSite: 'strict',
-    secure : process.env.NODE_ENV === 'production'
-}
-
-
-export const refreshTokenOptions : ITokenOptions = {
-    expires: new Date(Date.now() + refreshTokenExpire * 24 *60* 60 * 1000),
-    maxAge : refreshTokenExpire * 24 *60* 60* 1000,
-    httpOnly : true,
-    sameSite: 'strict',
-}
-
-//only set secure for production
-if(process.env.NODE_ENV === 'production'){
-    accessTokenOptions.secure = true;
-}
 
 export const signUp = async (req: Request, res: Response , next: NextFunction) => {
     try{ 
@@ -64,7 +30,6 @@ export const signUp = async (req: Request, res: Response , next: NextFunction) =
 export const sendOtpHandler = async (req: Request, res: Response) => {
     try{
         const {email} = req.body;
-        
         //sent otp 
         const sentOTP = await sendOtp(email)
         console.log('sentOtp controller', sentOTP)

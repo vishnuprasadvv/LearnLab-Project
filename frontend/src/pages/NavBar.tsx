@@ -40,7 +40,7 @@ function Navbar() {
                 </Link>
                 ) : (
                     <>
-                    <Link className=" inline-flex ml-auto pr-5" to={'/profile'}>{user?.firstName || 'profile'}</Link>
+                    <Link className=" inline-flex ml-auto pr-5" to={'/profile/dashboard'}>{user?.firstName || 'profile'}</Link>
                     <Button  className="bg-red-500" onClick={handleLogout}>LOGOUT</Button>
                     </>
                 )

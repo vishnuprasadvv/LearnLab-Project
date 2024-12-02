@@ -18,12 +18,19 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAddUser from "./pages/admin/AdminAddUser";
 import AdminEditUser from "./pages/admin/AdminEditUser";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/students/Profile";
 import { Toaster } from "react-hot-toast";
 import RegisterInstructor from "./pages/instructor/RegisterInstructor";
 import { AdminInstructors } from "./pages/admin/AdminInstructors";
 import { AdminInstructorApplication } from "./pages/admin/AdminInstructorApplication";
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+import { config } from "./config/config";
+import ProfileSidebar from "./pages/students/ProfileSidebar";
+import ProfileDashboard from "./components/user/profile/ProfileDashboard";
+import ProfileCourses from "./components/user/profile/ProfileCourses";
+import Profile from "./pages/students/Profile";
+import UserProfile from "./components/user/profile/dashboard";
+import ProfileEdit from "./components/user/profile/ProfileEdit";
+import ProfileChangePassword from "./components/user/profile/ProfileChangePassword";
+const GOOGLE_CLIENT_ID = config.google.CLIENT_ID
 
 
 function App() {
@@ -44,21 +51,32 @@ function App() {
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/home"
+          
+          
+          {/* Protected routes */}
+          <Route element={ <ProtectedRoute/> }>
+            <Route path='/home' element={<Home/>} />
 
-            element={
-              <ProtectedRoute>
-                < Home />
-              </ProtectedRoute>
-            } />
+            {/* <Route path='/sidebar' element={<Profile/>}>
+              <Route path="dashboard" element={<UserProfile/>}/>
+              <Route path="courses" element={<ProfileCourses/>}/>
+              <Route path="edit" element={<ProfileEdit/>}/>
+              <Route path="change-password" element={<ProfileChangePassword/>}/>
+            </Route> */}
 
-          <Route path="/profile"
+            {/* Profile */}
+            <Route path="/profile" element={<ProfileSidebar/>}>
+              <Route path="dashboard" element={<ProfileDashboard/>}/>
+              <Route path="courses" element={<ProfileCourses/>}/>
+              <Route path="edit" element={<ProfileEdit/>}/>
+              <Route path="change-password" element={<ProfileChangePassword/>}/>
+            </Route>
 
-            element={
-              <ProtectedRoute>
-                < Profile />
-              </ProtectedRoute>
-            } />
+            {/* Instructor registration */}
+            <Route path="/instructor/register"
+            element={< RegisterInstructor /> } />
+
+            </Route>
 
 
           <Route path="/admin/dashboard" element={
@@ -97,12 +115,12 @@ function App() {
           } />
 
           {/* instructor routes */}
-          <Route path="/instructor/register"
+          {/* <Route path="/instructor/register"
             element={
               <ProtectedRoute>
                 < RegisterInstructor />
               </ProtectedRoute>
-            } />
+            } /> */}
 
 
           <Route path="/unauthorized" element={<Unauthorized />} />

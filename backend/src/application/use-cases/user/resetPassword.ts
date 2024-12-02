@@ -2,7 +2,6 @@ import { generateOtp, verifyOtp } from "../../../infrastructure/services/otpServ
 import { sendEmail } from "../../../infrastructure/services/emailService";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import User from "../../../domain/models/User";
-import bcrypt from 'bcryptjs'
 import { hashPassword } from "../../../infrastructure/services/hashService";
 
 export const sendResetOtp = async(email: string) => {
@@ -35,9 +34,7 @@ LearnLab.`
 export const verifyResendOtp = async (email: string, otp : string) => {
     const isValid = await verifyOtp(email, otp);
     if(!isValid) throw new CustomError('Invalid or expired OTP', 400)
-
     return {message : 'Otp verified successfully'}
-
 }
 
 export const resetPassword = async(email : string , password: string ) => {

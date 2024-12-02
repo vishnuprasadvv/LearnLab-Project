@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import Instructor from "../../domain/models/InstructorDocument";
-import User from "../../domain/models/User";
 import { instructorRegister } from "../../application/use-cases/user/registerInstructor";
-
 
 export const registerInstuctorHandler = async (req: Request, res: Response, next: NextFunction) => {
     const {userId,formData} = req.body

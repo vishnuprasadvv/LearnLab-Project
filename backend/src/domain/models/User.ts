@@ -11,6 +11,7 @@ export interface IUser extends Document {
     status: string,
     phone: string,
     googleId : string,
+    _id: string
 }
 
 const UserSchema : Schema = new Schema({

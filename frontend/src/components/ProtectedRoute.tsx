@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { validateUser } from "../features/authSlice"; 
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
   requiredRole?: string
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
   const { isAuthenticated ,user} = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
@@ -39,7 +38,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     return <Navigate to = '/unauthorized' />
   }
 
-  return <>{children}</>;
+  return <Outlet/>
 };
 
 export default ProtectedRoute;

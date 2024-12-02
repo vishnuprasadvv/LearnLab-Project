@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout} from "@/api/auth";
+import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout, handleChangePasswordAPI} from "@/api/auth";
 import { RegisterInstructorFormValues } from "@/types/instructor";
 interface AuthState {
     user: {
@@ -9,6 +9,7 @@ interface AuthState {
         phone : string;
         email : string ;
         role : string;
+        createdAt: Date
     } | null;
     loading: boolean;
     error: string  | null;
@@ -112,6 +113,15 @@ export const registerInstructorThunk = createAsyncThunk('auth/instructor-registe
   }
 })
 
+export const changePasswordThunk = createAsyncThunk('auth/profile/change-password', async(data : {oldPassword:string, newPassword: string}, {rejectWithValue}) => {
+  try {
+    const response = await handleChangePasswordAPI(data.oldPassword, data.newPassword)
+    return response
+  } catch (error : any) {
+    return rejectWithValue(error.response.data)
+  }
+})
+
 //slice
 
 const authSlice = createSlice({
@@ -131,7 +141,7 @@ const authSlice = createSlice({
       authSuccess(
         state,
         action: PayloadAction<{
-          user: { id: string; email: string; role: string , firstName:string , lastName: string, phone: string};
+          user: { id: string; email: string; role: string , firstName:string , lastName: string, phone: string, createdAt: Date};
         }>
       ) {
         state.loading = false;

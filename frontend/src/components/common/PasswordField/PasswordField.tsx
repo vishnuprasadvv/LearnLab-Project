@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { EyeClosed, EyeIcon } from 'lucide-react';
 import React, { useState } from 'react'
 
-interface PasswordFieldProps {
+interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement>{
     label? : string;
     value : string;
     onchange: (value: string) => void;
@@ -10,9 +10,11 @@ interface PasswordFieldProps {
     error?: string;
     touched? : boolean // only if you use formik 
     name: string;
+    className?:string;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void; 
 
 }
-const PasswordField: React.FC<PasswordFieldProps> = ({label, value, onchange, name, placeholder= 'Enter Password', error, touched}) => {
+const PasswordField: React.FC<PasswordFieldProps> = ({label, value, onchange, name,className,onBlur,  placeholder= 'Enter Password', error, touched}) => {
 
      //setup password visibility
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -23,8 +25,8 @@ const PasswordField: React.FC<PasswordFieldProps> = ({label, value, onchange, na
     <>
         {label && <label htmlFor={name}>{label}</label>}
     <div className='flex'>
-    <Input type={isPasswordVisible ? "text" : "password"} id={name} name={name} placeholder={placeholder} 
-    value={value} onChange={(e) => onchange(e.target.value)} />
+    <Input type={isPasswordVisible ? "text" : "password"} id={name} name={name} className={className} placeholder={placeholder} 
+    value={value} onChange={(e) => onchange(e.target.value)} onBlur={onBlur} />
     <button type='button' onClick={togglePasswordVisibility}
       style={{
         position: 'relative',

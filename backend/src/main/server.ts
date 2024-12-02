@@ -6,27 +6,25 @@ import { connectDB } from '../infrastructure/repositories/dbConnection';
 import authRoutes from '../interfaces/routes/authRoutes'
 import bodyParser from 'body-parser'
 import { errorMiddleWare } from '../interfaces/middlewares/errorMiddleWare';
-import protectedRoutes from '../interfaces/routes/protectedRoutes';
+import protectedRoutes from '../interfaces/routes/studentRoutes';
 import adminRouter from '../interfaces/routes/adminRoutes';
 import session from 'express-session';
-import { config } from '../config/config';
+import { config } from '../infrastructure/config/config';
 
-
+const PORT = config.app.PORT
 
 const app = express();
 app.use(express.json());
-
 dotenv.config();
-
 //cookie parser 
 app.use(cookieParser());
 
 //CORS setup 
 app.use(cors({
-    origin:process.env.CLIENT_URL,
-    allowedHeaders:['Content-Type', 'Authorization'],
-    methods:["GET", "POST", "DELETE", "PUT","PATCH"],
-    credentials: true
+    origin : config.cors.CLIENT_URL,
+    allowedHeaders : config.cors.ALLOWED_HEADERS,
+    methods : config.cors.ALLOWED_METHODS,
+    credentials : config.cors.CREDENTIALS
 }));
 
 //bodyparser for cloudinary
@@ -36,7 +34,6 @@ app.use(cors({
 app.use(bodyParser.urlencoded({
     extended: true
   }));
-
 
 //middleware for sessions
 app.use(
@@ -49,8 +46,6 @@ app.use(
 );
 
 
-
-
 //api test
 app.get('/', (req: Request , res:Response, next : NextFunction) => {
     res.status(200).json({
@@ -58,6 +53,7 @@ app.get('/', (req: Request , res:Response, next : NextFunction) => {
         message : 'API is working'
     })
 })
+
 //authroutes 
 app.use('/api/auth', authRoutes)
 app.use('/api/protected', protectedRoutes)
@@ -75,7 +71,7 @@ app.all('*', (req: Request, res: Response, next : NextFunction) => {
 app.use(errorMiddleWare)
 
 //create server 
-app.listen(config.app.PORT, () => {
-    console.log(`server is running on port : http://localhost:${process.env.PORT}'`)
+app.listen(PORT, () => {
+    console.log(`server is running on port : http://localhost:${PORT}'`)
     connectDB();
 });  

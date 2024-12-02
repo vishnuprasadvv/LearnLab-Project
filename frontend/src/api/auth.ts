@@ -52,6 +52,11 @@ export const resetPasswordAPI = async (email: string, otp: string, password : st
     return response.data;
 }
 
+export const handleChangePasswordAPI = async (oldPassword: string, newPassword : string) => {
+    const response = await api.post(`${API_URL}/auth/profile/change-password`, {oldPassword, newPassword});
+    return response.data;
+}
+
 
  export const handleGoogleLogin = async (token: string) => {
     console.log(token)

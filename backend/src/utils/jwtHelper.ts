@@ -1,17 +1,8 @@
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { config } from '../infrastructure/config/config';
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret'
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret'
-
-// export const generateToken = (id:string) : string => {
-//     return jwt.sign({id}, SECRET_KEY, {expiresIn : '1h'})
-// }
-
-interface DecodedToken {
-    id: string;
-    role: string;
-}
-
+const ACCESS_TOKEN_SECRET = config.jwt.ACCESS_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = config.jwt.REFRESH_TOKEN_SECRET;
 
 export const generateAccessToken = (payload : {id:string, role:string}) : string => {
     // return jwt.sign(payload, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
@@ -24,7 +15,6 @@ export const generateAccessToken = (payload : {id:string, role:string}) : string
 export const generateRefreshToken = (payload : {id:string}) : string => {
     return jwt.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn : '1d'})
 }
-
 
 export const verifyAccessToken = (token : string) : {id:string, role: string} | null => {
     try {

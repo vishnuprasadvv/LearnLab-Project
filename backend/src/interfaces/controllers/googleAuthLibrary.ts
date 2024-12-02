@@ -3,14 +3,13 @@ import { OAuth2Client ,} from "google-auth-library";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
 import User from "../../domain/models/User";
 import axios from "axios";
-import { accessTokenOptions } from "./authController";
+import { accessTokenOptions } from "../../infrastructure/config/jwt";
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
-const client = new OAuth2Client(GOOGLE_CLIENT_ID)
+// const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
+// const client = new OAuth2Client(GOOGLE_CLIENT_ID)
 
 
 export const googleLogin = async (req: Request, res: Response , next: NextFunction): Promise<any | void> => {
-
     console.log('googlelogin')
     
     try {
@@ -46,11 +45,8 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
   
       // Create custom JWT
       const accessToken = generateAccessToken({
-        id: payload.sub,
-        email: payload.email,
-        firstName: payload.given_name!,
-        lastName: payload.family_name!,
-        picture: payload.picture,
+        id: user._id,
+        role:user.role
       })
       const refreshToken = generateRefreshToken({id: user.googleId})
 

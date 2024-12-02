@@ -73,7 +73,8 @@ const togglePasswordVisibility = () => {
     <form onSubmit={formik.handleSubmit} className='md:w-1/3 lg:w-1/4 sm:w-1/2 items-center mx-auto pt-10 border rounded-md p-6 mt-10'>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Admin Login</h1>
       <div className='pb-3 pt-5' >
-        <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} onChange={formik.handleChange} className='w-full'
+        <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} 
+        onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
         style={{
           width: '100%',
           padding: '8px',
@@ -88,7 +89,8 @@ const togglePasswordVisibility = () => {
       <div className='pb-3'>
 
       <div className='flex'>
-        <Input type={ isPasswordVisible ? "text" : "password"} id='password'name='password' placeholder='Password' value={formik.values.password} onChange={formik.handleChange}
+        <Input type={ isPasswordVisible ? "text" : "password"} id='password'name='password' placeholder='Password'
+         value={formik.values.password} onBlur={formik.handleBlur} onChange={formik.handleChange}
         style={{
           width: '100%',
           padding: '8px',
