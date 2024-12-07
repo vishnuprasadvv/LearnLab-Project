@@ -10,23 +10,48 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { authSuccess, editProfileThunk, setError } from "@/features/authSlice";
+import { authSuccess, changeProfileImageThunk, editProfileThunk, getUserDataThunk, setError } from "@/features/authSlice";
+import { User } from "@/types/userTypes";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { PencilIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const ProfileEdit = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [profileData, setProfileData] = useState<User | null>(null);
+  const [error, setError] = useState('')
   const { user } = useAppSelector((state) => state.auth);
+  const [profileImage, setProfileImage] = useState<File | null>(null)
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   if (!user) {
     return <>userNotfound</>;
   }
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await dispatch(getUserDataThunk(user._id)).unwrap();
+        console.log(response)
+        setProfileData(response.user);
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [user, isUploading]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -81,6 +106,63 @@ const ProfileEdit = () => {
       }
     },
   });
+
+
+  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfileImage(file)
+      console.log("Selected file:", file);
+      // Generate a preview URL for the selected file
+      const previewURL = URL.createObjectURL(file);
+      setPreviewImage(previewURL);     
+          //open dialog after selecting image 
+          setIsDialogOpen(true)
+        }
+  };
+
+  const triggerFileInput = () =>{
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    } else {
+      console.error("File input reference is null!");
+    }
+  }
+
+  const handleChangeProfileImage = async() => {
+
+    console.log(user)
+    try {
+      if(!profileImage){
+        setError('Please select an image to upload')
+        toast.error(error)
+        return 
+      }
+      //set uploading 
+      setIsUploading(true)
+
+      const formData = new FormData();
+      formData.append('profileImage', profileImage)
+
+      const response = dispatch(changeProfileImageThunk({userId: user._id, formData})).unwrap();
+      console.log('profileimage upload',await response)
+
+      await toast.promise(response, {
+          loading : 'Uploading profile image...',
+          success: (data:any) => {
+            return data.message || 'Profile image changed successfully'
+          },
+          error: (err) => {
+            return err?.message || 'Profile image update failed'
+          }
+      })
+      setIsDialogOpen(false);
+      setIsUploading(false)
+      setProfileImage(null)
+    } catch (error) {
+      console.log('error changing profile image', error)
+    }
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid gap-6 md:grid-cols-1">
@@ -88,9 +170,72 @@ const ProfileEdit = () => {
           <CardHeader className="text-center">
             <div className="text-xl">Edit Profile</div>
           </CardHeader>
+          <div className="text-center rounded-full bg-slate-200 w-20 h-20 relative">
+            <Avatar className="relative overflow-hidden mx-auto w-full h-full bg-slate-300 rounded-full">
+            {isUploading && (
+          <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center rounded-full">
+            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+              <AvatarImage src={profileData?.profileImageUrl || 'https://avatar.iran.liara.run/public/36'} />
+              <AvatarFallback>
+                <img
+                  src="https://avatar.iran.liara.run/public/36"
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+              </AvatarFallback>
+            </Avatar>
+            <div className="absolute bottom-0 right-0  bg-blue-500 rounded-full w-6 h-6 text-white flex items-center justify-center justify-self-end
+             hover:bg-blue-600 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+              
+
+              <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+              <PencilIcon className="h-4 w-4" onClick={triggerFileInput}/>
+              </div>
+
+          </div>
+
+
+          <div className="flex justify-center gap-2 pt-5 ">
+                  <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    
+                    <AlertDialogContent>
+                      <AlertDialogHeader className="items-center">
+                        
+                        <div className="flex justify-center items-center w-20 h-20">
+                <img
+                  src={previewImage || "https://avatar.iran.liara.run/public/36"}
+                  alt="Avatar"
+                  className="w-full h-full object-cover rounded-full"
+                />
+                        </div>
+                        <AlertDialogTitle>
+                          Preivew of image
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                         This will change your
+                          profile image. Are you sure?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="rounded-full">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-blue-600 rounded-full"
+                          type="button"
+                          onClick={handleChangeProfileImage}
+                        >
+                          Yes
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
           <form onSubmit={formik.handleSubmit} className="w-full">
-          <CardContent className="min-w-full place-items-center">
-            <div className="flex flex-col gap-5 md:w-1/2 w-full items-stretch">
+            <CardContent className="min-w-full place-items-center">
+              <div className="flex flex-col gap-5 md:w-1/2 w-full items-stretch">
                 <div>
                   <Input
                     type="text"
@@ -215,9 +360,9 @@ const ProfileEdit = () => {
                     </AlertDialogContent>
                   </AlertDialog>
                 </div>
-            </div>
-          </CardContent>
-              </form>
+              </div>
+            </CardContent>
+          </form>
         </Card>
       </div>
     </div>

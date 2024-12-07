@@ -1,17 +1,13 @@
-
-import Sidebar from '@/components/Admin/Sidebar';
-import Dashboard from '@/components/Admin/Dashboard';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-import { RiArrowGoBackLine, RiMessage2Line } from 'react-icons/ri';
 import { LiaBookReaderSolid, LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { RxDashboard } from 'react-icons/rx';
-import { logout, logoutSliceAction } from '@/features/authSlice';
 import toast from 'react-hot-toast';
 import { HiOutlineUsers } from "react-icons/hi2";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { IoLogOutOutline } from 'react-icons/io5';
+import { MdOutlineCategory } from "react-icons/md";
 import { adminLogout } from '@/api/adminApi';
 import { adminLogoutSliceAction } from '@/features/adminSlice';
 
@@ -39,6 +35,11 @@ const AdminPage = () => {
       icon: <LiaBookReaderSolid />,
     },
     {
+      path: "categories",
+      name: "Category Management",
+      icon: <MdOutlineCategory />,
+    },
+    {
       path: "notifications",
       name: "Notifications",
       icon: <IoMdNotificationsOutline />,
@@ -48,7 +49,6 @@ const AdminPage = () => {
   const { user } = useAppSelector((state) => state.admin);
   console.log(user);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
 
   const handleLogout = async () => {
     try {
@@ -62,8 +62,8 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="flex bg-slate">
-    <div className="flex flex-col gap-2 border p-3 bg-gray-50 bg-opacity-50 w-1/4 h-screen">
+    <div className="flex min-h-screen">
+    <div className="flex flex-col gap-2 border p-3 bg-gray-50 bg-opacity-50 w-1/4">
     <div className="hidden sm:block uppercase font-bold text-gray-600 text-xl">ADMIN DASHBOARD</div>
     
     <div className="flex gap-3 justify-center sm:justify-start mb-2 font-bold 
@@ -117,7 +117,7 @@ const AdminPage = () => {
         </AlertDialog>
      
     </div>
-    <div className="w-full">
+    <div className="w-full pt-2">
       <Outlet />
     </div>
   </div>

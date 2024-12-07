@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { validateUser } from "../features/authSlice"; 
+import { authSuccess, logoutSliceAction, validateUser } from "../features/authSlice"; 
+import toast from "react-hot-toast";
 
 interface ProtectedRouteProps {
   requiredRole?: string
@@ -16,9 +17,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await dispatch(validateUser());
+       const response = await dispatch(validateUser()).unwrap();
+       const user = response.user
+        console.log('protected route res',response)
+        dispatch(authSuccess({user:{...user}}))
         setLoading(false);
       } catch (error) {
+        console.log('protected route', error)
+        toast.error('Unauthorized')
+        dispatch(logoutSliceAction())
         setLoading(false); 
       }
     };

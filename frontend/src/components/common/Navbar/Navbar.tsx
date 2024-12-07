@@ -8,6 +8,7 @@ import { useAppSelector } from "@/app/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { LuShoppingCart, LuHeart } from "react-icons/lu";
+import { Input } from "@/components/ui/input";
 
 const Navbar = () => {
   let Links = [
@@ -51,7 +52,7 @@ const Navbar = () => {
   const {isAuthenticated, user} = useAppSelector((state) => state.auth)
   return (
     <div>
-    <div className="shadow-md w-full fixed top-0 left-0">
+    <div className="shadow-md w-full fixed top-0 left-0 z-20">
       <div className="md:flex items-center justify-between bg-blue-50 py-4 md:px-10 px-7">
         <div className="flex items-center ">
           <img src={Logo} alt="Logo" className="h-auto w-32" />
@@ -63,17 +64,19 @@ const Navbar = () => {
           {open ? <CiMinimize1 /> : <CiMenuBurger />}
         </div>
 
+
         <ul
           className={`md:flex md:items-center uppercase gap-4
             md:pb-0 pb-12 absolute md:static bg-blue-50 md:z-auto z-[-1] left-0 
-            w-full md:w-auto md:pl-0 pl-10 transistion-all duration-500 ease-in 
+            w-full md:w-auto md:pl-0 pl-10 transistion-all duration-500 ease-in-out 
             ${open ? "top-[65px]" : "top-[-500px]"}`}
         >
+
           {Links.map((item) => (
             <li key={item.name} className=" md:mb-0 mb-5">
               <NavLink
                 to={item.path}
-                className="text-gray-700 hover:text-gray-400 duration-500 "
+                className="text-gray-700 hover:text-blue-400 duration-500 "
               >
                 {item.name}
               </NavLink>
@@ -81,18 +84,24 @@ const Navbar = () => {
           ))}
 
           {IconsLinks.map((item) => (
-            <li key={item.name} className=" md:mb-0 mb-5">
+            <li key={item.name} className="flex gap-3 md:mb-0 mb-5">
               <NavLink
                 to={item.path}
-                className="text-gray-700 hover:text-gray-400 duration-500 text-xl"
+                className="text-gray-700 hover:text-blue-400 duration-500 text-xl hidden md:block"
               >
                 {item.icon}
+              </NavLink>
+              <NavLink
+                to={item.path}
+                className="text-gray-700 hover:text-blue-400 duration-500 md:hidden"
+              >
+                {item.name}
               </NavLink>
             </li>
           ))}
 
           {isAuthenticated ?  <NavLink to={'/profile'}>
-            <Avatar>
+            <Avatar className="hover:border-2 border-blue-400 border-spacing-3">
             <AvatarImage src="" />
             <AvatarFallback>
             <img src="https://avatar.iran.liara.run/public/36" 

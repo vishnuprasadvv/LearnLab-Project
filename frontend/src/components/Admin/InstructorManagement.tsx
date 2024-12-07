@@ -38,7 +38,7 @@ export default function InstructorManagement() {
 
   return (
     <div className='flex flex-col w-full'>
-      <h1 className='text-2xl font-bold text-dark-500 text-center'>Instructors </h1>
+      <h1 className='text-2xl font-bold text-dark-500 text-center'>Instructor requests </h1>
       <div className=' bg-blue-100 m-2 overflow-auto'>
         <table className='text-sm text-left w-full rtl:text-right text-gray-500 dark:text-gray-400 overflow-x-scroll'>
           <thead className=' text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>

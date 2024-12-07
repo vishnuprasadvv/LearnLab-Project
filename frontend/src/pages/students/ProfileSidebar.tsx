@@ -3,7 +3,6 @@ import { LiaUser, LiaUserEditSolid } from "react-icons/lia";
 import { NavLink, Outlet } from "react-router-dom";
 import { LiaBookReaderSolid } from "react-icons/lia";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { Button } from "@/components/ui/button";
 import { IoLogOutOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { logout, logoutSliceAction } from "@/features/authSlice";
@@ -60,7 +59,7 @@ const ProfileSidebar = () => {
   };
 
   return (
-    <div className="flex bg-slate">
+    <div className="flex bg-slate min-h-screen">
       <div className="flex flex-col gap-2 border p-3 bg-gray-50 bg-opacity-50 w-1/4 h-screen">
       {user?.role === 'instructor' && (<NavLink
           to={"/instructor/dashboard"}
@@ -71,7 +70,7 @@ const ProfileSidebar = () => {
         </NavLink>)}
         
         {profileItems.map((tab, index) => (
-          <NavLink
+          <NavLink 
             to={tab.path}
             key={index}
             className={({ isActive }) =>

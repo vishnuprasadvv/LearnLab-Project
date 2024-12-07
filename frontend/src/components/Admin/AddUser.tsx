@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { useFormik} from 'formik';
 import * as Yup from 'yup';
 import toast, {Toaster} from 'react-hot-toast';
-import { endLoading, setError, startLoading } from '@/features/authSlice';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch } from '@/app/hooks';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { EyeClosed, EyeIcon } from 'lucide-react';
@@ -24,9 +23,7 @@ import { createUser } from '@/api/adminApi';
 function AddUser() {
   const [role, setRole] = useState("student")
   const [userStatus, setUserStatus] = useState<string>('active')
-    const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const { loading ,isAuthenticated} = useAppSelector((state) => state.auth);
 
     
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -77,7 +74,6 @@ function AddUser() {
         )
         }),
         onSubmit : async(values) => {
-            dispatch(startLoading())
             const {firstName, lastName, email, phone, password} = values
           try {
     
@@ -93,10 +89,7 @@ function AddUser() {
             )
             console.log('user created', result)
           } catch (err: any) {
-            dispatch(setError(err?.message))
             console.error('User creation failed:', err);
-          }finally{
-            dispatch(endLoading())
           }
         }
         
@@ -261,8 +254,8 @@ function AddUser() {
     </div>
     
     <div className='flex justify-end gap-2 pt-5 '>
-      <Button className='border border-slate-200 bg-white text-blue-600 rounded-full  hover:bg-slate-100' type="button" onClick={handleBack} disabled={loading}>Cancel</Button>
-      <Button className='bg-blue-600 rounded-full  hover:bg-blue-700' type="submit" disabled={loading}>Create</Button>
+      <Button className='border border-slate-200 bg-white text-blue-600 rounded-full  hover:bg-slate-100' type="button" onClick={handleBack}>Cancel</Button>
+      <Button className='bg-blue-600 rounded-full  hover:bg-blue-700' type="submit">Create</Button>
     </div>
 
     </form>

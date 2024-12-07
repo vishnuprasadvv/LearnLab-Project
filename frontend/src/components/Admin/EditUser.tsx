@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormik} from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import { endLoading, setError, startLoading } from '@/features/authSlice';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch } from '@/app/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
-import { EyeClosed, EyeIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 
@@ -19,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { createUser, editUserGet, editUserPost } from '@/api/adminApi';
+import {  editUserGet, editUserPost } from '@/api/adminApi';
 
 function EditUser() {
   const [userStatus, setUserStatus] = useState<string>('active')
@@ -36,7 +35,7 @@ function EditUser() {
       setLoading(true);
       try {
         const response = await editUserGet(id as string)// Populate form with existing user data
-        console.log(response.user)
+        console.log(await response.user)
         const userData = response.user;
 
         formik.setValues({
@@ -109,7 +108,7 @@ function EditUser() {
     
               }
             )
-            console.log('user edited', result)
+            console.log('user edited',await result)
           } catch (err: any) {
             dispatch(setError(err?.message))
             console.error('User Edit failed:', err);

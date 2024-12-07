@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "./pages/students/Login";
 import Home from "./pages/students/Home";
@@ -34,6 +34,11 @@ import AddUser from "./components/Admin/AddUser";
 import EditUser from "./components/Admin/EditUser";
 import InstructorApplication from "./components/Admin/InstructorApplication";
 import InstructorManagement from "./components/Admin/InstructorManagement";
+import CreateCourse from "./components/instructor/CreateCourse";
+import Categories from "./components/Admin/Categories";
+import CreateCategory from "./pages/admin/Category/CreateCategory";
+import EditCategory from "./pages/admin/Category/EditCategory";
+import CourseMainCreation from "./pages/instructor/course/CourseMainCreation";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -41,11 +46,23 @@ function App() {
   if (!GOOGLE_CLIENT_ID) {
     console.error("Google client id is not defined");
   }
+
+  const Layout = ({ children }: { children: React.ReactNode }) => {
+    const location = useLocation(); 
+    const isAdminRoute = location.pathname.startsWith("/admin");
+    return (
+      <>
+        {!isAdminRoute && <Navbar />}
+        {children}
+      </>
+    );
+  };
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
         {/* <Navbar /> */}
-        <Navbar />
+        <Layout>
+
         <Toaster />
 
         <Routes>
@@ -87,6 +104,9 @@ function App() {
               <Route path="courses" element={<InstructorCourses />} />
               <Route path="messages" element={<Messages />} />
               <Route path="notifications" element={<Notifications />} />
+
+              <Route path="courses/create" element={<CreateCourse />} />
+              <Route path="courses/create/main" element={<CourseMainCreation />} />
             </Route>
           </Route>
 
@@ -98,6 +118,9 @@ function App() {
             <Route path="users" element={<UserManagement />} />
             <Route path="users/create" element={<AddUser />} />
             <Route path="users/edit/:id" element={<EditUser />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="categories/create" element={<CreateCategory />} />
+            <Route path="categories/:id/edit" element={<EditCategory />} />
             <Route path="instructors" element={<InstructorManagement />} />
             <Route
               path="instructors/application/:id"
@@ -110,6 +133,7 @@ function App() {
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Layout>
       </Router>
     </GoogleOAuthProvider>
   );

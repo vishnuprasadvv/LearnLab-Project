@@ -31,7 +31,7 @@ function RegisterInstructor() {
     const handleSubmit = async (values: RegisterInstructorFormValues) => {
         // Call backend API to save instructor details
         try {
-            const response = await dispatch(registerInstructorThunk({data: values, userId: user.id})).unwrap();
+            const response = await dispatch(registerInstructorThunk({data: values, userId: user._id})).unwrap();
             toast.success(response?.message)
             navigate('/home')
         } catch (error: any) {
