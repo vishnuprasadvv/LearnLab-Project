@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 export interface AppConfig {
     ENVIRONMENT : string;
     PORT : string | number;
@@ -36,6 +39,12 @@ export interface SessionConfig {
     SESSION_SECRET?: string;
 }
 
+export interface CloudinaryConfig {
+    CLOUD_NAME?: string,
+    API_KEY?: string,
+    API_SECRET?: string
+}
+
 export interface Config {
     app: AppConfig;
     cors: CorsConfig;
@@ -44,7 +53,9 @@ export interface Config {
     google: GoogleConfig;
     email: EmailConfig;
     session: SessionConfig;
+    cloudinary : CloudinaryConfig
 }
+
 
 export const config : Config = {
     app: {
@@ -81,5 +92,11 @@ export const config : Config = {
 
     session: {
         SESSION_SECRET : process.env.SESSION_SECRET
+    },
+
+    cloudinary:{
+        CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+        API_KEY : process.env.CLOUDINARY_API_KEY,
+        API_SECRET : process.env.CLOUDINARY_API_SECRET
     }
 }

@@ -2,9 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { createUser, deleteUser, getAllUsers, getEditUser, postEditUser, toggleUser } from "../../application/use-cases/admin/userManagement";
 
 export const getAllUsersController = async (req: Request, res: Response) => {
+        const {search, page = '1', limit = '10' } = req.query;
+        console.log(search, page, limit)
+
     try {
-        const users = await getAllUsers()
-        res.status(200).json(users)
+        const searchQuery = typeof search === 'string' ? search : '';
+        // Parse page and limit to numbers
+        const pageNum = parseInt(page as string, 10);
+        const limitNum = parseInt(limit as string, 10);
+        const {users, total} = await getAllUsers(searchQuery, pageNum, limitNum)
+        res.status(200).json({users, total})
     } catch (error) {
         console.log('getuser error', error)
         res.status(400).json({ message: 'Error fetching data' })

@@ -12,6 +12,8 @@ import { CustomError } from "../middlewares/errorMiddleWare";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
 import { accessTokenOptions, refreshTokenOptions } from "../../infrastructure/config/jwt";
 import { loginAdmin } from "../../application/use-cases/admin/adminLogin";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import { getUserData } from "../../application/use-cases/user/getUserData";
 
 
 export const signUp = async (req: Request, res: Response , next: NextFunction) => {
@@ -54,6 +56,20 @@ export const verifyOtpHandler = async (req: Request, res: Response) => {
 }
 
 
+export const getUserDataController = async (req: Request, res : Response, next: NextFunction) => {
+    try{
+        const {userId} = req.params
+        if(!userId) {
+            throw new CustomError('User id not found', 400)
+        }
+        const response = await getUserData(userId);
+        console.log(response)
+            
+        res.status(200).json({success: true, user : response , message: 'User data sent to front end'})
+    }catch(error : any){
+        next(error)
+    }
+}
 export const loginHandler = async (req: Request, res : Response, next: NextFunction) => {
     try{
         const {email, password, role} = req.body;
@@ -154,11 +170,16 @@ export const validateUser = async(req: Request, res: Response):Promise<any> =>{
         return res.status(401).json({message : 'Access token expired'})
     }
     try{
-        const verifyUser =  verifyAccessTokenUseCase(accessToken);
-        console.log(verifyUser)
-        return res.status(200).json({verifyUser})
+        const verifyUser = await verifyAccessTokenUseCase(accessToken);
+        return res.status(200).json({user:verifyUser, message: 'User verified'})
     }catch(error){
-        return res.status(401).json({message: "Unauthorized"})
+        if (error instanceof TokenExpiredError) {
+            res.status(401).json({ message: 'Access token expired' })
+        } else if (error instanceof JsonWebTokenError) {
+            res.status(401).json({ message: 'Invalid access token' })
+        } else {
+            res.status(400).json({ message: 'Unauthorized' })
+        }
     }
 }
 

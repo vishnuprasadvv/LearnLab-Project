@@ -7,11 +7,12 @@ export interface IUser extends Document {
     email : string;
     role : string;
     isVerified: boolean;
-    avatar : {public_id: string, url : string},
+    profileImageUrl? : string,
+    profileImagePublicId?:string,
     status: string,
     phone: string,
     googleId : string,
-    _id: string
+    _id: string,
 }
 
 const UserSchema : Schema = new Schema({
@@ -24,8 +25,8 @@ const UserSchema : Schema = new Schema({
     isVerified : {type :Boolean, default: false},
     status : {type:String, enum: ['active', 'inactive'], default: 'active'},
     googleId : {type: String},
-    
-    avatar : {public_id: String, url : String}
+    profileImageUrl : {type: String},
+    profileImagePublicId : {type: String},
 },{timestamps: true});
 
 

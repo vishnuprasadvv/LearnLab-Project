@@ -3,10 +3,24 @@ import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import bcrypt from 'bcryptjs'
 
 
-export const getAllUsers = async () =>{
-    const users = await User.find()
+export const getAllUsers = async (search : string, page: number | string, limit: number | string) =>{
+    
+    //set query for fetching search data
+    const query ={
+        $and: [
+          { role: { $ne: 'admin' } }, // Exclude users with role 'admin'
+          search
+            ? { $or: [{ firstName: new RegExp(search, 'i') }, { lastName: new RegExp(search, 'i') }] }
+            : {},
+        ],
+      };
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const users = await User.find(query).sort({createdAt: -1}).skip(skip).limit(Number(limit))
+    const total = await User.countDocuments(query)
     if(!users) throw new CustomError('failed to get users list', 400)
-    return users
+    return {users, total}
 }
 
 export const deleteUser = async (userid: string) => {

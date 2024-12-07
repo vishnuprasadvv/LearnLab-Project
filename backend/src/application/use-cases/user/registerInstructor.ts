@@ -8,6 +8,7 @@ interface formDataInterface extends InstructorDocument{
 }
 
 export const instructorRegister = async(userId : string, formData: formDataInterface) => {
+    console.log(userId)
         const {qualifications, experience, expertise, comment, password} = formData;
         const user:any = await User.findById(userId)
         //console.log(user)

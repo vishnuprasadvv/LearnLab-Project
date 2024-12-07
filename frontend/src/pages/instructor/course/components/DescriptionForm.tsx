@@ -6,6 +6,7 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface DescriptionFormProps {
     initialData: {
@@ -45,7 +46,7 @@ const DescriptionForm = ({
                 ) : (
                     <>
                     <Pencil className='h-4 w-4 mr-2'/>
-                    Edit title
+                    Edit description
                     </>
                 )}
                 
@@ -63,8 +64,8 @@ const DescriptionForm = ({
                     render={({field})=> (
                         <FormItem>
                             <FormControl>
-                                <Input disabled={isSubmitting}
-                                placeholder="e.g. 'Advanced web development'" {...field} />
+                                <Textarea disabled={isSubmitting}
+                                placeholder="e.g. 'This course is about...'" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

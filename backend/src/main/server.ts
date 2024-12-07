@@ -6,7 +6,7 @@ import { connectDB } from '../infrastructure/repositories/dbConnection';
 import authRoutes from '../interfaces/routes/authRoutes'
 import bodyParser from 'body-parser'
 import { errorMiddleWare } from '../interfaces/middlewares/errorMiddleWare';
-import protectedRoutes from '../interfaces/routes/studentRoutes';
+import studentRoutes from '../interfaces/routes/studentRoutes';
 import adminRouter from '../interfaces/routes/adminRoutes';
 import session from 'express-session';
 import { config } from '../infrastructure/config/config';
@@ -56,7 +56,7 @@ app.get('/', (req: Request , res:Response, next : NextFunction) => {
 
 //authroutes 
 app.use('/api/auth', authRoutes)
-app.use('/api/student', protectedRoutes)
+app.use('/api/student', studentRoutes)
 app.use('/api/admin', adminRouter)
 
 //unknown routes 

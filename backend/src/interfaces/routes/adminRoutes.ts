@@ -3,25 +3,33 @@ import { createUserController, deleteUserController, getAllUsersController, getE
 import { authorizeRole, isAdminAuthenticated } from "../middlewares/authMiddleware";
 import { acceptInstructorApplicationHandler, getInstructorApplicationHandler, getInstructorsHandler, rejectInstructorApplicationHandler } from "../controllers/admin/instructors/instructorsAdminController.ts";
 import { adminLoginHandler, adminLogoutHandler, refreshAdminTokenHandler } from "../controllers/authController";
+import { createCategoryController, getAllCategoriesAtOnceController, getCategories, updateCategoryController } from "../controllers/admin/categories/categoriesController";
 
 const adminRouter = Router();
 
 adminRouter.post('/refresh-token', refreshAdminTokenHandler)
-
-adminRouter.get('/users',isAdminAuthenticated,  authorizeRole(['admin']), getAllUsersController)
-adminRouter.patch('/users/:id/status',isAdminAuthenticated,  authorizeRole(['admin']), toggleStatusController)
-adminRouter.post('/users/create',isAdminAuthenticated,  authorizeRole(['admin']), createUserController)
-adminRouter.get('/users/edit/:id',isAdminAuthenticated,  authorizeRole(['admin']), getEditUserController)
-adminRouter.post('/users/edit/:id',isAdminAuthenticated,  authorizeRole(['admin']), postEditUserController)
-
 adminRouter.post ('/login', adminLoginHandler)
-
 adminRouter.post('/logout', adminLogoutHandler)
-//instructors
-adminRouter.get('/instructors',isAdminAuthenticated,  authorizeRole(['admin']), getInstructorsHandler )
-adminRouter.get('/instructor/application/:id',isAdminAuthenticated,  authorizeRole(['admin']), getInstructorApplicationHandler )
-adminRouter.post('/instructor/application/:id/accept',isAdminAuthenticated,  authorizeRole(['admin']), acceptInstructorApplicationHandler )
-adminRouter.post('/instructor/application/:id/reject',isAdminAuthenticated,  authorizeRole(['admin']), rejectInstructorApplicationHandler )
+adminRouter.get('/categories', getCategories)
+adminRouter.get('/categories/all', getAllCategoriesAtOnceController)
+adminRouter.post('/categories/add', createCategoryController)
+adminRouter.put('/categories/:id/edit', updateCategoryController)
+
+adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
+    .get('/users', getAllUsersController)
+    .patch('/users/:id/status',toggleStatusController)
+    .post('/users/create',createUserController)
+    .route('/users/edit/:id')
+    .get(getEditUserController)
+    .post(postEditUserController)
+
  
+adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
+    .get('/instructors',getInstructorsHandler)
+    .get('/instructor/application/:id',getInstructorApplicationHandler)
+    .post('/instructor/application/:id/accept',acceptInstructorApplicationHandler)
+    .post('/instructor/application/:id/reject',rejectInstructorApplicationHandler)
+
+
 
 export default adminRouter

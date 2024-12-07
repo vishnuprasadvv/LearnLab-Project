@@ -19,6 +19,10 @@ export const loginUser = async (email : string, password: string , role: string)
     if(user.role !== 'student' && user.role !== 'instructor'){
         throw new CustomError('You are not authorized', 400)
     }
+    //check user blocked or not 
+    if(user.status === 'inactive'){
+        throw new CustomError('You are blocked', 400)
+    }
     const isPasswordValid = await comparePassword(password, user.password)
     if(!isPasswordValid) throw new Error('Invalid credentials');
 

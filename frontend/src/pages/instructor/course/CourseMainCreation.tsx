@@ -3,6 +3,7 @@ import { LayoutDashboard, Pencil } from "lucide-react";
 import React from "react";
 import DescriptionForm from "./components/DescriptionForm";
 import TitleForm from "./components/TitleForm";
+import ImageForm from "./components/ImageForm";
 
 const CourseMainCreation = () => {
   const initialData = {
@@ -10,6 +11,9 @@ const CourseMainCreation = () => {
   };
   const descriptionInitialData = {
     description: "description",
+  };
+  const imageInitialData = {
+    imageUrl: "imageUrl",
   };
 
   return (
@@ -31,6 +35,7 @@ const CourseMainCreation = () => {
           </div>
           <TitleForm initialData={initialData} courseId={"dfsd"} />
           <DescriptionForm initialData={descriptionInitialData} courseId={"dfsd"} />
+          <ImageForm initialData={descriptionInitialData} courseId={"dfsd"} />
         </div>
       </div>
     </div>
