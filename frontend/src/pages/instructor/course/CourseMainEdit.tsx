@@ -154,6 +154,11 @@ const CourseMainCreation = () => {
             <h2 className="text-xl font-semibold">Create your course</h2>
           </div>
         </div>
+          <div>
+            <Link to={'/instructor/courses/create/'}>
+            <Button>Go to lectures</Button>
+            </Link>
+          </div>
       </div>
 
       <FormProvider {...methods}>

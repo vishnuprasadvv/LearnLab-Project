@@ -10,6 +10,7 @@ import studentRoutes from '../interfaces/routes/studentRoutes';
 import adminRouter from '../interfaces/routes/adminRoutes';
 import session from 'express-session';
 import { config } from '../infrastructure/config/config';
+import instructorRouter from '../interfaces/routes/instructorRoutes';
 
 const PORT = config.app.PORT
 
@@ -58,6 +59,7 @@ app.get('/', (req: Request , res:Response, next : NextFunction) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/student', studentRoutes)
 app.use('/api/admin', adminRouter)
+app.use('/api/instructor', instructorRouter)
 
 //unknown routes 
 app.all('*', (req: Request, res: Response, next : NextFunction) => {

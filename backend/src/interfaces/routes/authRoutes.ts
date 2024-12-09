@@ -34,4 +34,5 @@ router.post('/profile/edit', isAuthenticated, authorizeRole(['student','instruct
 
 router.get('/user-data/:userId',isAuthenticated, authorizeRole(['student','instructor']), getUserDataController)
 
+
 export default router;

@@ -161,6 +161,8 @@ const ProfileEdit = () => {
       setProfileImage(null)
     } catch (error) {
       console.log('error changing profile image', error)
+    }finally{
+      setIsUploading(false)
     }
   }
   return (

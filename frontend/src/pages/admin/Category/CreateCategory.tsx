@@ -122,6 +122,7 @@ const CreateCategory = () => {
     </div>
 
     <span className='pt-5 font-semibold'>Select parent category</span>
+    
     <div>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

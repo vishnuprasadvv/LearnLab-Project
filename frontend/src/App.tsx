@@ -34,11 +34,11 @@ import AddUser from "./components/Admin/AddUser";
 import EditUser from "./components/Admin/EditUser";
 import InstructorApplication from "./components/Admin/InstructorApplication";
 import InstructorManagement from "./components/Admin/InstructorManagement";
-import CreateCourse from "./components/instructor/CreateCourse";
 import Categories from "./components/Admin/Categories";
 import CreateCategory from "./pages/admin/Category/CreateCategory";
 import EditCategory from "./pages/admin/Category/EditCategory";
 import CourseMainCreation from "./pages/instructor/course/CourseMainCreation";
+import LectureCreation from "./pages/instructor/course/LectureCreation";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -105,8 +105,9 @@ function App() {
               <Route path="messages" element={<Messages />} />
               <Route path="notifications" element={<Notifications />} />
 
-              <Route path="courses/create" element={<CreateCourse />} />
-              <Route path="courses/create/main" element={<CourseMainCreation />} />
+
+              <Route path="courses/create" element={<CourseMainCreation />} />
+              <Route path="courses/create/lecture" element={<LectureCreation />} />
             </Route>
           </Route>
 

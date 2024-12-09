@@ -5,8 +5,8 @@ import { upload } from "../../infrastructure/middlewares/multer";
 
 const router = Router();
 
-router.get('/home', isAuthenticated, authorizeRole(['student']), studentHome)
-router.post('/profile/:id/update-image', upload.single('profileImage'), updateProfileImageController)
+router.get('/home', isAuthenticated, authorizeRole(['student','instructor']), studentHome)
+router.post('/profile/:id/update-image', upload.single('profileImage'), isAuthenticated, authorizeRole(['student','instructor']), updateProfileImageController)
 
 
 export default router;

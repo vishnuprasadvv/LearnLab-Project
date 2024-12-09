@@ -13,3 +13,6 @@ export const upload = multer({
         }
     }
 })
+
+
+export const uploadVideo = multer({ dest: "uploads/" });

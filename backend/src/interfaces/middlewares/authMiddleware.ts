@@ -2,13 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../../utils/jwtHelper";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
-interface AuthenticatedRequest extends Request {
-    user?: {
-        id: string;
-        role: string;
-    };
-}
-
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
     const accessToken = req.cookies?.accessToken;
     const refreshToken = req.cookies?.refreshToken;
@@ -27,7 +20,8 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
             return
         }
         //attch access token to request object
-        (req as AuthenticatedRequest).user = decoded;
+        // (req as AuthenticatedRequest).user = decoded;
+        req.user = decoded;
         next();
     } catch (error) {
         console.log('isAuthMiddleware error',error)
@@ -62,7 +56,7 @@ export const isAdminAuthenticated = (req: Request, res: Response, next: NextFunc
         //attch access token to request object
         
 
-        (req as AuthenticatedRequest).user = decoded;
+        req.user = decoded;
         next();
     } catch (error) {
         console.log('isAuthMiddleware error',error)
@@ -80,7 +74,7 @@ export const isAdminAuthenticated = (req: Request, res: Response, next: NextFunc
 
 export const authorizeRole = (roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction): void => {
-        const authReq = req as AuthenticatedRequest
+        const authReq = req
         console.log('from authorize role')
         console.log(authReq.user)
         if (!authReq.user) {

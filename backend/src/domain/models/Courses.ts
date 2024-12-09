@@ -1,16 +1,18 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface ICourses extends Document{
-    userId:string,
+    instructor:string,
     title:string,
     description?:string,
     imageUrl ?: string,
+    imagePublicId ?: string,
     price?: number,
     isPublished? : boolean,
-    categoryId ?: string,
+    category ?: string,
     level?: string,
-    attachments : Attachment[],
-    _id: string
+    _id: string,
+    duration? : number,
+    isDeleted : boolean
 }
 
 export interface Attachment extends Document{
@@ -26,16 +28,18 @@ const AttachmentSchema: Schema = new Schema({
   });
 
 const CourseSchema  : Schema = new Schema({
-    userId:{ type: Schema.Types.ObjectId, ref: 'User', required: true},
+    instructor:{ type: Schema.Types.ObjectId, ref: 'User', required: true},
     title :{type: String, required: true},
-    description : {type: String},
-    imageUrl: {type: String},
-    price: {type: Number},
-    isPublished: {type: Boolean, enum:['draft','published'], default:'draft'},
-    categoryId: { type: Schema.Types.ObjectId, ref: 'Category'},
+    description : {type: String , required: true},
+    duration : {type: Number , required: true},
+    imageUrl: {type: String, required: true},
+    imagePublicId:{type: String, required: true},
+    price: {type: Number, required: true},
+    isPublished: {type: Boolean, default : false},
+    category: { type: Schema.Types.ObjectId, ref: 'CourseCategory', required: true},
     isDeleted: {type: Boolean, default: false},
-    level: {type:String, enum: ['beginner','intermediate', 'advanced']},
-    attachments: [AttachmentSchema]
+    level: {type:String, enum: ['beginner','intermediate', 'advanced'], required: true},
+    lectures: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lecture' }],
     
 },{timestamps: true});
 
