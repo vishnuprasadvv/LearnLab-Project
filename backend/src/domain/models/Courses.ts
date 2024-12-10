@@ -12,20 +12,10 @@ export interface ICourses extends Document{
     level?: string,
     _id: string,
     duration? : number,
-    isDeleted : boolean
+    isDeleted : boolean,
+    lectures?: string[]
 }
 
-export interface Attachment extends Document{
-    title: string,
-    type?: string,
-    url : string,
-}
-
-const AttachmentSchema: Schema = new Schema({
-    title: { type: String, required: true },
-    type: { type: String, default: 'file' }, // Default type if not provided
-    url: { type: String, required: true },
-  });
 
 const CourseSchema  : Schema = new Schema({
     instructor:{ type: Schema.Types.ObjectId, ref: 'User', required: true},

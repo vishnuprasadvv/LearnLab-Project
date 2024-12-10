@@ -1,13 +1,14 @@
 import mongoose , {Schema, Document, Model} from "mongoose";
 
-interface IVideo {
+export interface IVideo {
     title: string;
     url: string;
+    publicId: string;
     duration: number;
     isFree: boolean
 }
 
-interface ILectureDocument extends Document{
+export interface ILectureDocument extends Document{
     title: string,
     description: string,
     course: mongoose.Types.ObjectId;
@@ -15,14 +16,16 @@ interface ILectureDocument extends Document{
     order : number;
     createdAt: Date;
     updatedAt: Date;
-    isFree: boolean
+    isFree: boolean;
+    _id: string
 }
 
 const VideoSchema : Schema = new Schema({
     title : {type: String, required: true, trim: true},
     url : {type: String, required :true},
+    publicId : {type: String, required :true},
     duration: {type: Number, required: true, min: 0},
-    isFree: {type: Boolean , default: false}
+    isFree: {type: Boolean , default: false},
 })
 
 const LectureSchema : Schema <ILectureDocument> = new Schema ( 

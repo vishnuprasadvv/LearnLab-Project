@@ -1,5 +1,6 @@
 import Courses, { ICourses } from "../../domain/models/Courses";
 import { ICourseRepository } from "../../application/repositories/ICourseRepository";
+import mongoose from "mongoose";
 
 
 export class CourseRepositoryClass implements ICourseRepository{
@@ -20,6 +21,10 @@ export class CourseRepositoryClass implements ICourseRepository{
    }
    async getCourseByName(title: string) : Promise<ICourses | null> {
     return await Courses.findOne({title})
+}
+
+async addLectureToCourse(courseId: string, lectureId: string, options: {session?: mongoose.ClientSession} ={}) : Promise<void> {
+    await Courses.findByIdAndUpdate(courseId, {$push:{lectures: lectureId}}, {new: true , session: options.session})
 }
     
 }

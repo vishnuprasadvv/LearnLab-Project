@@ -20,8 +20,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createCourseLectureApi } from "@/api/instructorApi";
+import { useParams } from "react-router-dom";
 
 const LectureCreation: React.FC = () => {
+
+  const {courseId} = useParams();
   const methods = useForm<CourseData>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -47,9 +50,8 @@ const LectureCreation: React.FC = () => {
 
   const {
     control,
-    register,
     handleSubmit,
-    formState: { errors },
+    formState:{errors}
   } = methods;
 
   const {
@@ -73,6 +75,9 @@ const LectureCreation: React.FC = () => {
   const onSubmit = async (data: CourseData) => {
     console.log(data);
     try {
+      if(!courseId){
+        throw new Error('Course id not found')
+      }
       const formData = new FormData();
       data.lectures.forEach((lecture, lectureIndex) => {
         lecture.videos.forEach((video, videoIndex) => {
@@ -97,11 +102,21 @@ const LectureCreation: React.FC = () => {
             video.order.toString()
           )
         })
+
+        formData.append(
+          `lectures[${lectureIndex}].title`, lecture.title
+        );
+        formData.append(
+          `lectures[${lectureIndex}].description`, lecture.description
+        );
+        formData.append(
+          `lectures[${lectureIndex}].order`, lecture.order.toString()
+        );
       })
-      const courseId = "6756e0c35a428f31c4c8aa55"
+      
       const response = await createCourseLectureApi (formData, courseId);
-      //console.log(response)
-      toast.success("Course and lectures added successfully!");
+      console.log(response)
+      toast.success(response.message || "Course and lectures added successfully!");
     } catch (error: any) {
       toast.error(error);
     }

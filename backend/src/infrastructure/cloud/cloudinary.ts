@@ -78,3 +78,31 @@ export const uploadCourseImageToCloudinary = async (fileBuffer:Buffer) => {
         throw new Error('Failed to upload image to Cloudinary')
     }
 }
+
+export const uploadVideoToCloudinary = async (fileBuffer: Buffer) => {
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "video", // Specify that this is a video
+          folder: "lecture_videos", // Organize videos in a folder in Cloudinary
+        },
+        (error, result) => {
+          if (error) {
+            console.error("Cloudinary upload failed:", error);
+            return reject(new Error("Failed to upload to Cloudinary"));
+          }
+          resolve(result);
+        }
+      );
+
+      // Pipe the file buffer to the upload stream
+      streamifier.createReadStream(fileBuffer).pipe(uploadStream);
+    });
+
+    return result as any; // Return the Cloudinary response
+  } catch (error) {
+    console.error("Error uploading to Cloudinary:", error);
+    throw new Error("Failed to upload video to Cloudinary");
+  }
+};

@@ -107,7 +107,7 @@ function App() {
 
 
               <Route path="courses/create" element={<CourseMainCreation />} />
-              <Route path="courses/create/lecture" element={<LectureCreation />} />
+              <Route path="courses/create/:courseId/lecture" element={<LectureCreation />} />
             </Route>
           </Route>
 

@@ -126,6 +126,8 @@ const CourseMainCreation = () => {
       await toast.promise(response,{
         loading: 'Course is creating, Please wait...',
         success: (data: any) => {
+          navigate(`/instructor/courses/create/${data.data._id}/lecture`)
+          console.log(data)
           return data.message || 'Course created successfully'
         } ,
         error: (err)=> {
