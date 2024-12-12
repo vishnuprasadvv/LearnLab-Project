@@ -42,6 +42,10 @@ import LectureCreation from "./pages/instructor/course/LectureCreation";
 import CourseOverview from "./pages/instructor/course/CourseOverview";
 import CourseMainEdit from "./pages/instructor/course/CourseMainEdit";
 import LectureEdit from "./pages/instructor/course/LectureEdit";
+import CoursesPage from "./pages/students/coursesPage/CoursesPage";
+import CourseDetails from "./pages/students/courseDetails/CourseDetails";
+import AdminCourseManagement from "./pages/admin/courses/CourseManagement";
+import CourseOverviewAdmin from "./pages/admin/courses/CourseOverview";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -76,10 +80,12 @@ function App() {
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/course-details/:id" element={<CourseDetails />} />
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />} />
 
             {/* Profile */}
             <Route path="/profile" element={<ProfileSidebar />}>
@@ -130,6 +136,8 @@ function App() {
             <Route path="categories/create" element={<CreateCategory />} />
             <Route path="categories/:id/edit" element={<EditCategory />} />
             <Route path="instructors" element={<InstructorManagement />} />
+            <Route path="courses" element={<AdminCourseManagement />} />
+            <Route path="courses/:courseId/overview" element={<CourseOverviewAdmin />} />
             <Route
               path="instructors/application/:id"
               element={<InstructorApplication />}

@@ -16,13 +16,15 @@ export class CourseRepositoryClass implements ICourseRepository{
         )
    }
 
-   async getAllCourses() : Promise<ICourses[] | null>{
-        return await Courses.find({isDeleted: false}).populate([
+   async getAllCourses(userId: string) : Promise<ICourses[] | null>{
+        return await Courses.find({instructor: userId ,isDeleted: false}).populate([
             { path: 'instructor', select: '-password -phone -profileImagePublicId' },
             {path: 'category', select: 'name _id'}
         ])
         .sort({createdAt: -1})
    }
+
+
    async getCourseByName(title: string) : Promise<ICourses | null> {
     return await Courses.findOne({title, isDeleted: false})
 }
@@ -74,5 +76,20 @@ async publishCourse(courseId: string, publishValue : boolean): Promise<ICourses 
   return await Courses.findOneAndUpdate({_id : courseId, isDeleted: false}, 
     {$set: {isPublished: publishValue}}, 
     { new: true})
+}
+
+async getAllCoursesUsers(): Promise<ICourses[] | null> {
+  return await Courses.find({isDeleted: false, isPublished: true}).populate([
+    {path: 'instructor', select: '-password -profileImagePublicId'},
+    {path: 'category', select: 'name _id'}
+  ]).sort({createdAt: -1})
+}
+
+async getAllCoursesAdmin() : Promise<ICourses[] | null>{
+  return await Courses.find({isDeleted: false}).populate([
+      { path: 'instructor', select: '-password -phone -profileImagePublicId' },
+      {path: 'category', select: 'name _id'}
+  ])
+  .sort({createdAt: -1})
 }
 }

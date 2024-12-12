@@ -159,3 +159,42 @@ export const editCategory = async (id: string, name:string, description: string,
     throw error
   }
 }
+
+export const getAllCoursesAdminApi = async () => {
+  try {
+      const response = await adminInterceptorApi.get(`${API_URL}/admin/courses`, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    } 
+}
+
+export const getCourseByIdAdminApi = async (courseId: string) => {
+  try {
+      const response = await adminInterceptorApi.get(`${API_URL}/admin/courses/${courseId}`, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    }
+  
+}
+
+export const deleteCourseAdminApi = async (courseId: string) => {
+  try {
+      const response = await adminInterceptorApi.patch(`${API_URL}/admin/courses/${courseId}/delete`, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    }
+  
+}
+
+export const publishCourseAdminApi = async (courseId: string , publishValue : boolean) => {
+  try {
+      const response = await adminInterceptorApi.patch(`${API_URL}/admin/courses/${courseId}/publish`,{publishValue}, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    }
+  
+}

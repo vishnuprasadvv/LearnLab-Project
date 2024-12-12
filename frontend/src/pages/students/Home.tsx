@@ -1,9 +1,6 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import React, { useEffect } from 'react'
+import { useAppSelector } from '@/app/hooks';
 import { useNavigate } from 'react-router-dom'
-import HomeHero from '../../assets/HomeHero.svg'
 import bannertwo from '../../assets/whychooselearnlab.svg'
-import featured from '../../assets/featured.svg'
 import HeroSection from '../../components/common/Hero/HeroSection'
 import Courses from './Courses';
 

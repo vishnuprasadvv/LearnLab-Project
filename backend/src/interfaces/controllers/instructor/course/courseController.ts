@@ -73,7 +73,11 @@ export const editCourseController = async( req: Request, res: Response, next : N
 
 export const getAllCoursesController = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const courses = await getAllCoursesUseCase.execute()
+      const user = req.user;
+      if(!user || user.role !== 'instructor'){
+        throw new CustomError('Instructor not found', 400)
+      }
+        const courses = await getAllCoursesUseCase.execute(user.id)
         res.status(200).json({message: 'All courses fetched successfully', success : true, data: courses})
     } catch (error) {
         next(error)

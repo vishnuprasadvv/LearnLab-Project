@@ -9,7 +9,7 @@ export interface ICourseRepository{
 
     getCourseByName(title: string) : Promise<ICourses | null>
 
-    getAllCourses() : Promise<ICourses[] | null>
+    getAllCourses(userId: string) : Promise<ICourses[] | null>
 
     addLectures(courseId: string, lectures: any[]): Promise<ICourses | null>
 
@@ -20,4 +20,10 @@ export interface ICourseRepository{
     updateLecture(courseId: string, udpatedlectureData: any[]): Promise<ICourses | null>
 
     publishCourse(courseId: string, publishValue : boolean) : Promise<ICourses | null>
+
+    //users
+
+    getAllCoursesUsers () : Promise<ICourses[] | null >
+
+    getAllCoursesAdmin() : Promise<ICourses[] | null>
 }

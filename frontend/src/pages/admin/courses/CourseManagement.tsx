@@ -1,10 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../../components/ui/button";
 import { useEffect, useState } from "react";
 import { ICourses } from "@/types/course";
-import { deleteCourseApi, getAllCoursesListApi, publishCourseApi } from "@/api/instructorApi";
 import toast from "react-hot-toast";
-import { Input } from "../../components/ui/input";
 import { SlOptionsVertical } from "react-icons/sl";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
@@ -16,8 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { deleteCourseAdminApi, getAllCoursesAdminApi, publishCourseAdminApi } from "@/api/adminApi";
 
-const InstructorCourses = () => {
+const AdminCourseManagement = () => {
   const [courses, setCourses] = useState<ICourses[] | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate =  useNavigate()
@@ -26,12 +26,11 @@ const InstructorCourses = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await getAllCoursesListApi();
+        const response = await getAllCoursesAdminApi();
         setCourses(response.data);
         console.log(response.data);
       } catch (error: any) {
-        toast.error(
-          error.response.data || error.message || "failed to fetch courses"
+        toast.error( error.message || "failed to fetch courses"
         );
       } finally {
         setLoading(false);
@@ -41,16 +40,16 @@ const InstructorCourses = () => {
   }, []);
 
   const handleEditButton = (courseId:string) => {
-    navigate(`/instructor/courses/${courseId}/edit`)
+    navigate(`/admin/courses/${courseId}/edit`)
   }
   const handleOpenCourse = (courseId:string) => {
-    navigate(`/instructor/courses/${courseId}/overview`)
+    navigate(`/admin/courses/${courseId}/overview`)
   }
 
   const handleDeleteButton = async() => {
       if (!selectedCourseId) return;
     try {
-        const response = await deleteCourseApi(selectedCourseId)
+        const response = await deleteCourseAdminApi(selectedCourseId)
         console.log(response)
         toast.success(response.data.message || 'Course deleted successfully')
         setCourses((prev) => 
@@ -63,10 +62,9 @@ const InstructorCourses = () => {
 
   const handlePublishCourse = async (courseId: string, isPublished : any) => {
 
-
     try {
       setLoading(true);
-      const response = await publishCourseApi(courseId, !isPublished);
+      const response = await publishCourseAdminApi(courseId, !isPublished);
       setCourses((prev)=> {
         if(!prev) return null;
 
@@ -101,7 +99,7 @@ const InstructorCourses = () => {
             className="mb-4 p-2 border w-full border-blue-100 rounded-full h-10 sm:w-1/3 ml-2 shadow-md shadow-blue-100"
           />
           {/* <Button variant='outline' size='icon' onClick={handleSearch}><CiSearch /></Button> */}
-          <Link to={"/instructor/courses/create"} className=" ml-auto">
+          <Link to={"create"} className=" ml-auto">
             <Button className="bg-blue-600 rounded-full hover:bg-blue-700">
               Create course
             </Button>
@@ -219,4 +217,4 @@ const InstructorCourses = () => {
   );
 };
 
-export default InstructorCourses;
+export default AdminCourseManagement;

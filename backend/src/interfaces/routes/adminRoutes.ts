@@ -4,6 +4,7 @@ import { authorizeRole, isAdminAuthenticated } from "../middlewares/authMiddlewa
 import { acceptInstructorApplicationHandler, getInstructorApplicationHandler, getInstructorsHandler, rejectInstructorApplicationHandler } from "../controllers/admin/instructors/instructorsAdminController.ts";
 import { adminLoginHandler, adminLogoutHandler, refreshAdminTokenHandler } from "../controllers/authController";
 import { createCategoryController, getAllCategoriesAtOnceController, getCategories, updateCategoryController } from "../controllers/admin/categories/categoriesController";
+import { deleteCourseController, getAllCoursesController, getCourseController, publishCourseController } from "../controllers/admin/courses/coursesController";
 
 const adminRouter = Router();
 
@@ -29,6 +30,12 @@ adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
     .get('/instructor/application/:id',getInstructorApplicationHandler)
     .post('/instructor/application/:id/accept',acceptInstructorApplicationHandler)
     .post('/instructor/application/:id/reject',rejectInstructorApplicationHandler)
+
+adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
+    .get('/courses', getAllCoursesController)
+    .patch('/courses/:courseId/publish', publishCourseController)
+    .patch('/courses/:id/delete', deleteCourseController)
+    .get('/courses/:id',getCourseController)
 
 
 
