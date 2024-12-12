@@ -1,4 +1,4 @@
-import { Card, CardHeader } from "../ui/card"
+import { Card, CardHeader } from "../../components/ui/card"
 
 
 const Dashboard = () => {

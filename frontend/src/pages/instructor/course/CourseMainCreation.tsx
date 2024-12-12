@@ -127,6 +127,7 @@ const CourseMainCreation = () => {
         loading: 'Course is creating, Please wait...',
         success: (data: any) => {
           navigate(`/instructor/courses/create/${data.data._id}/lecture`)
+          sessionStorage.setItem('courseTitle', data.data.title)
           console.log(data)
           return data.message || 'Course created successfully'
         } ,
@@ -146,7 +147,7 @@ const CourseMainCreation = () => {
   const watchImage = watch("image");
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-y-2">
           <div className="flex items-center gap-x-2">
@@ -254,9 +255,7 @@ const CourseMainCreation = () => {
                         Course image
                       </div>
                       <FormControl className="w-full">
-                        <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-                          <ImageIcon className="h-10 w-10 text-slate-500" />
-                        </div>
+                       
                         <div className="grid w-full max-w-sm items-center gap-1.5">
                           <Label htmlFor="image">Image</Label>
                           <Input
@@ -271,14 +270,15 @@ const CourseMainCreation = () => {
                             }}
                           />
                         </div>
+                        
                       </FormControl>
 
                       {watchImage && (
-                        <div className="mt-2">
+                        <div className="mt-2 place-items-center sm:place-items-start">
                           <img
                             src={URL.createObjectURL(watchImage)}
                             alt="Course Preview"
-                            className="w-32 h-32 object-cover rounded-md"
+                            className="w-58 h-32 object-cover rounded-md"
                           />
                         </div>
                       )}

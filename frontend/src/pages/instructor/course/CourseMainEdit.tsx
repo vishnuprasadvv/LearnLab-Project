@@ -1,4 +1,4 @@
-import { ImageIcon, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,33 +17,66 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { FormControl } from "@mui/material";
+import { duration, FormControl } from "@mui/material";
 import toast from "react-hot-toast";
-import { createCourseApi } from "@/api/instructorApi";
-import { useAppSelector } from "@/app/hooks";
+import { editCourseApi, getCourseById } from "@/api/instructorApi";
 import { useEffect, useState } from "react";
 import { getAllCategoriesAtOnce } from "@/api/adminApi";
 import { Category } from "@/types/categories";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ICourses } from "@/types/course";
+import _ from 'lodash'
 
-const CourseMainCreation = () => {
-  const { user } = useAppSelector((state) => state.auth);
+const CourseMainEdit = () => {
   const [categories, setCategories] = useState<Category[] | null>([]);
   const [loading, setLoading] = useState(false);
+  const [course, setCourse] = useState<ICourses | null>(null)
+  const {courseId} = useParams()
   const navigate = useNavigate()
+  const [initialFormData, setInitialFormData] = useState({})
+
+  //fetch current course data
+  const getCourse = async() => {
+    if (!courseId) {
+      throw new Error("Course id not found");
+    }
+    try {
+      setLoading(true);
+      const response = await getCourseById(courseId);
+      setCourse(response.data);
+      console.log(response.data)
+      const resultdata = response.data
+      methods.setValue('title', resultdata.title)
+      methods.setValue('description', resultdata.description)
+      methods.setValue('category', resultdata.category?.name)
+      methods.setValue('price', resultdata.price.toString())
+      methods.setValue('duration', resultdata.duration.toString())
+      methods.setValue('level', resultdata.level)
+      methods.setValue('image', resultdata.imageUrl || null)
+      
+      setInitialFormData(methods.getValues())
+    } catch (error: any) {
+      toast.error(
+        error.message || "failed to fetch course"
+      );
+      navigate('/instructor/courses')
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     const getCategories = async () => {
       try {
         const response = await getAllCategoriesAtOnce();
         setCategories(response.categories);
-        console.log(response);
       } catch (error) {
         console.error("error fetching categories", error);
       }
     };
+    getCourse()
     getCategories();
-  }, [loading]);
+  }, []);
 
   const formSchema = z.object({
     title: z.string().min(3, "Title must be atleast 3 characters"),
@@ -73,15 +106,29 @@ const CourseMainCreation = () => {
       required_error: "Level is required",
     }),
     image: z
-      .instanceof(File, { message: "Image must be a file." }) // Check that it's a File object
-      .refine((file) => file?.size > 0, { message: "Image is required." }) // Check that a file is uploaded
-      .refine((file) => file.size <= 5 * 1024 * 1024, {
-        message: "Image size must be less than 5MB.",
-      }) // File size validation
-      .refine(
-        (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-        { message: "Image must be in JPEG, PNG, or GIF format." }
-      ),
+    .union([
+      z.instanceof(File), // If a new image is uploaded
+      z.string(), // If the existing image URL is used
+    ])
+    .refine(
+      (value) => {
+        if (typeof value === "string") return value !== ""; // Existing image must have a URL
+        if (value instanceof File) return value.size > 0; // Uploaded image must be valid
+        return false;
+      },
+      { message: "An image is required." }
+    )
+    .refine(
+      (value) =>
+        typeof value === "string" ||
+        (value instanceof File &&
+          value.size <= 5 * 1024 * 1024 &&
+          ["image/jpeg", "image/png", "image/gif"].includes(value.type)),
+      {
+        message:
+          "Image must be in JPEG, PNG, or GIF format and less than 5MB.",
+      }
+    ),
   });
 
   const methods = useForm({
@@ -106,6 +153,20 @@ const CourseMainCreation = () => {
     setLoading(true);
 
     try {
+      if(!courseId){
+        console.error('course id not found')
+        return 
+      }
+      console.log('data', data)
+      console.log('initial data', initialFormData)
+      const isUnchanged =  _.isEqual({...data, duration: data.duration.toString(), price: data.price.toString()}, initialFormData)
+      if(isUnchanged){
+        console.log('value not changed')
+      }
+      if(isUnchanged){
+        toast('No Changes detected',{icon:'⚠️'})
+        return;
+      }
       const selectedCategoryData = categories?.find((item)=> item.name === data.category)
       if(!selectedCategoryData){
         throw new Error('Selected category not found')
@@ -118,44 +179,59 @@ const CourseMainCreation = () => {
       formData.append("duration", data.duration.toString());
       formData.append("level", data.level);
 
-      if (data.image) {
+      if (data.image instanceof File) {
         formData.append("courseImage", data.image);
       }
 
-      const response = createCourseApi(formData);
+      const response = editCourseApi(formData, courseId);
       await toast.promise(response,{
-        loading: 'Course is creating, Please wait...',
+        loading: 'Course is editing, Please wait...',
         success: (data: any) => {
-          return data.message || 'Course created successfully'
+          setCourse(data.data)
+          getCourse()
+          return data.message || 'Course edited successfully'
         } ,
         error: (err)=> {
-          return err.message || 'Course creation failed'
+          return err.message || 'Course edit failed'
         }
       })
     } catch (error: any) {
       toast.error(error.message);
-      console.error("create course error", error);
+      console.error("Edit course error", error);
     } finally {
       setLoading(false);
     }
   };
 
   // Watch image file
-  const watchImage = watch("image");
+  const watchImage =
+  watch("image") instanceof Blob && watch("image")?.type.startsWith("image/")
+    ? watch("image")
+    : null;
+  useEffect(() => {
+    if (watchImage) {
+      const objectUrl = URL.createObjectURL(watchImage);
+  
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+  }, [watchImage]);
+
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-y-2">
           <div className="flex items-center gap-x-2">
             <div className="rounded-full bg-sky-200 p-1">
               <LayoutDashboard className="text-sky-800" />
             </div>
-            <h2 className="text-xl font-semibold">Create your course</h2>
+            <h2 className="text-xl font-semibold">Edit your course</h2>
           </div>
         </div>
           <div>
-            <Link to={'/instructor/courses/create/'}>
+            <Link to={'lecture'}>
             <Button>Go to lectures</Button>
             </Link>
           </div>
@@ -257,9 +333,12 @@ const CourseMainCreation = () => {
                         Course image
                       </div>
                       <FormControl className="w-full">
-                        <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-                          <ImageIcon className="h-10 w-10 text-slate-500" />
+                      {course?.imageUrl && !watchImage && (
+                        <div className="flex items-center justify-center bg-slate-200 rounded-md">
+                          <img src={course?.imageUrl} alt="course_image" />
                         </div>
+                      )}
+                        
                         <div className="grid w-full max-w-sm items-center gap-1.5">
                           <Label htmlFor="image">Image</Label>
                           <Input
@@ -281,7 +360,7 @@ const CourseMainCreation = () => {
                           <img
                             src={URL.createObjectURL(watchImage)}
                             alt="Course Preview"
-                            className="w-32 h-32 object-cover rounded-md"
+                            className="w-58 h-32 object-cover rounded-md"
                           />
                         </div>
                       )}
@@ -377,4 +456,4 @@ const CourseMainCreation = () => {
   );
 };
 
-export default CourseMainCreation;
+export default CourseMainEdit;

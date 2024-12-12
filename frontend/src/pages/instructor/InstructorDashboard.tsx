@@ -50,9 +50,9 @@ const InstructorDashboard = () => {
   };
 
   return (
-    <div className="flex bg-slate">
-      <div className="flex flex-col gap-2 border p-3 bg-gray-50 bg-opacity-50 w-1/4 h-screen">
-      <div className="hidden sm:block uppercase font-bold text-gray-600 text-xl">INSTRUCTOR DASHBOARD</div>
+    <div className="flex bg-slate max-w-screen">
+      <div className="flex flex-col  gap-2 border p-3 bg-gray-50 bg-opacity-50 w-[20%] h-[90%] fixed z-10 overflow-y-auto">
+      <div className="hidden md:block uppercase font-bold text-gray-600 text-xl">INSTRUCTOR DASHBOARD</div>
       
       <div className="flex gap-3 justify-center sm:justify-start mb-2 font-bold 
        bg-slate-200 outline outline-slate-400 rounded-md p-2 py-5 w-full"
@@ -71,7 +71,7 @@ const InstructorDashboard = () => {
             }
           >
             <span className="text-2xl">{tab.icon}</span>
-            <span className="hidden sm:block">{tab.name}</span>
+            <span className="hidden sm:block truncate">{tab.name}</span>
           </NavLink>
         ))}
         <button className="flex gap-3 items-center justify-center sm:justify-start hover:bg-red-200  rounded-md p-2 py-5 w-full mt-auto"
@@ -80,7 +80,7 @@ const InstructorDashboard = () => {
         <span className="hidden sm:block">Back to profile</span>
         </button>
       </div>
-      <div className="w-full">
+      <div className="flex flex-grow ml-[20%]">
         <Outlet />
       </div>
     </div>

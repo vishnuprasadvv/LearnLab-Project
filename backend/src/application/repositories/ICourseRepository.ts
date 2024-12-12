@@ -11,5 +11,13 @@ export interface ICourseRepository{
 
     getAllCourses() : Promise<ICourses[] | null>
 
-    addLectureToCourse(courseId: string, lectureId: string, options: {session?: mongoose.ClientSession}) : Promise<void> 
+    addLectures(courseId: string, lectures: any[]): Promise<ICourses | null>
+
+    deleteCourse(courseId: string) : Promise<ICourses | null>
+
+    updateCourse(courseId: string, updateData: Partial<ICourses>): Promise<ICourses | null>
+
+    updateLecture(courseId: string, udpatedlectureData: any[]): Promise<ICourses | null>
+
+    publishCourse(courseId: string, publishValue : boolean) : Promise<ICourses | null>
 }

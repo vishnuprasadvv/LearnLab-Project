@@ -1,5 +1,23 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+export interface IVideo {
+    title: string;
+    url: string;
+    publicId: string;
+    duration: number;
+    isFree: boolean
+}
+
+export interface ILectureDocument extends Document{
+    title: string,
+    description: string,
+    videos: IVideo[];
+    order : number;
+    createdAt: Date;
+    updatedAt: Date;
+    isFree: boolean;
+}
+
 export interface ICourses extends Document{
     instructor:string,
     title:string,
@@ -13,9 +31,26 @@ export interface ICourses extends Document{
     _id: string,
     duration? : number,
     isDeleted : boolean,
-    lectures?: string[]
+    lectures?: ILectureDocument[]
 }
 
+const VideoSchema : Schema = new Schema({
+    title : {type: String, required: true, trim: true},
+    url : {type: String, required :true},
+    publicId : {type: String, required :true},
+    duration: {type: Number, required: true, min: 0},
+    isFree: {type: Boolean , default: false},
+})
+
+const LectureSchema : Schema = new Schema ( 
+    {
+        title: {type: String, required: true, trim: true},
+        description: {type: String},
+        videos: {type: [VideoSchema], default: []},
+        order: {type: Number, required: true, min: 1},
+        isFree: {type: Boolean , default: false},
+    },
+)
 
 const CourseSchema  : Schema = new Schema({
     instructor:{ type: Schema.Types.ObjectId, ref: 'User', required: true},
@@ -29,7 +64,7 @@ const CourseSchema  : Schema = new Schema({
     category: { type: Schema.Types.ObjectId, ref: 'CourseCategory', required: true},
     isDeleted: {type: Boolean, default: false},
     level: {type:String, enum: ['beginner','intermediate', 'advanced'], required: true},
-    lectures: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lecture' }],
+    lectures: {type: [LectureSchema], default: []},
     
 },{timestamps: true});
 

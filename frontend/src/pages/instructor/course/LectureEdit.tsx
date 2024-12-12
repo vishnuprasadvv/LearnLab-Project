@@ -25,24 +25,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createCourseLectureApi } from "@/api/instructorApi";
+import { createCourseLectureApi, editCourseLectureApi, getCourseById } from "@/api/instructorApi";
 import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@/components/ui/progress";
+import { ICourses } from "@/types/course";
+import _ from 'lodash'
 
-const LectureCreation: React.FC = () => {
+const LectureEdit: React.FC = () => {
   const { courseId } = useParams();
-  const course_title = sessionStorage.getItem("courseTitle");
-  const [courseTitle, setCourseTitle] = useState("");
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
+  const [course, setCourse] = useState<ICourses | null>(null);
+  const [loading, setLoading] = useState(false);
+  const[initialFormData, setInitialFormData] = useState({})
 
-  useEffect(() => {
-    if (course_title) {
-      setCourseTitle(course_title);
-    }
-  }, []);
   const methods = useForm<CourseData>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -69,6 +67,7 @@ const LectureCreation: React.FC = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = methods;
 
@@ -81,12 +80,61 @@ const LectureCreation: React.FC = () => {
     name: "lectures",
   });
 
+  useEffect(() => {
+    const getCourse = async () => {
+      if (!courseId) {
+        throw new Error("Course id not found");
+      }
+      try {
+        setLoading(true);
+        const response = await getCourseById(courseId);
+        const courseData = response.data;
+
+        console.log("editlecture coursedata", courseData);
+
+        const formattedData: CourseData = {
+          lectures: (courseData.lectures || []).map(
+            (lecture: any, lectureIndex: number) => ({
+              title: lecture.title || "",
+              description: lecture.description || "",
+              order: lecture.order || lectureIndex + 1,
+              videos: (lecture.videos || []).map((video: any, videoIndex: number) => ({
+                title: video.title || "",
+                order: video.order || videoIndex + 1,
+                duration: video.duration || 0,
+                file: video.url || "",
+              })),
+            })
+          ),
+        };
+
+        reset(formattedData);
+        setInitialFormData(formattedData)
+        setCourse(courseData);
+      } catch (error: any) {
+        toast.error(error.message || "failed to fetch course");
+        navigate("/instructor/courses");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCourse();
+  }, [courseId, reset]);
+
   const handleAddLecture = () => {
     addLecture({
       title: "",
       order: lectureFields.length + 1,
       description: "",
-      videos: [],
+      videos: [
+        {
+          title: "",
+          order: 1,
+          duration: 0,
+          file: "",
+        },
+      ],
     });
   };
 
@@ -95,7 +143,14 @@ const LectureCreation: React.FC = () => {
       toast.error("An upload is already in progress.");
       return;
     }
-    console.log(data);
+    const isUnchanged =  _.isEqual(data, initialFormData)
+    if(isUnchanged){
+      console.log('value not changed')
+    }
+    if(isUnchanged){
+      toast('No Changes detected',{icon:'⚠️'})
+      return;
+    }
     setIsUploading(true);
     try {
       if (!courseId) {
@@ -139,7 +194,7 @@ const LectureCreation: React.FC = () => {
 
       toast.loading("Uploading lectures...");
 
-      const response = await createCourseLectureApi(
+      const response = await editCourseLectureApi(
         formData,
         courseId,
         (progressEvent: AxiosProgressEvent) => {
@@ -156,7 +211,7 @@ const LectureCreation: React.FC = () => {
       toast.dismiss(); //clear the loading toast
       navigate(`/instructor/courses/${courseId}/overview`);
       toast.success(
-        response.message || "Course and lectures added successfully!"
+        response.message || "Course edited successfully!"
       );
     } catch (error: any) {
       if (axios.isCancel(error)) {
@@ -178,7 +233,7 @@ const LectureCreation: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 md:px-10 py-8 w-full">
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col">
         <div className="flex items-center gap-x-2">
           <div className="rounded-full bg-sky-200 p-1">
             <LayoutDashboard className="text-sky-800" />
@@ -188,7 +243,7 @@ const LectureCreation: React.FC = () => {
         <div className="mt-3 ml-5">
           <span className="italic">Course title : </span>
           <span className="text-lg italic font-semibold text-slate-800">
-            {courseTitle }
+            {course?.title || "Course title"}
           </span>
         </div>
 
@@ -231,8 +286,8 @@ const LectureCreation: React.FC = () => {
                           <FormLabel>Lecture order</FormLabel>
                           <FormControl>
                             <Input
-                            type="number"
                               placeholder="Lecture order"
+                              type="number"
                               className="bg-white"
                               {...field}
                               onChange={(e) => field.onChange(Number(e.target.value))}
@@ -361,8 +416,8 @@ const LectureCreation: React.FC = () => {
                                       <FormLabel>Video Order</FormLabel>
                                       <FormControl>
                                         <Input
+                                        type="number"
                                           className="bg-white"
-                                          type="number"
                                           placeholder="Video Order"
                                           {...orderField}
                                           value={video.order}
@@ -403,22 +458,87 @@ const LectureCreation: React.FC = () => {
                                   <FormItem>
                                     <FormLabel>Upload Video</FormLabel>
                                     <FormControl>
-                                      <Input
-                                        className="bg-white"
-                                        type="file"
-                                        accept="video/*"
-                                        onChange={(e) => {
-                                          const file = e.target.files?.[0];
-                                          field.onChange([
-                                            ...field.value.slice(0, videoIndex),
-                                            { ...video, file },
-                                            ...field.value.slice(
-                                              videoIndex + 1
-                                            ),
-                                          ]);
-                                          fileField.onChange(file); // Update validation state
-                                        }}
-                                      />
+                                      <div className="space-y-2">
+                                        {/* Show existing video URL if available */}
+                                        {video.file &&
+                                        typeof video.file === "string" ? (
+                                          <div className="bg-gray-100 p-2 rounded-md">
+                                            <p className="text-sm text-gray-700">
+                                              Current Video:{" "}
+                                              <a
+                                                href={video.file}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 underline break-words"
+                                              >
+                                                {video.file}
+                                              </a>
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                              (Leave empty to retain the current
+                                              video)
+                                            </p>
+                                          </div>
+                                        ) : (
+                                          // If a file is selected, show a preview
+                                          video.file &&
+                                          typeof video.file !== "string" && (
+                                            <div className="bg-gray-100 p-2 rounded-md">
+                                              <video controls width="300">
+                                                <source
+                                                  src={URL.createObjectURL(
+                                                    video.file
+                                                  )}
+                                                />
+                                                Your browser does not support
+                                                the video tag.
+                                              </video>
+                                            </div>
+                                          )
+                                        )}
+
+                                        {/* File input to upload a new video */}
+                                        <Input
+                                          className="bg-white"
+                                          type="file"
+                                          accept="video/*"
+                                          onChange={(e) => {
+                                            const selectedFile =
+                                              e.target.files?.[0];
+
+                                            if (selectedFile) {
+                                              // If a new file is selected, update the video file field
+                                              field.onChange([
+                                                ...field.value.slice(
+                                                  0,
+                                                  videoIndex
+                                                ),
+                                                {
+                                                  ...video,
+                                                  file: selectedFile,
+                                                }, // Update with the new file object
+                                                ...field.value.slice(
+                                                  videoIndex + 1
+                                                ),
+                                              ]);
+                                              fileField.onChange(selectedFile); // Update validation state
+                                            } else {
+                                              // If no file is selected, retain the old URL
+                                              field.onChange([
+                                                ...field.value.slice(
+                                                  0,
+                                                  videoIndex
+                                                ),
+                                                { ...video, file: video.file }, // Retain the existing video URL
+                                                ...field.value.slice(
+                                                  videoIndex + 1
+                                                ),
+                                              ]);
+                                              fileField.onChange(null); // Clear file state
+                                            }
+                                          }}
+                                        />
+                                      </div>
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -513,4 +633,4 @@ const LectureCreation: React.FC = () => {
   );
 };
 
-export default LectureCreation;
+export default LectureEdit;

@@ -92,6 +92,7 @@ export const uploadVideoToCloudinary = async (fileBuffer: Buffer) => {
             console.error("Cloudinary upload failed:", error);
             return reject(new Error("Failed to upload to Cloudinary"));
           }
+          console.log('video uploaded')
           resolve(result);
         }
       );

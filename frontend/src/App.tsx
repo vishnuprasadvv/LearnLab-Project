@@ -23,8 +23,8 @@ import ProfileCourses from "./components/user/profile/ProfileCourses";
 import ProfileEdit from "./components/user/profile/ProfileEdit";
 import ProfileChangePassword from "./components/user/profile/ProfileChangePassword";
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
-import InstructorDashboardComponent from "./components/instructor/Dashboard";
-import InstructorCourses from "./components/instructor/InstructorCourses";
+import InstructorDashboardComponent from "./pages/instructor/Dashboard";
+import InstructorCourses from "./pages/instructor/InstructorCourses";
 import Messages from "./components/instructor/Messages";
 import Notifications from "./components/instructor/Notifications";
 import Navbar from "./components/common/Navbar/Navbar";
@@ -39,6 +39,9 @@ import CreateCategory from "./pages/admin/Category/CreateCategory";
 import EditCategory from "./pages/admin/Category/EditCategory";
 import CourseMainCreation from "./pages/instructor/course/CourseMainCreation";
 import LectureCreation from "./pages/instructor/course/LectureCreation";
+import CourseOverview from "./pages/instructor/course/CourseOverview";
+import CourseMainEdit from "./pages/instructor/course/CourseMainEdit";
+import LectureEdit from "./pages/instructor/course/LectureEdit";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -108,6 +111,10 @@ function App() {
 
               <Route path="courses/create" element={<CourseMainCreation />} />
               <Route path="courses/create/:courseId/lecture" element={<LectureCreation />} />
+              <Route path="courses/create/:courseId/lecture/overview" element={<CourseOverview />} />
+              <Route path="courses/:courseId/overview" element={<CourseOverview />} />
+              <Route path="courses/:courseId/edit" element={<CourseMainEdit />} />
+              <Route path="courses/:courseId/edit/lecture" element={<LectureEdit />} />
             </Route>
           </Route>
 
