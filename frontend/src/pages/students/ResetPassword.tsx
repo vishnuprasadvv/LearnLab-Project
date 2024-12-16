@@ -111,9 +111,6 @@ function ResetPassword() {
 
       </div>
 
-
-
-
       <div className='pb-3 pt-5 flex flex-col gap-2 text-start' >
         <label htmlFor='newPassword'>New Password:</label>
         <Input type="password" id='newPassword' name='newPassword' value={formik.values.newPassword} onChange={formik.handleChange} className='w-full '

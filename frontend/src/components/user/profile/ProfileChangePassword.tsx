@@ -3,6 +3,7 @@ import { useAppDispatch } from "@/app/hooks";
 import PasswordFieldTwo from "@/components/common/PasswordField/PasswordFieldtwo";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { changePasswordThunk } from "@/features/authSlice";
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -51,6 +52,7 @@ const ProfileChangePassword = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values,{resetForm}) => {
+      setLoading(true)
       console.log(values)
      const {oldPassword, newPassword} = values
 
@@ -61,6 +63,8 @@ const ProfileChangePassword = () => {
       }catch(error:any){
         console.log('change password error',error.message)
         toast.error(error.message || 'Change password failed')
+      }finally{
+        setLoading(false)
       }
     },
   });
@@ -74,7 +78,8 @@ const ProfileChangePassword = () => {
           <form onSubmit={formik.handleSubmit} className="w-full">
             <CardContent className="min-w-full place-items-center">
               <div className="flex flex-col gap-5 md:w-1/2 w-full items-stretch">
-                <div>
+                <div className="space-y-1">
+                  <label htmlFor="oldPassword">Old password:</label>
                   <PasswordFieldTwo
                     className={`${
                       formik.touched.oldPassword &&
@@ -82,11 +87,12 @@ const ProfileChangePassword = () => {
                       "border-red-500"
                     } py-6`}
                     value={formik.values.oldPassword}
-                    placeholder="Old password"
+                    placeholder="Enter old password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     touched = {formik.touched.oldPassword}
                     name="oldPassword"
+                    id="oldPassword"
                   />
                   {formik.touched.oldPassword && formik.errors.oldPassword && (
                     <span className="text-xs text-red-500">
@@ -94,7 +100,8 @@ const ProfileChangePassword = () => {
                     </span>
                   )}
                 </div>
-                <div>
+                <div className="space-y-1">
+                  <label htmlFor="newPassword">New password:</label>
                   <PasswordFieldTwo
                     className={`${
                       formik.touched.newPassword &&
@@ -102,11 +109,12 @@ const ProfileChangePassword = () => {
                       "border-red-500"
                     } py-6`}
                     value={formik.values.newPassword}
-                    placeholder="New Password"
+                    placeholder="Enter new Password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     touched = {formik.touched.newPassword}
                     name="newPassword"
+                    id="newPassword"
                   />
                   {formik.touched.newPassword && formik.errors.newPassword && (
                     <span className="text-xs text-red-500">
@@ -114,7 +122,8 @@ const ProfileChangePassword = () => {
                     </span>
                   )}
                 </div>
-                <div>
+                <div className="space-y-1">
+                  <label htmlFor="confirmNewPassword">Confirm new password:</label>
                   <PasswordFieldTwo
                     className={`${
                       formik.touched.confirmNewPassword &&
@@ -122,11 +131,12 @@ const ProfileChangePassword = () => {
                       "border-red-500"
                     } py-6`}
                     value={formik.values.confirmNewPassword}
-                    placeholder="Confirm new password"
+                    placeholder="Enter confirm new password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     touched = {formik.touched.confirmNewPassword}
                     name="confirmNewPassword"
+                    id="confirmNewPassword"
                   />
                   {formik.touched.confirmNewPassword &&
                     formik.errors.confirmNewPassword && (

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout, handleChangePasswordAPI, handleEditUserAPI, changeProfileImage, getUserDataAPI} from "@/api/auth";
+import { login as loginAPI, logout as logoutAPI, register as registerAPI, verifyAccount as verifyAccountAPI, sendOtp as sendOtpAPI, validateUserAuth, forgotPassword, resetPasswordAPI, handleGoogleLogin, handleRegisterToInstructor, adminLogout, handleChangePasswordAPI, handleEditUserAPI, changeProfileImage, getUserDataAPI, updateEmailUserProfileAPI} from "@/api/auth";
 import { RegisterInstructorFormValues } from "@/types/instructor";
 interface AuthState {
     user: {
@@ -59,6 +59,14 @@ export const register = createAsyncThunk('auth/signup', async(data:{firstName : 
 export const verifyAccount = createAsyncThunk('auth/verify-otp', async(data:{otp: string , email :string},{rejectWithValue})=>{
   try {
     const response = await verifyAccountAPI(data.email, data.otp)
+    return response;
+  } catch (error :any) {
+    return rejectWithValue(error.response?.data || 'Verification failed')
+  }
+})
+export const updateEmailUserProfile = createAsyncThunk('auth/profile/edit/email', async(data:{otp: string , email :string},{rejectWithValue})=>{
+  try {
+    const response = await updateEmailUserProfileAPI(data.email, data.otp)
     return response;
   } catch (error :any) {
     return rejectWithValue(error.response?.data || 'Verification failed')

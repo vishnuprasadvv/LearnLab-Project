@@ -20,7 +20,7 @@ This OTP is valid for 10 minutes from the receipt of this email.
 Best regards,
 LearnLab.`
 );
-
+    console.log('otp sent successfully', otpCode)
     return {message : 'OTP sent successfully' , otpCode}
 }
 

@@ -4,7 +4,7 @@ import passport from "passport";
 import { googleLogin } from "../controllers/googleAuthLibrary";
 import { registerInstuctorHandler } from "../controllers/instructorController";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
-import { changePasswordHandler, editProfileHandler } from "../controllers/studentController";
+import { changePasswordHandler, editProfileEmailController, editProfileHandler } from "../controllers/studentController";
 
 
 
@@ -30,6 +30,7 @@ router.post('/instructor-register', registerInstuctorHandler)
 //user profile
 router.post('/profile/change-password', isAuthenticated, authorizeRole(['student','instructor']), changePasswordHandler)
 router.post('/profile/edit', isAuthenticated, authorizeRole(['student','instructor']), editProfileHandler)
+router.patch('/profile/edit/email', isAuthenticated, authorizeRole(['student','instructor']), editProfileEmailController)
 
 
 router.get('/user-data/:userId',isAuthenticated, authorizeRole(['student','instructor']), getUserDataController)

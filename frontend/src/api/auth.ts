@@ -34,6 +34,10 @@ export const verifyAccount = async( email: string, otp : string ) => {
     const response = await api.post(`${API_URL}/auth/verify-otp`, {email, otp})
     return response.data;
 }
+export const updateEmailUserProfileAPI = async( email: string, otp : string ) => {
+    const response = await api.patch(`${API_URL}/auth/profile/edit/email`, {email, otp})
+    return response.data;
+}
 
 
 export const sendOtp = async( email: string ) => {

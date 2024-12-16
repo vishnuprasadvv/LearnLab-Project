@@ -4,6 +4,7 @@ import { CustomError } from "../middlewares/errorMiddleWare";
 import { editProfile } from "../../application/use-cases/student/editProfile";
 import { updateProfileImage } from "../../application/use-cases/student/updateProfileImage";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
+import { editProfileEmail } from "../../application/use-cases/student/editEmail";
 
 
 const userRepository = new UserRepositoryImpl()
@@ -37,8 +38,22 @@ export const editProfileHandler = async(req: Request, res: Response, next : Next
             throw new CustomError('User not found, Unauthorized', 400)
         }
         const response = await editProfile({userId:user.id,firstName,lastName, email, phone})
-        console.log('edit profile handler' ,response)
+        //console.log('edit profile handler' ,response)
         res.status(200).json({success: true, message: 'Profile edited successfully',user:response})
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const editProfileEmailController = async(req: Request, res: Response, next : NextFunction) => {
+    const { email, otp} = req.body
+    const user:any = req.user
+    try {
+        if(!user){
+            throw new CustomError('User not found, Unauthorized', 400)
+        }
+        const response = await editProfileEmail({userId:user.id,email, otp})
+        res.status(200).json({success: true, message: 'Email updated successfully',user:response})
     } catch (error) {
         next(error)
     }
