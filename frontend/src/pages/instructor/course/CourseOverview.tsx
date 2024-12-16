@@ -90,7 +90,7 @@ const CourseOverview = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 md:px-10 py-2 w-full">
+    <div className="container mx-auto px-4 md:px-10 py-2 w-full max-w-4xl">
       <div
         className="flex gap-1 items-center hover:text-blue-600 cursor-pointer"
         onClick={handleBackToCourses}
@@ -167,7 +167,7 @@ const CourseOverview = () => {
           </div>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-3">
           <div className="flex flex-row gap-5 text-slate-800 bg-slate-100 p-3 rounded-lg">
             <div className="flex gap-2 flex-col sm:flex-row w-full">
               <div className="sm:w-2/3 xl:w-3/4 space-y-3">
@@ -266,30 +266,41 @@ const CourseOverview = () => {
             </div>
           </div>
           <div className="mt-4 text-slate-800">
-            <h2 className="font-semibold text-lg ">Course content</h2>
+            <h2 className="font-bold text-xl mb-2">Course content</h2>
             <div className="bg-slate-100 p-2 rounded-lg">
               <ol className=" space-y-2">
                 {course?.lectures?.map((lecture) => (
                   <div className="bg-white p-2 pl-5 rounded-lg">
-                    <li className="list-decimal space-y-2">
-                      <h4 className="font-semibold">
+                    <li className="list-decimal space-y-3">
+                      <h4 className="font-semibold text-lg">
                         {lecture && lecture.title}
                       </h4>
-                      <div className="space-y-1">
-                        <span className="">Lecture description : </span>
-                        <p className="text-xs italic">
+                      <div className="space-y-1 ">
+                        <span className="uppercase font-semibold">Lecture description : </span>
+                        <p className="text italic">
                           {lecture && lecture.description}
                         </p>
                       </div>
                       <div className="space-y-1 flex gap-2">
-                        <span className="">Lecture order : </span>
-                        <p className="text-xs">{lecture && lecture.order}</p>
+                        <span className="uppercase font-semibold">Lecture order : {lecture && lecture.order}</span>
                       </div>
-                      <div className="space-y-1 flex gap-2">
-                        <span className="">Lecture videos : </span>
-                        <p className="text-xs">
-                          {lecture && lecture.videos.length}
-                        </p>
+                      <div>
+                          <h5 className="font-semibold uppercase">Lecture videos : ({lecture && lecture.videos.length} No/s)</h5>
+                        <div className="flex flex-col sm:flex-row  gap-2  border p-3 rounded-lg">
+                          
+                        {lecture.videos.map((video,index) => (
+                          <div key={index} className="flex flex-col w-max p-2 rounded-lg gap-1 bg-slate-100 justify-between">
+                            <div className="flex flex-col">
+                            <span className="">Video title: {video.title}</span>
+                            <span>Video duration: {video.duration} sec</span>
+                            </div>
+                            <video controls width='250' className="rounded-lg">
+                              <source src={video.url} />
+                            </video>
+                          </div>
+
+                        ))}
+                         </div>
                       </div>
                     </li>
                   </div>

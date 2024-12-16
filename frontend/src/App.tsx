@@ -8,7 +8,6 @@ import VerifyAccount from "./pages/VerifyAccount";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
-import LandingPage from "./pages/LandingPage";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import ForgotPassword from "./pages/students/ForgotPassword";
@@ -73,14 +72,13 @@ function App() {
         <Toaster />
 
         <Routes>
-          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/courses/course-details/:id" element={<CourseDetails />} />
 

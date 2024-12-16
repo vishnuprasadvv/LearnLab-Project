@@ -1,6 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { logout, logoutSliceAction } from "@/features/authSlice";
-import toast from "react-hot-toast";
+import { useAppSelector } from "@/app/hooks";
 import { LiaBookReaderSolid } from "react-icons/lia";
 import { RxDashboard } from "react-icons/rx";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
@@ -8,24 +6,15 @@ import { RiMessage2Line } from "react-icons/ri";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { RiArrowGoBackLine } from "react-icons/ri";
+import { useState } from "react";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 const InstructorDashboard = () => {
   const profileItems = [
-    {
-      path: "dashboard",
-      name: "Dashboard",
-      icon: <RxDashboard />,
-    },
-    {
-      path: "courses",
-      name: "My courses",
-      icon: <LiaBookReaderSolid />,
-    },
-    {
-      path: "messages",
-      name: "Messages",
-      icon: <RiMessage2Line />,
-    },
+    { path: "dashboard", name: "Dashboard", icon: <RxDashboard /> },
+    { path: "courses", name: "My courses", icon: <LiaBookReaderSolid /> },
+    { path: "messages", name: "Messages", icon: <RiMessage2Line /> },
     {
       path: "notifications",
       name: "Notifications",
@@ -34,32 +23,45 @@ const InstructorDashboard = () => {
   ];
 
   const { user } = useAppSelector((state) => state.auth);
-  console.log(user);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      const response = await dispatch(logout()).unwrap();
-      dispatch(logoutSliceAction());
-      toast.success(response.message || "Logout successful");
-    } catch (err: any) {
-      console.log(err);
-      toast.error(err.message || "Logout failed");
-    }
-  };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar visibility
+
 
   return (
-    <div className="flex bg-slate max-w-screen">
-      <div className="flex flex-col  gap-2 border p-3 bg-gray-50 bg-opacity-50 w-[20%] h-[90%] fixed z-10 overflow-y-auto">
-      <div className="hidden md:block uppercase font-bold text-gray-600 text-xl">INSTRUCTOR DASHBOARD</div>
-      
-      <div className="flex gap-3 justify-center sm:justify-start mb-2 font-bold 
-       bg-slate-200 outline outline-slate-400 rounded-md p-2 py-5 w-full"
+    <div className="flex flex-col min-h-screen">
+      {/* Toggle Sidebar Button */}
+      <div className="bg-white w-full sm:hidden fixed z-10 h-[10vh] backdrop-blur-md bg-opacity-75">
+        <button
+          className="p-3 hover:bg-blue-400 hover:text-white bg-blue-200 hover:scale-105 duration-300 rounded-full mt-4 ml-4"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
-          <LiaChalkboardTeacherSolid className="text-2xl" />
-          <span className="hidden sm:block">Hi, {`${user?.firstName} ${user?.lastName}`} </span>
+          {isSidebarOpen ? (
+            <IoIosArrowBack className="text-xl" />
+          ) : (
+            <IoIosArrowForward className="text-xl" />
+          )}
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <div
+        className={`${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
+        } sm:block flex flex-col gap-1 space-y-2 border mt-[10vh] sm:mt-0 p-3 bg-slate-50 w-full sm:w-[15%] md:w-[20%]  h-auto sm:h-[90%] 
+        fixed z-10 overflow-y-auto  transition-transform duration-300 shadow-lg ease-in-out will-change-transform`}
+      >
+        <div className="text-center sm:text-start sm:hidden md:block uppercase font-bold text-gray-600 text-xl">
+          INSTRUCTOR DASHBOARD
         </div>
+
+        <div className="flex gap-3 justify-center md:justify-start mb-2 font-bold bg-slate-200 outline outline-slate-400 rounded-md p-2 py-5 w-full">
+          <LiaChalkboardTeacherSolid className="text-2xl" />
+          <span className="sm:hidden md:block">
+            Hi, {`${user?.firstName} ${user?.lastName}`}
+          </span>
+        </div>
+
         {profileItems.map((tab, index) => (
           <NavLink
             to={tab.path}
@@ -67,24 +69,32 @@ const InstructorDashboard = () => {
             className={({ isActive }) =>
               `${
                 isActive ? "bg-blue-300" : ""
-              } flex gap-3 items-center justify-center sm:justify-start hover:bg-gray-200  rounded-md p-2 py-5 w-full`
+              } flex gap-3 items-center justify-center md:justify-start hover:bg-gray-200 rounded-md p-2 py-5 w-full`
             }
+            onClick={() => setIsSidebarOpen(false)} // Close sidebar when a menu item is clicked
           >
             <span className="text-2xl">{tab.icon}</span>
-            <span className="hidden sm:block truncate">{tab.name}</span>
+            <span className="block sm:hidden md:block truncate">
+              {tab.name}
+            </span>
           </NavLink>
         ))}
-        <button className="flex gap-3 items-center justify-center sm:justify-start hover:bg-red-200  rounded-md p-2 py-5 w-full mt-auto"
-        onClick={() => navigate('/profile/dashboard')}>
-        <RiArrowGoBackLine className="text-2xl"/>
-        <span className="hidden sm:block">Back to profile</span>
+
+        <button
+          className="flex gap-3 items-center justify-center md:justify-start hover:bg-red-200 rounded-md p-2 py-5 w-full mt-auto"
+          onClick={() => navigate("/profile/dashboard")}
+        >
+          <RiArrowGoBackLine className="text-2xl" />
+          <span className="sm:hidden md:block">Back to profile</span>
         </button>
       </div>
-      <div className="flex flex-grow ml-[20%]">
+
+      {/* Main Content */}
+      <div className="flex flex-grow sm:ml-[15%] md:ml-[20%] p-2 mt-10 sm:mt-0">
         <Outlet />
       </div>
     </div>
   );
 };
 
-export default InstructorDashboard
+export default InstructorDashboard;

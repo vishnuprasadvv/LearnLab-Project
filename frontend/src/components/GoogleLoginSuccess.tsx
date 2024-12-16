@@ -8,7 +8,7 @@ const GoogleLoginSuccess: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/home'); // Redirect to the home page on success
+      navigate('/'); // Redirect to the home page on success
     }
   }, [isAuthenticated, navigate]);
 

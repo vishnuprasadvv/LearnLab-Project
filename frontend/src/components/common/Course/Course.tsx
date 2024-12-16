@@ -24,7 +24,7 @@ const Course = (course:ICourses) => {
             <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
                 <Avatar className="bg-gray-200 h-8 w-8">
-                    <AvatarImage src={course.instructor.profileImageUrl || "https://png.pngtree.com/png-vector/20230903/ourmid/pngtree-man-avatar-isolated-png-image_9935819.png"} alt="@shadcn" />
+                    <AvatarImage src={course.instructor?.profileImageUrl ? course.instructor.profileImageUrl : "https://png.pngtree.com/png-vector/20230903/ourmid/pngtree-man-avatar-isolated-png-image_9935819.png"} alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <h2 className=" text-xs font-medium text-gray-500" >{`${course.instructor.firstName} ${course.instructor.lastName}`}</h2>

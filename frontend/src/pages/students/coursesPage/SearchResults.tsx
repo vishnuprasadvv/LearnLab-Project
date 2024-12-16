@@ -1,13 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { ICourses } from "@/types/course";
-import React from "react";
 import { Link } from "react-router-dom";
 
 const SearchResults = ( course :ICourses) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-300 py-4 gap-4 hover:bg-gray-100 p-2 hover:rounded-xl">
-      <Link
-        to={`course-details/${course._id}`}
+    <Link to={`course-details/${course._id}`} 
+    className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-300 py-4 gap-4 hover:bg-gray-100 p-2 hover:rounded-xl">
+      <div
         className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto "
       >
         <img
@@ -26,8 +25,8 @@ const SearchResults = ( course :ICourses) => {
           </p>
           <Badge className="w-fit mt-2 md:mt-0">{course.level}</Badge>
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 

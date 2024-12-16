@@ -160,9 +160,9 @@ export const editCategory = async (id: string, name:string, description: string,
   }
 }
 
-export const getAllCoursesAdminApi = async () => {
+export const getAllCoursesAdminApi = async (searchQuery: string, currentPage:number, itemsPerPage:number) => {
   try {
-      const response = await adminInterceptorApi.get(`${API_URL}/admin/courses`, { withCredentials: true });
+      const response = await adminInterceptorApi.get(`${API_URL}/admin/courses`, {params:{ query: searchQuery, page: currentPage, limit : itemsPerPage}, withCredentials: true });
       return response.data;
   } catch (error: any) {
       throw error?.response?.data || error; // Propagate error to caller

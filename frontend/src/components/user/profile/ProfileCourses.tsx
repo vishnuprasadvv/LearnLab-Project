@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const ProfileCourses = () => {
   const isLoading = false
-  const myCourses: any[] = [1,2,3,1,4,5,]
+  const myCourses: any[] = []
   return (
     <div className="container mx-auto px-4 py-8">
     <div className="grid gap-6 md:grid-cols-1">
@@ -13,12 +13,18 @@ const ProfileCourses = () => {
           <div className='text-xl'>My Learning</div>
         </CardHeader>
         <CardContent>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {isLoading
+        <div className="">
+          {
+           myCourses.length === 0 ? (<h2 className='text-lg text-center text-slate-600 font-semibold'>You are not enrolled any courses</h2>) 
+           : (
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {isLoading
             ? Array.from({ length: 8 }).map((_, index) => (
                 <ProfileCoursesSkeleton key={index} />
-              ))
-            : myCourses.length === 0 ? (<p>You are not enrolled any courses</p>) :  myCourses.map((course, index) => <Course />)}
+              )) : (myCourses.map((course, index) => <Course {...course}/>))}
+            </div>
+              )}
+           
         </div>
         </CardContent>
       </Card>

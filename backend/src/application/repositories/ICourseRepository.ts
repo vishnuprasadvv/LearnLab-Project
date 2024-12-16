@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 import { ICourses } from "../../domain/models/Courses";
+interface Pagination {
+    page: number,
+    limit: number
+  }
+  
+  interface Filter {
+    [key : string] : any
+  }
+  
+  interface PaginatedResultCourses {
+    courses: ICourses[];
+    totalCourses: number;
+    totalPages : number | null;
+  }
+
 
 export interface ICourseRepository{
 
@@ -25,5 +40,7 @@ export interface ICourseRepository{
 
     getAllCoursesUsers () : Promise<ICourses[] | null >
 
-    getAllCoursesAdmin() : Promise<ICourses[] | null>
+    getAllFilteredCoursesUsers (filter:any, sort:any, pagination:any) : Promise<PaginatedResultCourses > 
+
+    getAllCoursesAdmin(query: string, page: number, limit?: number) : Promise <{courses:ICourses[], total : number}>
 }

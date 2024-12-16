@@ -56,7 +56,7 @@ const LectureCreation: React.FC = () => {
               title: "",
               order: 1,
               duration: 0,
-              file: '',
+              file: "",
             },
           ],
         },
@@ -176,6 +176,8 @@ const LectureCreation: React.FC = () => {
     }
   };
 
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState("");
+
   return (
     <div className="container mx-auto px-4 md:px-10 py-8 w-full">
       <div className="flex flex-col w-full">
@@ -188,7 +190,7 @@ const LectureCreation: React.FC = () => {
         <div className="mt-3 ml-5">
           <span className="italic">Course title : </span>
           <span className="text-lg italic font-semibold text-slate-800">
-            {courseTitle }
+            {courseTitle}
           </span>
         </div>
 
@@ -231,11 +233,13 @@ const LectureCreation: React.FC = () => {
                           <FormLabel>Lecture order</FormLabel>
                           <FormControl>
                             <Input
-                            type="number"
+                              type="number"
                               placeholder="Lecture order"
                               className="bg-white"
                               {...field}
-                              onChange={(e) => field.onChange(Number(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
                             />
                           </FormControl>
                           <FormMessage />
@@ -409,14 +413,30 @@ const LectureCreation: React.FC = () => {
                                         accept="video/*"
                                         onChange={(e) => {
                                           const file = e.target.files?.[0];
-                                          field.onChange([
-                                            ...field.value.slice(0, videoIndex),
-                                            { ...video, file },
-                                            ...field.value.slice(
-                                              videoIndex + 1
-                                            ),
-                                          ]);
-                                          fileField.onChange(file); // Update validation state
+                                          
+                                          if (videoPreviewUrl) {
+                                            URL.revokeObjectURL(
+                                              videoPreviewUrl
+                                            );
+                                            setVideoPreviewUrl('')
+                                          }
+                                          if (file) {
+                                            const newPreviewUrl =
+                                              URL.createObjectURL(file);
+
+                                            field.onChange([
+                                              ...field.value.slice(
+                                                0,
+                                                videoIndex
+                                              ),
+                                              { ...video, file },
+                                              ...field.value.slice(
+                                                videoIndex + 1
+                                              ),
+                                            ]);
+                                            fileField.onChange(file); // Update validation state
+                                            setVideoPreviewUrl(newPreviewUrl);
+                                          }
                                         }}
                                       />
                                     </FormControl>
@@ -424,6 +444,19 @@ const LectureCreation: React.FC = () => {
                                   </FormItem>
                                 )}
                               />
+                              {videoPreviewUrl && videoPreviewUrl.length && (
+                                <div className="bg-gray-100 p-2 rounded-md">
+                                  <h2 className="pb-1">Newly choosen video:</h2>
+                                  <video
+                                    controls
+                                    width="300"
+                                    key={videoPreviewUrl}
+                                  >
+                                    <source src={videoPreviewUrl} />
+                                  </video>
+                                  <div>{videoPreviewUrl}</div>
+                                </div>
+                              )}
                             </div>
                             <div className="ml-auto w-max">
                               <Button

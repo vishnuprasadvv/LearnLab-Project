@@ -49,7 +49,7 @@ const Login = () => {
           })
         );
         toast.success(result.message || 'Login success')
-        navigate('/home', { replace: true })
+        navigate('/', { replace: true })
       } catch (err: any) {
 
 

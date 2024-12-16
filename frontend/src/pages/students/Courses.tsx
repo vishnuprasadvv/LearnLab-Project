@@ -37,7 +37,7 @@ const isLoading = false;
             </div>
         )}
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
           {isLoading
             ? Array.from({ length: 8 }).map((_, index) => (
                 <CourseSkeleton key={index} />

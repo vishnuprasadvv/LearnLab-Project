@@ -4,11 +4,11 @@ import { ICourseRepository } from "../../../repositories/ICourseRepository";
 
 export class GetAllCoursesAdminUseCase{
     constructor(private courseRepository: ICourseRepository) {}
-    async execute(): Promise <ICourses[]> {
-        const courses = await this.courseRepository.getAllCoursesAdmin();
-        if(!courses) {
+    async execute(query: string, page: number, limit?: number): Promise <{courses: ICourses[] , total: number}> {
+        const result = await this.courseRepository.getAllCoursesAdmin(query, page, limit);
+        if(!result) {
             throw new CustomError('Error fetching courses from DB', 400)
         }
-        return courses;
+        return {courses: result.courses, total : result.total};
     }
 }

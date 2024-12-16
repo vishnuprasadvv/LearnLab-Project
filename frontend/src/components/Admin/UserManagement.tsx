@@ -39,7 +39,6 @@ const UserManagement = () => {
       try {
         const response:any = await getUsers(searchQuery, currentPage, itemsPerPage);
       console.log(response)
-      console.log(searchQuery, currentPage)
       setUsers(response.users)
       setTotalPages(Math.ceil(response.total / itemsPerPage))
       } catch (error:any) {

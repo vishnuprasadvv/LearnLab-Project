@@ -9,7 +9,8 @@ interface AuthState {
         phone : string;
         email : string ;
         role : string;
-        createdAt: Date;
+        createdAt?: Date;
+        profileImageUrl?: string;
     } | null;
     loading: boolean;
     error: string  | null;
@@ -163,7 +164,8 @@ const authSlice = createSlice({
       authSuccess(
         state,
         action: PayloadAction<{
-          user: { _id: string; email: string; role: string , firstName:string , lastName: string, phone: string, createdAt: Date};
+          user: { _id: string; email: string; role: string , firstName:string , lastName: string, 
+            phone: string, createdAt?: Date, profileImageUrl?: string};
         }>
       ) {
         state.loading = false;

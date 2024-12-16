@@ -1,6 +1,21 @@
 import Courses, { ICourses } from "../../domain/models/Courses";
 import { ICourseRepository } from "../../application/repositories/ICourseRepository";
+import { SortOrder } from "mongoose";
 
+interface Pagination {
+  page: number,
+  limit: number
+}
+
+interface Filter {
+  [key : string] : any
+}
+
+interface PaginatedResultCourses {
+  courses: ICourses[];
+  totalCourses: number;
+  totalPages : number | null;
+}
 
 export class CourseRepositoryClass implements ICourseRepository{
     async createCourse(data: Partial<ICourses>): Promise<ICourses>{
@@ -85,11 +100,56 @@ async getAllCoursesUsers(): Promise<ICourses[] | null> {
   ]).sort({createdAt: -1})
 }
 
-async getAllCoursesAdmin() : Promise<ICourses[] | null>{
-  return await Courses.find({isDeleted: false}).populate([
+//filtered course for users (search, filter, sort)
+
+async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>, pagination : Pagination): Promise<PaginatedResultCourses> {
+  const query = Courses.find({...filter, isPublished: true}).populate([
+    {path: 'instructor', select: '-password -profileImagePublicId'},
+    {path: 'category', select: 'name _id'}
+  ])
+
+  if(sort){
+    query.sort(sort)
+  }
+
+  if(pagination){
+    const skip = (pagination.page - 1) * pagination.limit;
+    query.skip(skip).limit(pagination.limit)
+  }
+
+  const courses = await query.exec();
+
+  const totalCourses = await Courses.countDocuments({...filter, isPublished: true});
+  const totalPages = pagination ? Math.ceil(totalCourses / pagination.limit) : null;
+
+  return {
+    courses, 
+    totalCourses,
+    totalPages
+  }
+}
+
+async getAllCoursesAdmin(query: string, page: number, limit?: number):Promise<{courses: ICourses[] , total : number}> {
+
+  const filter = query? {title : {$regex : query, $options: 'i'}, isDeleted: false} : {isDeleted: false}
+ 
+ const queryBuilder = Courses.find(filter).populate([
       { path: 'instructor', select: '-password -phone -profileImagePublicId' },
       {path: 'category', select: 'name _id'}
   ])
-  .sort({createdAt: -1})
+
+
+  let courses, total;
+
+  if(limit === undefined) {
+    courses = await queryBuilder.sort({createdAt : -1});
+    total = courses.length;
+  }else{
+    courses = await queryBuilder.sort({createdAt: -1})
+      .skip((page -1) * limit)
+      .limit(limit);
+      total = await Courses.countDocuments(filter)
+  }
+ return {courses, total}
 }
 }

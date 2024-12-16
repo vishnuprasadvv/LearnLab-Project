@@ -30,7 +30,7 @@ const Signup = () => {
     dispatch(clearError())
 
     if(isAuthenticated){
-      navigate('/home')
+      navigate('/')
     }
     }
   , [])

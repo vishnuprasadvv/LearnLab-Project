@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../../utils/jwtHelper";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import User from "../../domain/models/User";
 
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
+export const isAuthenticated = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     const accessToken = req.cookies?.accessToken;
     const refreshToken = req.cookies?.refreshToken;
     console.log('isAuthMiddleware',accessToken)
@@ -20,8 +21,17 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
             return
         }
         //attch access token to request object
-        // (req as AuthenticatedRequest).user = decoded;
-        req.user = decoded;
+        const user = await User.findById(decoded.id)
+        // req.user = decoded;
+        if(!user){
+            res.status(404).json({message: 'User not authorized'})
+            return
+        }
+
+        req.user = {
+            id: user._id.toString(),
+            role: user.role
+        }
         next();
     } catch (error) {
         console.log('isAuthMiddleware error',error)

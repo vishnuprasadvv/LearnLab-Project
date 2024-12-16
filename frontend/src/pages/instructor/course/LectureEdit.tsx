@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useForm,
   useFieldArray,
@@ -25,12 +25,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createCourseLectureApi, editCourseLectureApi, getCourseById } from "@/api/instructorApi";
+import {
+  editCourseLectureApi,
+  getCourseById,
+} from "@/api/instructorApi";
 import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@/components/ui/progress";
 import { ICourses } from "@/types/course";
-import _ from 'lodash'
+import _ from "lodash";
 
 const LectureEdit: React.FC = () => {
   const { courseId } = useParams();
@@ -39,7 +42,7 @@ const LectureEdit: React.FC = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState<ICourses | null>(null);
   const [loading, setLoading] = useState(false);
-  const[initialFormData, setInitialFormData] = useState({})
+  const [initialFormData, setInitialFormData] = useState({});
 
   const methods = useForm<CourseData>({
     resolver: zodResolver(courseSchema),
@@ -54,7 +57,7 @@ const LectureEdit: React.FC = () => {
               title: "",
               order: 1,
               duration: 0,
-              file: '',
+              file: "",
             },
           ],
         },
@@ -68,7 +71,6 @@ const LectureEdit: React.FC = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
   } = methods;
 
   const {
@@ -98,18 +100,20 @@ const LectureEdit: React.FC = () => {
               title: lecture.title || "",
               description: lecture.description || "",
               order: lecture.order || lectureIndex + 1,
-              videos: (lecture.videos || []).map((video: any, videoIndex: number) => ({
-                title: video.title || "",
-                order: video.order || videoIndex + 1,
-                duration: video.duration || 0,
-                file: video.url || "",
-              })),
+              videos: (lecture.videos || []).map(
+                (video: any, videoIndex: number) => ({
+                  title: video.title || "",
+                  order: video.order || videoIndex + 1,
+                  duration: video.duration || 0,
+                  file: video.url || "",
+                })
+              ),
             })
           ),
         };
 
         reset(formattedData);
-        setInitialFormData(formattedData)
+        setInitialFormData(formattedData);
         setCourse(courseData);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch course");
@@ -143,12 +147,12 @@ const LectureEdit: React.FC = () => {
       toast.error("An upload is already in progress.");
       return;
     }
-    const isUnchanged =  _.isEqual(data, initialFormData)
-    if(isUnchanged){
-      console.log('value not changed')
+    const isUnchanged = _.isEqual(data, initialFormData);
+    if (isUnchanged) {
+      console.log("value not changed");
     }
-    if(isUnchanged){
-      toast('No Changes detected',{icon:'⚠️'})
+    if (isUnchanged) {
+      toast("No Changes detected", { icon: "⚠️" });
       return;
     }
     setIsUploading(true);
@@ -210,9 +214,7 @@ const LectureEdit: React.FC = () => {
       console.log(response);
       toast.dismiss(); //clear the loading toast
       navigate(`/instructor/courses/${courseId}/overview`);
-      toast.success(
-        response.message || "Course edited successfully!"
-      );
+      toast.success(response.message || "Course edited successfully!");
     } catch (error: any) {
       if (axios.isCancel(error)) {
         toast.dismiss();
@@ -231,6 +233,17 @@ const LectureEdit: React.FC = () => {
     }
   };
 
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState("");
+  useEffect(() => {
+    // Cleanup previous preview URL when component unmounts or URL changes
+    return () => {
+      if (videoPreviewUrl) {
+        URL.revokeObjectURL(videoPreviewUrl);
+      }
+    };
+  }, [videoPreviewUrl]);
+
+  
   return (
     <div className="container mx-auto px-4 md:px-10 py-8 w-full">
       <div className="flex flex-col">
@@ -290,7 +303,9 @@ const LectureEdit: React.FC = () => {
                               type="number"
                               className="bg-white"
                               {...field}
-                              onChange={(e) => field.onChange(Number(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
                             />
                           </FormControl>
                           <FormMessage />
@@ -416,7 +431,7 @@ const LectureEdit: React.FC = () => {
                                       <FormLabel>Video Order</FormLabel>
                                       <FormControl>
                                         <Input
-                                        type="number"
+                                          type="number"
                                           className="bg-white"
                                           placeholder="Video Order"
                                           {...orderField}
@@ -463,19 +478,14 @@ const LectureEdit: React.FC = () => {
                                         {video.file &&
                                         typeof video.file === "string" ? (
                                           <div className="bg-gray-100 p-2 rounded-md">
-                                            <p className="text-sm text-gray-700">
-                                              Current Video:{" "}
-                                              <a
-                                                href={video.file}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 underline break-words"
-                                              >
-                                                {video.file}
-                                              </a>
-                                            </p>
-                                            <p className="text-xs text-gray-500">
-                                              (Leave empty to retain the current
+                                            <div className="text-sm text-gray-700">
+                                              <h3 className="pb-1">Current Video:</h3>
+                                              <video controls width='300'>
+                                                <source src={video.file}/>
+                                              </video>
+                                            </div>
+                                            <p className="text-xs text-gray-500 mt-2 uppercase">
+                                              (Don't choose any video file to retain the current
                                               video)
                                             </p>
                                           </div>
@@ -484,14 +494,11 @@ const LectureEdit: React.FC = () => {
                                           video.file &&
                                           typeof video.file !== "string" && (
                                             <div className="bg-gray-100 p-2 rounded-md">
-                                              <video controls width="300">
+                                              <h2 className="pb-1">Newly choosen video:</h2>
+                                              <video controls width="300" key={videoPreviewUrl}>
                                                 <source
-                                                  src={URL.createObjectURL(
-                                                    video.file
-                                                  )}
+                                                  src={ videoPreviewUrl }
                                                 />
-                                                Your browser does not support
-                                                the video tag.
                                               </video>
                                             </div>
                                           )
@@ -505,9 +512,17 @@ const LectureEdit: React.FC = () => {
                                           onChange={(e) => {
                                             const selectedFile =
                                               e.target.files?.[0];
-
+                                              console.log(selectedFile)
+                                            // Revoke the previous preview URL to avoid memory leaks
+                                            if (videoPreviewUrl) {
+                                              URL.revokeObjectURL(
+                                                videoPreviewUrl
+                                              );
+                                            }
                                             if (selectedFile) {
+                                              const newPreviewUrl =URL.createObjectURL(selectedFile);
                                               // If a new file is selected, update the video file field
+
                                               field.onChange([
                                                 ...field.value.slice(
                                                   0,
@@ -522,6 +537,7 @@ const LectureEdit: React.FC = () => {
                                                 ),
                                               ]);
                                               fileField.onChange(selectedFile); // Update validation state
+                                              setVideoPreviewUrl(newPreviewUrl);
                                             } else {
                                               // If no file is selected, retain the old URL
                                               field.onChange([
