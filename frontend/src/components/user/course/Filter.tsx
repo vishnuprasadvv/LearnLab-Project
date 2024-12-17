@@ -84,6 +84,9 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
             <SelectGroup>
               {/* Default "None" Option */}
               <SelectItem value="none">None</SelectItem>
+              <SelectLabel>Sort by title</SelectLabel>
+              <SelectItem value="a-z">A-Z</SelectItem>
+              <SelectItem value="z-a">Z-A</SelectItem>
               <SelectLabel>Sort by price</SelectLabel>
               <SelectItem value="priceLowToHigh">Low to high</SelectItem>
               <SelectItem value="priceHighToLow">High to low</SelectItem>

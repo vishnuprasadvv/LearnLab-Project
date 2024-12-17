@@ -1,5 +1,4 @@
-import { getAllCoursesUserApi, getFilteredCoursesUserApi } from "@/api/student";
-import Course from "@/components/common/Course/Course";
+import { getFilteredCoursesUserApi } from "@/api/student";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Filter from "@/components/user/course/Filter";
@@ -7,7 +6,7 @@ import { ICourses } from "@/types/course";
 import React, { useEffect, useState } from "react";
 import SearchResults from "./SearchResults";
 import { AlertCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import PaginationComponent from "@/components/common/Pagination/Pagination";
 import { COURSES_PER_PAGE } from "@/config/paginationConifig";
@@ -18,22 +17,26 @@ interface Filters {
   rating: number | null;
   level: string | null;
 }
+
 const CoursesPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [courses, setCourses] = useState<ICourses[] | []>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
   //search and pagination
-  const [searchQuery, setSearchQuery] = useState("");
-  const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("query") || "");
+  const [appliedSearchQuery, setAppliedSearchQuery] = useState(searchParams.get("query") || "");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCourses, setTotalCourses] = useState('')
   const itemsPerPage = COURSES_PER_PAGE;
 
+
+
   const [filters, setFilters] = useState<Filters>({
-    categories: [],
-    sortBy: "",
-    rating: null,
-    level: null,
+    categories: searchParams.get("categories")?.split(",") || [],
+    sortBy: searchParams.get("sortBy") || "",
+    rating: searchParams.get("rating") ? Number(searchParams.get("rating")) : null,
+    level: searchParams.get("level") || null,
   });
 
   const handleFilterChange = (updatedFilters: {
@@ -48,6 +51,22 @@ const CoursesPage = () => {
     }));
     console.log("Active Filters:", updatedFilters);
   };
+
+  const updateQueryParams = () => {
+    setSearchParams({
+      query: appliedSearchQuery || "",
+      page: String(currentPage),
+      categories: filters.categories.join(","),
+      sortBy: filters.sortBy || "",
+      rating: filters.rating ? String(filters.rating) : "",
+      level: filters.level || "",
+    });
+  };
+
+  useEffect(() => {
+    updateQueryParams(); // Update URL query params
+  }, [filters, currentPage, appliedSearchQuery]);
+
 
   useEffect(() => {
     const { categories, sortBy, rating, level } = filters;
@@ -109,8 +128,11 @@ const CoursesPage = () => {
         <p>Total Courses : {totalCourses}</p>
       </div>
       <div className="flex flex-col sm:flex-row gap-10">
+
         {/* Filter page  */}
         <Filter onFilterChange={handleFilterChange} />
+        <div className=" flex flex-col w-full">
+        
         <div className="flex-1">
           {isLoading ? (
             Array.from({ length: 8 }).map((_, index) => (
@@ -124,13 +146,16 @@ const CoursesPage = () => {
             ))
           )}
         </div>
-      </div>
-      <div>
+
+      <div className="pt-5 mt-auto">
         <PaginationComponent
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
         />
+      </div>
+        
+      </div>
       </div>
     </div>
   );

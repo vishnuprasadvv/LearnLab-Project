@@ -109,7 +109,7 @@ async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>
   ])
 
   if(sort){
-    query.sort(sort)
+    query.sort(sort).collation({ locale: 'en', strength: 2 })
   }
 
   if(pagination){
