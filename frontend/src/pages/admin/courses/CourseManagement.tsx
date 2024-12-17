@@ -21,7 +21,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,28 +31,68 @@ import {
 } from "@/api/adminApi";
 import { ITEMS_PER_PAGE } from "@/config/paginationConifig";
 import PaginationComponent from "@/components/common/Pagination/Pagination";
+import CourseFilter from "@/components/Admin/courses/CourseFilter";
+import ResultsNotFound from "@/components/common/NoResults/ResultsNotFound";
+
+interface Filters {
+  categories: string[];
+  sortBy: string;
+  rating: number | null;
+  level: string | null;
+}
 
 const AdminCourseManagement = () => {
-  const [courses, setCourses] = useState<ICourses[] | null>(null);
+  const [courses, setCourses] = useState<ICourses[] | []>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
 
   //search and pagination
-  const [searchQuery, setSearchQuery] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCourses, setTotalCourses] = useState("");
   const itemsPerPage = ITEMS_PER_PAGE;
+
+  const [filters, setFilters] = useState<Filters>({
+    categories: [],
+    sortBy: "",
+    rating: null,
+    level: null,
+  });
+
+  const handleFilterChange = (updatedFilters: {
+    categories: string[];
+    sortBy: string;
+    rating: number | null;
+    level: string | null;
+  }) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...updatedFilters,
+    }));
+    console.log("Active Filters:", updatedFilters);
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
+      const { categories, sortBy, rating, level } = filters;
       try {
         setLoading(true);
-        const response = await getAllCoursesAdminApi(searchQuery, currentPage, itemsPerPage);
-        setCourses(response.data);
+        const response = await getAllCoursesAdminApi({
+          categories: categories.length > 0 ? categories.join(",") : undefined,
+          sortBy: sortBy || undefined,
+          rating: rating || undefined,
+          level: level || undefined,
+          page: currentPage,
+          limit: itemsPerPage,
+          query: searchQuery,
+        });
+        setCourses(response.data.courses);
         console.log(response);
         //set values for pagination
-      setTotalPages(Math.ceil(response.total / itemsPerPage))
+        setTotalPages(Math.ceil(response.data.totalPages / itemsPerPage));
+        setTotalCourses(response.data.totalCourses);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch courses");
       } finally {
@@ -61,25 +100,23 @@ const AdminCourseManagement = () => {
       }
     };
 
-    if(searchQuery === ''){
-      fetchCourses()
+    if (searchQuery === "") {
+      fetchCourses();
       return;
     }
 
     const debounceFetch = setTimeout(() => {
-      fetchCourses()
+      fetchCourses();
     }, 300);
 
-    return () => clearTimeout(debounceFetch)
-    
-
-  }, [searchQuery, currentPage]);
+    return () => clearTimeout(debounceFetch);
+  }, [searchQuery, currentPage, filters]);
 
   useEffect(() => {
-    if(searchQuery !== '') {
-      setCurrentPage(1)
+    if (searchQuery !== "") {
+      setCurrentPage(1);
     }
-  }, [searchQuery])
+  }, [searchQuery]);
 
   const handleEditButton = (courseId: string) => {
     navigate(`/admin/courses/${courseId}/edit`);
@@ -108,7 +145,7 @@ const AdminCourseManagement = () => {
       setLoading(true);
       const response = await publishCourseAdminApi(courseId, !isPublished);
       setCourses((prev) => {
-        if (!prev) return null;
+        if (!prev) return [];
 
         return prev?.map((course) =>
           course._id === courseId
@@ -132,28 +169,37 @@ const AdminCourseManagement = () => {
           {" "}
           Courses
         </h2>
-
-         {/* Search bar */}
-         <div className="w-max ml-auto mb-2">
+        <div className="w-max ml-auto mb-2">
           <Link to={"create"} className=" ml-auto">
             <Button className="bg-blue-600 rounded-full hover:bg-blue-700">
               Create course
             </Button>
           </Link>
         </div>
-        <div className=" relative sm:w-1/2 w-full">
-          <IoSearchOutline className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 place-content-center justify-center text-lg" />
-          <Input
-            type="text"
-            placeholder="Search courses"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 border w-full border-blue-100 place-self-center
+
+        {/* Search bar */}
+        <div className="flex lg:flex-row flex-col justify-between gap-2 max-w-full">
+          <div className=" relative lg:w-1/2 w-full flex">
+            <IoSearchOutline className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 place-content-center justify-center text-lg" />
+            <Input
+              type="text"
+              placeholder="Search courses"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 border w-full border-blue-100 place-self-center
               rounded-full h-10 shadow-md shadow-blue-100"
-          />
+            />
+          </div>
+          <div className="flex">
+            <CourseFilter onFilterChange={handleFilterChange} />
+          </div>
+          <div className="font-medium">TOTAL : {totalCourses} no/s</div>
         </div>
 
-        <div className=" bg-blue-100 overflow-auto mt-2">
+
+      {
+        courses.length !== 0 ? (
+<div className=" bg-blue-100 overflow-auto mt-2">
           <table className="text-sm text-left w-full rtl:text-right text-gray-500 dark:text-gray-400 overflow-x-scroll">
             <thead className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr className="bg-blue-200">
@@ -246,6 +292,11 @@ const AdminCourseManagement = () => {
             </tbody>
           </table>
         </div>
+        ) : (
+          <ResultsNotFound />
+        )
+      }
+        
       </div>
 
       {/* AlertDialog */}
@@ -283,9 +334,10 @@ const AdminCourseManagement = () => {
 
       <div>
         <PaginationComponent
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(page) => setCurrentPage(page)} />
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
     </div>
   );

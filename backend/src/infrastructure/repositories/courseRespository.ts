@@ -103,7 +103,7 @@ async getAllCoursesUsers(): Promise<ICourses[] | null> {
 //filtered course for users (search, filter, sort)
 
 async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>, pagination : Pagination): Promise<PaginatedResultCourses> {
-  const query = Courses.find({...filter, isPublished: true}).populate([
+  const query = Courses.find({...filter, isPublished: true, isDeleted : false}).populate([
     {path: 'instructor', select: '-password -profileImagePublicId'},
     {path: 'category', select: 'name _id'}
   ])
@@ -129,27 +129,31 @@ async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>
   }
 }
 
-async getAllCoursesAdmin(query: string, page: number, limit?: number):Promise<{courses: ICourses[] , total : number}> {
+async getAllCoursesAdmin(filter:Filter, sort: Record<string, SortOrder>, pagination: Pagination):Promise<PaginatedResultCourses> {
 
-  const filter = query? {title : {$regex : query, $options: 'i'}, isDeleted: false} : {isDeleted: false}
- 
- const queryBuilder = Courses.find(filter).populate([
-      { path: 'instructor', select: '-password -phone -profileImagePublicId' },
-      {path: 'category', select: 'name _id'}
+  const query = Courses.find({...filter, isPublished: true, isDeleted:false}).populate([
+    {path: 'instructor', select: '-password -profileImagePublicId'},
+    {path: 'category', select: 'name _id'}
   ])
 
-
-  let courses, total;
-
-  if(limit === undefined) {
-    courses = await queryBuilder.sort({createdAt : -1});
-    total = courses.length;
-  }else{
-    courses = await queryBuilder.sort({createdAt: -1})
-      .skip((page -1) * limit)
-      .limit(limit);
-      total = await Courses.countDocuments(filter)
+  if(sort){
+    query.sort(sort).collation({ locale: 'en', strength: 2 })
   }
- return {courses, total}
+
+  if(pagination){
+    const skip = (pagination.page - 1) * pagination.limit;
+    query.skip(skip).limit(pagination.limit)
+  }
+
+  const courses = await query.exec();
+
+  const totalCourses = await Courses.countDocuments({...filter, isPublished: true});
+  const totalPages = pagination ? Math.ceil(totalCourses / pagination.limit) : null;
+
+  return {
+    courses, 
+    totalCourses,
+    totalPages
+  }
 }
 }

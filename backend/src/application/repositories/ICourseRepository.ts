@@ -37,10 +37,11 @@ export interface ICourseRepository{
     publishCourse(courseId: string, publishValue : boolean) : Promise<ICourses | null>
 
     //users
-
     getAllCoursesUsers () : Promise<ICourses[] | null >
 
     getAllFilteredCoursesUsers (filter:any, sort:any, pagination:any) : Promise<PaginatedResultCourses > 
 
-    getAllCoursesAdmin(query: string, page: number, limit?: number) : Promise <{courses:ICourses[], total : number}>
+    //admin
+    getAllCoursesAdmin(filter:Filter, sort :any, pagination: Pagination | null) : Promise <PaginatedResultCourses>
+
 }

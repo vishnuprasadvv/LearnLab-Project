@@ -160,9 +160,29 @@ export const editCategory = async (id: string, name:string, description: string,
   }
 }
 
-export const getAllCoursesAdminApi = async (searchQuery: string, currentPage:number, itemsPerPage:number) => {
+// export const getAllCoursesAdminApi = async (searchQuery: string, currentPage:number, itemsPerPage:number) => {
+//   try {
+//       const response = await adminInterceptorApi.get(`${API_URL}/admin/courses`, {params:{ query: searchQuery, page: currentPage, limit : itemsPerPage}, withCredentials: true });
+//       return response.data;
+//   } catch (error: any) {
+//       throw error?.response?.data || error; // Propagate error to caller
+//     } 
+// }
+
+//get all courses list
+interface GetFilteredCourseParams {
+  categories?: string;
+  sortBy? : string;
+  rating?: number;
+  level ? : string;
+  page? : number;
+  limit ? : number;
+  query? : string
+}
+
+export const getAllCoursesAdminApi = async (params:GetFilteredCourseParams) => {
   try {
-      const response = await adminInterceptorApi.get(`${API_URL}/admin/courses`, {params:{ query: searchQuery, page: currentPage, limit : itemsPerPage}, withCredentials: true });
+      const response = await adminInterceptorApi.get(`${API_URL}/admin/courses`, {params:params, withCredentials: true });
       return response.data;
   } catch (error: any) {
       throw error?.response?.data || error; // Propagate error to caller

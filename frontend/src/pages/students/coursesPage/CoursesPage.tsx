@@ -173,7 +173,7 @@ const CourseNotFound = () => {
       <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
         Sorry, we couldn't find the course you're looking for.
       </p>
-      <Link to="/" className="italic">
+      <Link to="/courses" className="italic">
         <Button variant="link">Browse All Courses</Button>
       </Link>
     </div>

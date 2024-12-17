@@ -17,22 +17,48 @@ export const getAllCoursesController = async (
   next: NextFunction
 ) => {
   try {
-    const { limit = 5, query = "", page = 1 } = req.query;
-    const parsedLimit = Number(limit);
-    const parsedPage = Number(page);
-    const result = await getAllCoursesUseCase.execute(
-      query as string,
-      parsedPage,
-      parsedLimit === 0 ? undefined : parsedLimit
-    );
-    res
-      .status(200)
-      .json({
-        message: "All courses fetched successfully",
-        success: true,
-        data: result.courses,
-        total: result.total,
-      });
+    const {
+      limit = 5,
+      query = "",
+      page = 1,
+      categories,
+      sortBy,
+      rating,
+      level,
+    } = req.query;
+    console.log(req.query);
+    const normalizedCategories =
+      typeof categories === "string"
+        ? categories
+        : Array.isArray(categories)
+        ? categories.join(",")
+        : undefined;
+
+    const normalizedSortBy = typeof sortBy === "string" ? sortBy : undefined;
+    const normalizedRating = rating ? Number(rating) : undefined;
+    const normalizedLevel =
+      typeof level === "string"
+        ? level
+        : Array.isArray(categories)
+        ? categories.join(",")
+        : undefined;
+    const normalizedQuery = query.toString();
+    const normalizedPage = Number(page);
+    const normalizedLimit = Number(limit) === 0 ? undefined : Number(limit);
+    const result = await getAllCoursesUseCase.execute({
+      query: normalizedQuery,
+      categories: normalizedCategories,
+      sortBy: normalizedSortBy,
+      rating: normalizedRating,
+      level: normalizedLevel,
+      page: normalizedPage,
+      limit: normalizedLimit,
+    });
+    res.status(200).json({
+      message: "All courses fetched successfully",
+      success: true,
+      data: result
+    });
   } catch (error) {
     next(error);
   }
@@ -49,13 +75,11 @@ export const getCourseController = async (
       throw new CustomError("course id not provided", 400);
     }
     const courses = await getCourseByIdUseCase.execute(id);
-    res
-      .status(200)
-      .json({
-        message: "Course fetched successfully",
-        success: true,
-        data: courses,
-      });
+    res.status(200).json({
+      message: "Course fetched successfully",
+      success: true,
+      data: courses,
+    });
   } catch (error) {
     next(error);
   }
@@ -72,13 +96,11 @@ export const deleteCourseController = async (
       throw new CustomError("course id not provided", 400);
     }
     const courses = await deleteCourseUseCase.execute(id);
-    res
-      .status(200)
-      .json({
-        message: "Course deleted successfully",
-        success: true,
-        data: courses,
-      });
+    res.status(200).json({
+      message: "Course deleted successfully",
+      success: true,
+      data: courses,
+    });
   } catch (error) {
     next(error);
   }
@@ -104,15 +126,13 @@ export const publishCourseController = async (
       throw new CustomError("Failed to publish course", 400);
     }
     console.log(publishedCourse.isPublished);
-    res
-      .status(200)
-      .json({
-        message: `Course ${
-          publishedCourse.isPublished ? "published" : "unpublished"
-        } successfully`,
-        success: true,
-        data: publishedCourse,
-      });
+    res.status(200).json({
+      message: `Course ${
+        publishedCourse.isPublished ? "published" : "unpublished"
+      } successfully`,
+      success: true,
+      data: publishedCourse,
+    });
   } catch (error) {
     next(error);
   }
