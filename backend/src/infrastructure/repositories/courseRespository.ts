@@ -30,6 +30,17 @@ export class CourseRepositoryClass implements ICourseRepository{
         ]
         )
    }
+   async getCourseByIds(ids: string[]) : Promise<ICourses[] | null>{
+    if (!Array.isArray(ids) || ids.length === 0) {
+      console.error("Invalid or empty IDs array provided.");
+      return null;
+    }
+        return await Courses.find({_id:{ $in: ids }, isDeleted: false}).populate([
+            { path: 'category'},
+            {path : 'instructor', select:'-password -phone -profileImagePublicId'}
+        ]
+        )
+   }
 
    async getAllCourses(userId: string) : Promise<ICourses[] | null>{
         return await Courses.find({instructor: userId ,isDeleted: false}).populate([
@@ -156,4 +167,5 @@ async getAllCoursesAdmin(filter:Filter, sort: Record<string, SortOrder>, paginat
     totalPages
   }
 }
+
 }

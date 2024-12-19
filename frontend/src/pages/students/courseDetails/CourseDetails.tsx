@@ -1,4 +1,4 @@
-import { getAllCoursesUserApi, getCourseByIdUserApi } from "@/api/student";
+import {getCourseByIdUserApi, purchaseCourseApi, } from "@/api/student";
 import BreadCrumb from "@/components/common/BreadCrumb/BreadCrumb";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,11 +11,30 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ICourses } from "@/types/course";
-import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
+import { BadgeInfo, Loader2, Lock, PlayCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import {loadStripe} from '@stripe/stripe-js'
+import { config } from "@/config/config";
+import { ICoursesInOrder } from "@/types/orders";
 
+interface Course {
+  courseId: string ;
+    courseTitle : string;
+    coursePrice : Number;
+    courseImage: string;
+    courseInstructor ?: string;
+    courseLevel ?: string;
+    courseDescription ?:string ;
+    courseDuration ?: number
+    courseLecturesCount ?: number
+    courseInstructorImage ?: string;
+    courseCategory ?: string
+}
+
+
+const stripePromise = loadStripe(config.stripe.STRIPE_PUBLISHABLE_KEY)
 const CourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState<ICourses | null>(null);
@@ -23,7 +42,7 @@ const CourseDetails = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
-      if (!id) {
+      if (!id){
         throw new Error("Course id not found");
       }
       try {
@@ -41,7 +60,47 @@ const CourseDetails = () => {
     fetchCourse();
   }, []);
 
-  const purchasedCourse = true;
+  const handleCheckout = async() => {
+    if(!course){
+      throw new Error('course not found') 
+    }
+    setLoading(true)
+    try {
+      const courseProps:Course = {
+        courseId:course?._id,
+        courseTitle:course.title,
+        courseDescription:course.description,
+        courseImage: course.imageUrl || '',
+        coursePrice:course.price,
+        courseInstructor: `${course.instructor.firstName} ${course.instructor.lastName}`,
+        courseInstructorImage : course.instructor.profileImageUrl,
+        courseLevel : course.level,
+        courseDuration: course.duration,
+        courseLecturesCount : course.lectures?.length,
+        courseCategory : course.category?.name
+
+      }
+      const response = await purchaseCourseApi([courseProps])
+      const sessionId = response.sessionId;
+      console.log('checkouturl', sessionId)
+
+      if(sessionId){
+        const stripe = await stripePromise;
+        stripe?.redirectToCheckout({sessionId: sessionId})
+      }else{
+        console.error('Session ID not found in the URL')
+      }
+
+      
+    } catch (error:any) {
+      toast.error(error.message)
+      console.error('Checkout error',error)
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  const purchasedCourse = false;
   return (
     <div className="mt-10 space-y-5">
       <BreadCrumb/>
@@ -118,9 +177,12 @@ const CourseDetails = () => {
             </CardContent>
             <CardFooter className="flex justify-center p-4">
               {purchasedCourse ? (
-                <Button className="w-full">Continue course</Button>
+                
+                <Button className="w-full" >Continue course</Button>
               ) : (
-                <Button className="w-full">Purchase course</Button>
+                <Button className="w-full" onClick={handleCheckout} disabled={loading}>
+                  {loading && <Loader2 className="animate-spin" />}
+                  Purchase course</Button>
               )}
             </CardFooter>
           </Card>

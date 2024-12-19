@@ -44,6 +44,11 @@ export interface CloudinaryConfig {
     API_KEY?: string,
     API_SECRET?: string
 }
+export interface StripeConfig {
+    STRIPE_PUBLISHABLE_KEY? : string,
+    STRIPE_SECRET_KEY ?:string,
+    STRIPE_WEBHOOK_SECRET?: string
+}
 
 export interface Config {
     app: AppConfig;
@@ -53,7 +58,8 @@ export interface Config {
     google: GoogleConfig;
     email: EmailConfig;
     session: SessionConfig;
-    cloudinary : CloudinaryConfig
+    cloudinary : CloudinaryConfig;
+    stripe: StripeConfig
 }
 
 
@@ -98,5 +104,10 @@ export const config : Config = {
         CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
         API_KEY : process.env.CLOUDINARY_API_KEY,
         API_SECRET : process.env.CLOUDINARY_API_SECRET
+    },
+    stripe : {
+        STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+        STRIPE_SECRET_KEY : process.env.STRIPE_SECRET_KEY,
+        STRIPE_WEBHOOK_SECRET : process.env.STRIPE_WEBHOOK_SECRET
     }
 }

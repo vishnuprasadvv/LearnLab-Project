@@ -42,3 +42,35 @@ export const getAllCategoriesApi = async () => {
       }
     
   }
+
+
+  interface Course {
+    courseId: string ;
+      courseTitle : string;
+      coursePrice : Number;
+      courseImage: string;
+      courseInstructor ?: string;
+      courseLevel ?: string;
+      courseDescription ?:string ;
+      courseDuration ?: number
+      courseLecturesCount ?: number
+      courseInstructorImage ?: string
+  }
+  export const purchaseCourseApi = async (courses:[Course]) => {
+    try {
+        const response = await api.post(`${API_URL}/student/order/create`,{courses}, { withCredentials: true });
+        return response.data;
+    } catch (error: any) {
+        throw error?.response?.data || error; // Propagate error to caller
+      }
+    
+  }
+  export const fetchMyCoursesApi = async () => {
+    try {
+        const response = await api.get(`${API_URL}/student/profile/courses`, { withCredentials: true });
+        return response.data;
+    } catch (error: any) {
+        throw error?.response?.data || error; // Propagate error to caller
+      }
+    
+  }

@@ -18,7 +18,7 @@ import RegisterInstructor from "./pages/instructor/RegisterInstructor";
 import { config } from "./config/config";
 import ProfileSidebar from "./pages/students/ProfileSidebar";
 import ProfileDashboard from "./components/user/profile/ProfileDashboard";
-import ProfileCourses from "./components/user/profile/ProfileCourses";
+import ProfileCourses from "./pages/students/profile/ProfileCourses";
 import ProfileEdit from "./components/user/profile/ProfileEdit";
 import ProfileChangePassword from "./components/user/profile/ProfileChangePassword";
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
@@ -45,6 +45,8 @@ import CoursesPage from "./pages/students/coursesPage/CoursesPage";
 import CourseDetails from "./pages/students/courseDetails/CourseDetails";
 import AdminCourseManagement from "./pages/admin/courses/CourseManagement";
 import CourseOverviewAdmin from "./pages/admin/courses/CourseOverview";
+import PurchaseCancel from "./pages/students/purchase/PurchaseCancel";
+import PurchaseSuccess from "./pages/students/purchase/PurchaseSuccess";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -81,6 +83,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/courses/course-details/:id" element={<CourseDetails />} />
+            <Route path='/cancel' element={<PurchaseCancel />}/>
+            <Route path='/payment/success' element={<PurchaseSuccess />}/>
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>

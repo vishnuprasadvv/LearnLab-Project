@@ -7,5 +7,8 @@ export const config = {
     },
     google: {
       CLIENT_ID : import.meta.env.VITE_GOOGLE_CLIENT_ID 
+    },
+    stripe:{
+      STRIPE_PUBLISHABLE_KEY: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
     }
 }

@@ -11,10 +11,12 @@ import adminRouter from '../interfaces/routes/adminRoutes';
 import session from 'express-session';
 import { config } from '../infrastructure/config/config';
 import instructorRouter from '../interfaces/routes/instructorRoutes';
+import webhookRouter from '../interfaces/routes/webhookRoute'
 
 const PORT = config.app.PORT
 
 const app = express();
+app.use('/api',webhookRouter)
 app.use(express.json());
 dotenv.config();
 //cookie parser 

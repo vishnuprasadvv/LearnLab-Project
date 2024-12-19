@@ -25,10 +25,10 @@ export interface ICourses {
         role ?: string
     },
     title:string,
-    description?:string,
+    description:string,
     imageUrl ?: string,
     imagePublicId ?: string,
-    price?: number,
+    price: number,
     isPublished? : boolean,
     category ?: {
         name: string,
@@ -39,5 +39,6 @@ export interface ICourses {
     duration? : number,
     createdAt: Date,
     updatedAt: Date,
-    lectures?: ILectureDocument[] | []
+    lectures?: ILectureDocument[] | [],
+    rating ?: number
 }

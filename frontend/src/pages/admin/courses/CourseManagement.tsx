@@ -163,7 +163,8 @@ const AdminCourseManagement = () => {
   };
 
   return (
-    <div className="container mx-auto md:px-4 px-2 py-8 w-full">
+    <div className="container mx-auto md:px-4 px-2 py-8 w-full flex flex-col">
+      <div className="">
       <div className="flex flex-col">
         <h2 className="text-2xl font-bold text-dark-500 text-center ">
           {" "}
@@ -193,8 +194,8 @@ const AdminCourseManagement = () => {
           <div className="flex">
             <CourseFilter onFilterChange={handleFilterChange} />
           </div>
-          <div className="font-medium">TOTAL : {totalCourses} no/s</div>
         </div>
+          <div className="font-medium pt-2">TOTAL : {totalCourses} no/s</div>
 
 
       {
@@ -332,7 +333,8 @@ const AdminCourseManagement = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div>
+        </div>
+      <div className="mt-auto pt-5">
         <PaginationComponent
           currentPage={currentPage}
           totalPages={totalPages}
