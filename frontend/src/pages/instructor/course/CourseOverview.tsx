@@ -269,12 +269,27 @@ const CourseOverview = () => {
             <h2 className="font-bold text-xl mb-2">Course content</h2>
             <div className="bg-slate-100 p-2 rounded-lg">
               <ol className=" space-y-2">
-                {course?.lectures?.map((lecture) => (
+                {course?.lectures?.sort((a,b) => a.order - b.order).map((lecture) => (
                   <div className="bg-white p-2 pl-5 rounded-lg">
                     <li className="list-decimal space-y-3">
+                      <div className="flex justify-between">
                       <h4 className="font-semibold text-lg">
                         {lecture && lecture.title}
                       </h4>
+                      {lecture &&(
+                        <div>{lecture.isFree ? (
+                          <div className="border border-red-400 px-2 py-1 text-red-400 font-medium"> 
+                            <span>FREE</span>
+                          </div>
+                        ) : (
+                          <div className="border border-green-400 px-2 py-1 text-green-400 font-medium"> 
+                            <span>PAID</span>
+                          </div>
+                         
+                        )}</div>
+                      )}
+                      </div>
+                      
                       <div className="space-y-1 ">
                         <span className="uppercase font-semibold">Lecture description : </span>
                         <p className="text italic">

@@ -102,7 +102,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {isAuthenticated ?  <NavLink to={'/profile'} onClick={() => setOpen(false)}>
+          {isAuthenticated ?  <NavLink to={'/profile/dashboard'} onClick={() => setOpen(false)}>
             <Avatar className="hover:border-2 border-blue-400 border-spacing-3">
             <AvatarImage src="" />
             <AvatarFallback>

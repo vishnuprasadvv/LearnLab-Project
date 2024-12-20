@@ -29,6 +29,7 @@ import { createCourseLectureApi } from "@/api/instructorApi";
 import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@/components/ui/progress";
+import CustomToggleButton from "@/components/common/ToggleButton/ToggleButton";
 
 const LectureCreation: React.FC = () => {
   const { courseId } = useParams();
@@ -51,6 +52,7 @@ const LectureCreation: React.FC = () => {
           title: "",
           order: 1,
           description: "",
+          isFree: false,
           videos: [
             {
               title: "",
@@ -86,6 +88,7 @@ const LectureCreation: React.FC = () => {
       title: "",
       order: lectureFields.length + 1,
       description: "",
+      isFree: false,
       videos: [],
     });
   };
@@ -130,6 +133,10 @@ const LectureCreation: React.FC = () => {
         formData.append(
           `lectures[${lectureIndex}].description`,
           lecture.description
+        );
+        formData.append(
+          `lectures[${lectureIndex}].isFree`,
+          lecture.isFree.toString()
         );
         formData.append(
           `lectures[${lectureIndex}].order`,
@@ -260,6 +267,24 @@ const LectureCreation: React.FC = () => {
                             className="bg-white"
                             placeholder="e.g. 'This lecture includes'..."
                             {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    name={`lectures.${lectureIndex}.isFree`}
+                    control={control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Lecture is Free?</FormLabel>
+                        <FormControl>
+                          <CustomToggleButton
+                            isChecked={field.value}
+                            onToggle={(value) => field.onChange(value)}
                           />
                         </FormControl>
                         <FormMessage />
@@ -413,12 +438,12 @@ const LectureCreation: React.FC = () => {
                                         accept="video/*"
                                         onChange={(e) => {
                                           const file = e.target.files?.[0];
-                                          
+
                                           if (videoPreviewUrl) {
                                             URL.revokeObjectURL(
                                               videoPreviewUrl
                                             );
-                                            setVideoPreviewUrl('')
+                                            setVideoPreviewUrl("");
                                           }
                                           if (file) {
                                             const newPreviewUrl =

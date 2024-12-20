@@ -1,17 +1,35 @@
 import User from "../../../domain/models/User";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import bcrypt from 'bcryptjs'
+import { preprocessQuery } from "../../../utils/preProcessQuery";
 
 
 export const getAllUsers = async (search : string, page: number | string, limit: number | string) =>{
     
     //set query for fetching search data
+    const searchQuery = preprocessQuery(search)
     const query ={
         $and: [
           { role: { $ne: 'admin' } }, // Exclude users with role 'admin'
-          search
-            ? { $or: [{ firstName: new RegExp(search, 'i') }, { lastName: new RegExp(search, 'i') }] }
-            : {},
+          ...(search
+            ? [
+                {
+                  $or: [
+                    { firstName: { $regex: new RegExp(searchQuery, 'i') } },
+                    { lastName: { $regex: new RegExp(searchQuery, 'i') } },
+                    {
+                      $expr: {
+                        $regexMatch: {
+                          input: { $concat: ['$firstName', '$lastName'] }, // Combine firstName and lastName
+                          regex: searchQuery,
+                          options: 'i',
+                        },
+                      },
+                    },
+                  ],
+                },
+              ]
+            : []),
         ],
       };
 

@@ -1,8 +1,6 @@
 import { fetchMyCoursesApi } from "@/api/student";
-import Course from "@/components/common/Course/Course";
 import UserProfileCourses from "@/components/common/Course/userProfileOrders";
 import PaginationComponent from "@/components/common/Pagination/Pagination";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { COURSES_PER_PAGE } from "@/config/paginationConifig";
@@ -18,6 +16,7 @@ const ProfileCourses = () => {
   const itemsPerPage = COURSES_PER_PAGE;
   const [limitedOrders, setLimitedOrders] = useState<IOrder[] | []>([]);
   useEffect(() => {
+    setIsLoading(true)
     const fetchMyCourses = async () => {
       try {
         const response = await fetchMyCoursesApi();
@@ -29,6 +28,8 @@ const ProfileCourses = () => {
       } catch (error: any) {
         console.error("fetching course error", error);
         toast.error(error.message || "Fetching course failed");
+      }finally{
+        setIsLoading(false)
       }
     };
 
@@ -59,13 +60,14 @@ const ProfileCourses = () => {
                   You are not enrolled any courses
                 </h2>
               ) : (
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {isLoading
                     ? Array.from({ length: 8 }).map((_, index) => (
                         <ProfileCoursesSkeleton key={index} />
                       ))
                     : limitedOrders.map((order) => (
-                        <div className="hover:bg-blue-50 p-1 rounded-md">
+                        <div className="hover:bg-blue-50 p-1 rounded-md bg-slate-50 shadow-md">
+                          <h3 className="font-semibold">{order.orderId || 'OrderID'}</h3>
                           {order.courses.map((course) => (
                             <UserProfileCourses {...course} />
                           ))}

@@ -45,4 +45,12 @@ export class OrderRepository implements IOrderRepository{
     async getOrdersByUserId(userId: string):Promise<IOrder[]>{
         return await OrderModel.find({userId})
     }
+    async hasUserPurchasedCourse (userId: string, courseId: string) : Promise<boolean> {
+        const order = await OrderModel.findOne({
+            userId,
+            'courses.courseId': courseId,
+            paymentStatus:'completed'
+        })
+        return !!order
+    }
 }

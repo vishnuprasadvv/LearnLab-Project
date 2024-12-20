@@ -4,6 +4,7 @@ export const lectureSchema = z.object({
   title: z.string().min(1, { message: "Lecture title is required." }),
   order:z.number().min(1, { message: "Video order must be greater than 0." }),
 description:z.string().min(10, {message: 'Description must be more than 10 characters'}),
+isFree:z.boolean().default(false),
   videos: z
     .array(
       z.object({

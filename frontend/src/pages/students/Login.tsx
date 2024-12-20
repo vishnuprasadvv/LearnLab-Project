@@ -19,7 +19,7 @@ const Login = () => {
   useEffect(() => {
     dispatch(clearError())
     if (isAuthenticated) {
-      navigate('/home')
+      navigate('/')
     }
   }
     , [])

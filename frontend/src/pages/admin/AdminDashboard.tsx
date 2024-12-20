@@ -119,6 +119,7 @@ const AdminPage = () => {
                 isActive ? "bg-blue-300" : ""
               } flex gap-3 items-center justify-center md:justify-start hover:bg-gray-200  rounded-md p-2 py-5 w-full`
             }
+            onClick={() => setIsSidebarOpen(false)} // Close sidebar when a menu item is clicked
           >
             <span className="text-2xl">{tab.icon}</span>
             <span className="sm:hidden md:block truncate">{tab.name}</span>

@@ -14,7 +14,6 @@ interface GetFilteredCourseParams {
 }
 
 export const getFilteredCoursesUserApi = async (params: GetFilteredCourseParams) => {
-  console.log('api', params)
     const response = await api.get(`${API_URL}/student/courses-filtered`, {params : params, withCredentials: true});
     return response.data;
 }
@@ -33,9 +32,13 @@ export const getAllCategoriesApi = async () => {
     }
   }
 
-  export const getCourseByIdUserApi = async (courseId: string) => {
+  export const getCourseByIdUserApi = async (courseId: string, userId: string | null) => {
+    const url = userId 
+            ? `${API_URL}/student/courses/${courseId}?userId=${userId}`
+            : `${API_URL}/student/courses/${courseId}`
+
     try {
-        const response = await api.get(`${API_URL}/student/courses/${courseId}`, { withCredentials: true });
+        const response = await api.get(url, { withCredentials: true });
         return response.data;
     } catch (error: any) {
         throw error?.response?.data || error; // Propagate error to caller

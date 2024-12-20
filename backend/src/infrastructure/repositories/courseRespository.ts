@@ -30,6 +30,8 @@ export class CourseRepositoryClass implements ICourseRepository{
         ]
         )
    }
+
+
    async getCourseByIds(ids: string[]) : Promise<ICourses[] | null>{
     if (!Array.isArray(ids) || ids.length === 0) {
       console.error("Invalid or empty IDs array provided.");
@@ -130,7 +132,7 @@ async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>
 
   const courses = await query.exec();
 
-  const totalCourses = await Courses.countDocuments({...filter, isPublished: true});
+  const totalCourses = await Courses.countDocuments({...filter, isPublished: true, isDeleted: false});
   const totalPages = pagination ? Math.ceil(totalCourses / pagination.limit) : null;
 
   return {

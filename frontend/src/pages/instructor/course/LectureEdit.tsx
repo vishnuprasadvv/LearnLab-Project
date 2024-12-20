@@ -34,6 +34,7 @@ import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@/components/ui/progress";
 import { ICourses } from "@/types/course";
 import _ from "lodash";
+import CustomToggleButton from "@/components/common/ToggleButton/ToggleButton";
 
 const LectureEdit: React.FC = () => {
   const { courseId } = useParams();
@@ -52,6 +53,7 @@ const LectureEdit: React.FC = () => {
           title: "",
           order: 1,
           description: "",
+          isFree: false,
           videos: [
             {
               title: "",
@@ -99,6 +101,7 @@ const LectureEdit: React.FC = () => {
             (lecture: any, lectureIndex: number) => ({
               title: lecture.title || "",
               description: lecture.description || "",
+              isFree : lecture.isFree || false,
               order: lecture.order || lectureIndex + 1,
               videos: (lecture.videos || []).map(
                 (video: any, videoIndex: number) => ({
@@ -131,6 +134,7 @@ const LectureEdit: React.FC = () => {
       title: "",
       order: lectureFields.length + 1,
       description: "",
+      isFree: false,
       videos: [
         {
           title: "",
@@ -191,6 +195,10 @@ const LectureEdit: React.FC = () => {
           lecture.description
         );
         formData.append(
+          `lectures[${lectureIndex}].isFree`,
+          lecture.isFree ? 'true' : 'false'
+        );
+        formData.append(
           `lectures[${lectureIndex}].order`,
           lecture.order.toString()
         );
@@ -242,7 +250,6 @@ const LectureEdit: React.FC = () => {
       }
     };
   }, [videoPreviewUrl]);
-
   
   return (
     <div className="container mx-auto px-4 md:px-10 py-8 w-full">
@@ -327,6 +334,24 @@ const LectureEdit: React.FC = () => {
                             placeholder="e.g. 'This lecture includes'..."
                             {...field}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <FormField
+                    name={`lectures.${lectureIndex}.isFree`}
+                    control={control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Lecture is Free?</FormLabel>
+                        <FormControl>
+                          <CustomToggleButton
+                          isChecked={field.value}
+                          onToggle={(value) => field.onChange(value)}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

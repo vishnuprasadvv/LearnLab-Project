@@ -6,12 +6,14 @@ import { GetAllCategoriesAtOnceUseCase } from "../../../../application/use-cases
 import { CategoryRespository } from "../../../../infrastructure/repositories/categoryRespository";
 import { GetCourseByIdStudentUseCase } from "../../../../application/use-cases/student/getCourseById";
 import { GetAllFilteredCoursesUseCase } from "../../../../application/use-cases/student/getFilteredCourse";
+import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";
 
 const courseRepository = new CourseRepositoryClass()
 const categoryRepository = new CategoryRespository()
+const orderRepository = new OrderRepository()
 const getAllCoursesUserUseCase = new GetAllCoursesUserUseCase(courseRepository)
 const getAllCategoriesUseCase = new GetAllCategoriesAtOnceUseCase(categoryRepository)
-const getCourseByIdUseCase = new GetCourseByIdStudentUseCase(courseRepository)
+const getCourseByIdUseCase = new GetCourseByIdStudentUseCase(courseRepository, orderRepository)
 const getAllFilteredCoursesUseCase = new GetAllFilteredCoursesUseCase(courseRepository)
 
 export const getAllCoursesController = async(req: Request, res: Response, next: NextFunction) => {
@@ -67,11 +69,15 @@ export const getCategoriesController = async(req: Request, res: Response, next: 
 export const getCourseController = async(req: Request, res: Response, next: NextFunction) => {
     try {
       const {id} = req.params;
+      const userId = req.query.userId || null;
       if(!id) {
         throw new CustomError('course id not provided', 400)
       } 
-        const courses = await getCourseByIdUseCase.execute(id)
-        res.status(200).json({message: 'Course fetched successfully', success : true, data: courses})
+        const result = await getCourseByIdUseCase.execute(id , userId as string)
+        if(!result){
+            throw new CustomError('Course not found', 400)
+        }
+        res.status(200).json({message: 'Course fetched successfully', success : true, data: result?.course, purchaseStatus: result?.purchased})
     } catch (error) {
         next(error)
     }

@@ -6,4 +6,5 @@ export interface IOrderRepository {
     getOrderById (orderId: string): Promise<IOrder | null> ;
     getOrdersByUserIdWithPaymentStatus(userId: string, paymentStatus:string):Promise<IOrder[]>
     getOrdersByUserId(userId: string):Promise<IOrder[]>
+    hasUserPurchasedCourse (userId: string, courseId: string) : Promise<boolean> 
 }

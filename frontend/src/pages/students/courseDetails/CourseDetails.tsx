@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import {loadStripe} from '@stripe/stripe-js'
 import { config } from "@/config/config";
-import { ICoursesInOrder } from "@/types/orders";
+import { useAppSelector } from "@/app/hooks";
 
 interface Course {
   courseId: string ;
@@ -39,6 +39,8 @@ const CourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState<ICourses | null>(null);
   const [loading, setLoading] = useState(false);
+  const {user} = useAppSelector((state) => state.auth)
+  const [userCoursePurchaseStatus, setUserCoursePurchaseStatus] = useState(false)
   const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
@@ -47,8 +49,13 @@ const CourseDetails = () => {
       }
       try {
         setLoading(true);
-        const response = await getCourseByIdUserApi(id);
+        let userId = null;
+        if(user?._id){
+          userId = user._id
+        }
+        const response = await getCourseByIdUserApi(id , userId);
         setCourse(response.data);
+        setUserCoursePurchaseStatus(response.purchaseStatus)
         console.log(response.data);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch course");
@@ -100,7 +107,6 @@ const CourseDetails = () => {
     }
   }
 
-  const purchasedCourse = false;
   return (
     <div className="mt-10 space-y-5">
       <BreadCrumb/>
@@ -170,13 +176,15 @@ const CourseDetails = () => {
         <div className="w-full lg:w-1/3 ">
           <Card>
             <CardContent className="p-4 flex flex-col">
-              <div className="w-full aspect-video mb-4">react plyer Video</div>
+              <div className="w-full aspect-video mb-4">
+                video player
+              </div>
               <h1>Lecture Title</h1>
               <Separator className="my-2" />
               <h1 className="text-lg md:text-xl font-semibold">Course price</h1>
             </CardContent>
             <CardFooter className="flex justify-center p-4">
-              {purchasedCourse ? (
+              {userCoursePurchaseStatus ? (
                 
                 <Button className="w-full" >Continue course</Button>
               ) : (
