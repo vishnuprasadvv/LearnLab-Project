@@ -265,64 +265,89 @@ const CourseOverview = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 text-slate-800">
-            <h2 className="font-bold text-xl mb-2">Course content</h2>
-            <div className="bg-slate-100 p-2 rounded-lg">
-              <ol className=" space-y-2">
-                {course?.lectures?.sort((a,b) => a.order - b.order).map((lecture) => (
-                  <div className="bg-white p-2 pl-5 rounded-lg">
-                    <li className="list-decimal space-y-3">
-                      <div className="flex justify-between">
-                      <h4 className="font-semibold text-lg">
-                        {lecture && lecture.title}
-                      </h4>
-                      {lecture &&(
-                        <div>{lecture.isFree ? (
-                          <div className="border border-red-400 px-2 py-1 text-red-400 font-medium"> 
-                            <span>FREE</span>
-                          </div>
-                        ) : (
-                          <div className="border border-green-400 px-2 py-1 text-green-400 font-medium"> 
-                            <span>PAID</span>
-                          </div>
-                         
-                        )}</div>
-                      )}
-                      </div>
-                      
-                      <div className="space-y-1 ">
-                        <span className="uppercase font-semibold">Lecture description : </span>
-                        <p className="text italic">
-                          {lecture && lecture.description}
-                        </p>
-                      </div>
-                      <div className="space-y-1 flex gap-2">
-                        <span className="uppercase font-semibold">Lecture order : {lecture && lecture.order}</span>
-                      </div>
-                      <div>
-                          <h5 className="font-semibold uppercase">Lecture videos : ({lecture && lecture.videos.length} No/s)</h5>
-                        <div className="flex flex-col sm:flex-row  gap-2  border p-3 rounded-lg">
-                          
-                        {lecture.videos.map((video,index) => (
-                          <div key={index} className="flex flex-col w-max p-2 rounded-lg gap-1 bg-slate-100 justify-between">
-                            <div className="flex flex-col">
-                            <span className="">Video title: {video.title}</span>
-                            <span>Video duration: {video.duration} sec</span>
-                            </div>
-                            <video controls width='250' className="rounded-lg">
-                              <source src={video.url} />
-                            </video>
+          {!course?.lectures || course.lectures.length == 0 ? (
+            <div>
+              <h1 className="text-xl text-slate-800 font-bold">No Lectures available</h1>
+            </div>
+          ) : (
+            <div className="mt-4 text-slate-800">
+              <h2 className="font-bold text-xl mb-2">Course content</h2>
+              <div className="bg-slate-100 p-2 rounded-lg">
+                <ol className=" space-y-2">
+                  {course?.lectures
+                    ?.sort((a, b) => a.order - b.order)
+                    .map((lecture) => (
+                      <div className="bg-white p-2 pl-5 rounded-lg">
+                        <li className="list-decimal space-y-3">
+                          <div className="flex justify-between">
+                            <h4 className="font-semibold text-lg">
+                              {lecture && lecture.title}
+                            </h4>
+                            {lecture && (
+                              <div>
+                                {lecture.isFree ? (
+                                  <div className="border border-red-400 px-2 py-1 text-red-400 font-medium">
+                                    <span>FREE</span>
+                                  </div>
+                                ) : (
+                                  <div className="border border-green-400 px-2 py-1 text-green-400 font-medium">
+                                    <span>PAID</span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
 
-                        ))}
-                         </div>
+                          <div className="space-y-1 ">
+                            <span className="uppercase font-semibold">
+                              Lecture description :{" "}
+                            </span>
+                            <p className="text italic">
+                              {lecture && lecture.description}
+                            </p>
+                          </div>
+                          <div className="space-y-1 flex gap-2">
+                            <span className="uppercase font-semibold">
+                              Lecture order : {lecture && lecture.order}
+                            </span>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold uppercase">
+                              Lecture videos : (
+                              {lecture && lecture.videos.length} No/s)
+                            </h5>
+                            <div className="flex flex-col sm:flex-row  gap-2  border p-3 rounded-lg">
+                              {lecture.videos.map((video, index) => (
+                                <div
+                                  key={index}
+                                  className="flex flex-col w-max p-2 rounded-lg gap-1 bg-slate-100 justify-between"
+                                >
+                                  <div className="flex flex-col">
+                                    <span className="">
+                                      Video title: {video.title}
+                                    </span>
+                                    <span>
+                                      Video duration: {video.duration} sec
+                                    </span>
+                                  </div>
+                                  <video
+                                    controls
+                                    width="250"
+                                    className="rounded-lg"
+                                  >
+                                    <source src={video.url} />
+                                  </video>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </li>
                       </div>
-                    </li>
-                  </div>
-                ))}
-              </ol>
+                    ))}
+                </ol>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

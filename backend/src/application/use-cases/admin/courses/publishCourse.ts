@@ -9,6 +9,11 @@ export class PublishCourseAdminUseCase {
         try {
             const foundCourse = await this.courseRespository.getCourseById(courseId)
             if(!foundCourse) throw new CustomError('Course not found', 404)
+                if (!foundCourse.isPublished && foundCourse.lectures?.length === 0)
+                    throw new CustomError(
+                      `Course don't contain lectures, Add lectures before publish`,
+                      400
+                    );
             
             const publishedCourse = await this.courseRespository.publishCourse(courseId, publishValue);
             if(!publishedCourse) throw new CustomError('Failed to publish/unpublish course', 400)

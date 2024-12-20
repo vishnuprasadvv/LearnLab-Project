@@ -25,10 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  editCourseLectureApi,
-  getCourseById,
-} from "@/api/instructorApi";
+import { editCourseLectureApi, getCourseById } from "@/api/instructorApi";
 import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@/components/ui/progress";
@@ -69,11 +66,7 @@ const LectureEdit: React.FC = () => {
     shouldUseNativeValidation: false,
   });
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-  } = methods;
+  const { control, handleSubmit, reset } = methods;
 
   const {
     fields: lectureFields,
@@ -101,7 +94,7 @@ const LectureEdit: React.FC = () => {
             (lecture: any, lectureIndex: number) => ({
               title: lecture.title || "",
               description: lecture.description || "",
-              isFree : lecture.isFree || false,
+              isFree: lecture.isFree || false,
               order: lecture.order || lectureIndex + 1,
               videos: (lecture.videos || []).map(
                 (video: any, videoIndex: number) => ({
@@ -196,7 +189,7 @@ const LectureEdit: React.FC = () => {
         );
         formData.append(
           `lectures[${lectureIndex}].isFree`,
-          lecture.isFree ? 'true' : 'false'
+          lecture.isFree ? "true" : "false"
         );
         formData.append(
           `lectures[${lectureIndex}].order`,
@@ -241,16 +234,8 @@ const LectureEdit: React.FC = () => {
     }
   };
 
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState("");
-  useEffect(() => {
-    // Cleanup previous preview URL when component unmounts or URL changes
-    return () => {
-      if (videoPreviewUrl) {
-        URL.revokeObjectURL(videoPreviewUrl);
-      }
-    };
-  }, [videoPreviewUrl]);
-  
+  const [videoPreviews, setVideoPreviews] = useState<Record<string, string>>({});
+
   return (
     <div className="container mx-auto px-4 md:px-10 py-8 w-full">
       <div className="flex flex-col">
@@ -258,7 +243,7 @@ const LectureEdit: React.FC = () => {
           <div className="rounded-full bg-sky-200 p-1">
             <LayoutDashboard className="text-sky-800" />
           </div>
-          <h2 className="text-xl font-semibold">Add Lectures to Course</h2>
+          <h2 className="text-xl font-semibold">Edit course lectures</h2>
         </div>
         <div className="mt-3 ml-5">
           <span className="italic">Course title : </span>
@@ -350,8 +335,9 @@ const LectureEdit: React.FC = () => {
                         <FormLabel>Lecture is Free?</FormLabel>
                         <FormControl>
                           <CustomToggleButton
-                          isChecked={field.value}
-                          onToggle={(value) => field.onChange(value)}/>
+                            isChecked={field.value}
+                            onToggle={(value) => field.onChange(value)}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -485,14 +471,15 @@ const LectureEdit: React.FC = () => {
                               </div>
                             </div>
                             <div>
-                              {/* Upload Video */}
                               <FormField
                                 name={`lectures.${lectureIndex}.videos.${videoIndex}.file`}
                                 control={control}
                                 rules={{
                                   required: "Please upload a file",
                                   validate: (file) =>
-                                    file ? true : "File is required",
+                                    file || typeof video.file === "string"
+                                      ? true
+                                      : "File is required",
                                 }}
                                 render={({ field: fileField }) => (
                                   <FormItem>
@@ -504,29 +491,46 @@ const LectureEdit: React.FC = () => {
                                         typeof video.file === "string" ? (
                                           <div className="bg-gray-100 p-2 rounded-md">
                                             <div className="text-sm text-gray-700">
-                                              <h3 className="pb-1">Current Video:</h3>
-                                              <video controls width='300'>
-                                                <source src={video.file}/>
+                                              <h3 className="pb-1">
+                                                Current Video:
+                                              </h3>
+                                              <video controls width="300">
+                                                <source src={video.file} />
                                               </video>
                                             </div>
                                             <p className="text-xs text-gray-500 mt-2 uppercase">
-                                              (Don't choose any video file to retain the current
-                                              video)
+                                              (Don't choose any video file to
+                                              retain the current video)
                                             </p>
                                           </div>
-                                        ) : (
-                                          // If a file is selected, show a preview
-                                          video.file &&
-                                          typeof video.file !== "string" && (
-                                            <div className="bg-gray-100 p-2 rounded-md">
-                                              <h2 className="pb-1">Newly choosen video:</h2>
-                                              <video controls width="300" key={videoPreviewUrl}>
-                                                <source
-                                                  src={ videoPreviewUrl }
-                                                />
-                                              </video>
-                                            </div>
-                                          )
+                                        ) : null}
+
+                                        {/* Show preview of newly selected video */}
+                                        {videoPreviews[
+                                          `${lectureIndex}-${videoIndex}`
+                                        ] && (
+                                          <div className="bg-gray-100 p-2 rounded-md">
+                                            <h2 className="pb-1">
+                                              Newly chosen video:
+                                            </h2>
+                                            <video
+                                              controls
+                                              width="300"
+                                              key={
+                                                videoPreviews[
+                                                  `${lectureIndex}-${videoIndex}`
+                                                ]
+                                              }
+                                            >
+                                              <source
+                                                src={
+                                                  videoPreviews[
+                                                    `${lectureIndex}-${videoIndex}`
+                                                  ]
+                                                }
+                                              />
+                                            </video>
+                                          </div>
                                         )}
 
                                         {/* File input to upload a new video */}
@@ -537,17 +541,28 @@ const LectureEdit: React.FC = () => {
                                           onChange={(e) => {
                                             const selectedFile =
                                               e.target.files?.[0];
-                                              console.log(selectedFile)
+                                            const previewKey = `${lectureIndex}-${videoIndex}`;
+
                                             // Revoke the previous preview URL to avoid memory leaks
-                                            if (videoPreviewUrl) {
+                                            if (videoPreviews[previewKey]) {
                                               URL.revokeObjectURL(
-                                                videoPreviewUrl
+                                                videoPreviews[previewKey]
                                               );
                                             }
-                                            if (selectedFile) {
-                                              const newPreviewUrl =URL.createObjectURL(selectedFile);
-                                              // If a new file is selected, update the video file field
 
+                                            if (selectedFile) {
+                                              const newPreviewUrl =
+                                                URL.createObjectURL(
+                                                  selectedFile
+                                                );
+
+                                              // Update the video previews state
+                                              setVideoPreviews((prev) => ({
+                                                ...prev,
+                                                [previewKey]: newPreviewUrl,
+                                              }));
+
+                                              // Update the video field in the form
                                               field.onChange([
                                                 ...field.value.slice(
                                                   0,
@@ -556,26 +571,25 @@ const LectureEdit: React.FC = () => {
                                                 {
                                                   ...video,
                                                   file: selectedFile,
-                                                }, // Update with the new file object
+                                                },
                                                 ...field.value.slice(
                                                   videoIndex + 1
                                                 ),
                                               ]);
                                               fileField.onChange(selectedFile); // Update validation state
-                                              setVideoPreviewUrl(newPreviewUrl);
                                             } else {
-                                              // If no file is selected, retain the old URL
+                                              // Retain the existing video file if no new file is selected
                                               field.onChange([
                                                 ...field.value.slice(
                                                   0,
                                                   videoIndex
                                                 ),
-                                                { ...video, file: video.file }, // Retain the existing video URL
+                                                { ...video, file: video.file },
                                                 ...field.value.slice(
                                                   videoIndex + 1
                                                 ),
                                               ]);
-                                              fileField.onChange(null); // Clear file state
+                                              fileField.onChange(null); // Clear file state if necessary
                                             }
                                           }}
                                         />

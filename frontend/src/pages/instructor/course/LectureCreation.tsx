@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useForm,
   useFieldArray,
@@ -30,6 +30,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@/components/ui/progress";
 import CustomToggleButton from "@/components/common/ToggleButton/ToggleButton";
+import VideoUpload from "./components/VideoUpload";
 
 const LectureCreation: React.FC = () => {
   const { courseId } = useParams();
@@ -71,7 +72,6 @@ const LectureCreation: React.FC = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
   } = methods;
 
   const {
@@ -420,68 +420,12 @@ const LectureCreation: React.FC = () => {
                             </div>
                             <div>
                               {/* Upload Video */}
-                              <FormField
-                                name={`lectures.${lectureIndex}.videos.${videoIndex}.file`}
+                              <VideoUpload
+                                lectureIndex={lectureIndex}
+                                videoIndex={videoIndex}
                                 control={control}
-                                rules={{
-                                  required: "Please upload a file",
-                                  validate: (file) =>
-                                    file ? true : "File is required",
-                                }}
-                                render={({ field: fileField }) => (
-                                  <FormItem>
-                                    <FormLabel>Upload Video</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        className="bg-white"
-                                        type="file"
-                                        accept="video/*"
-                                        onChange={(e) => {
-                                          const file = e.target.files?.[0];
-
-                                          if (videoPreviewUrl) {
-                                            URL.revokeObjectURL(
-                                              videoPreviewUrl
-                                            );
-                                            setVideoPreviewUrl("");
-                                          }
-                                          if (file) {
-                                            const newPreviewUrl =
-                                              URL.createObjectURL(file);
-
-                                            field.onChange([
-                                              ...field.value.slice(
-                                                0,
-                                                videoIndex
-                                              ),
-                                              { ...video, file },
-                                              ...field.value.slice(
-                                                videoIndex + 1
-                                              ),
-                                            ]);
-                                            fileField.onChange(file); // Update validation state
-                                            setVideoPreviewUrl(newPreviewUrl);
-                                          }
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
+                                field={field}
                               />
-                              {videoPreviewUrl && videoPreviewUrl.length && (
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                  <h2 className="pb-1">Newly choosen video:</h2>
-                                  <video
-                                    controls
-                                    width="300"
-                                    key={videoPreviewUrl}
-                                  >
-                                    <source src={videoPreviewUrl} />
-                                  </video>
-                                  <div>{videoPreviewUrl}</div>
-                                </div>
-                              )}
                             </div>
                             <div className="ml-auto w-max">
                               <Button

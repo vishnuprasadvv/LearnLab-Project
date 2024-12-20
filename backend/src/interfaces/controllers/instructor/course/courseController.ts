@@ -122,7 +122,6 @@ export const publishCourseController = async(req: Request, res: Response, next: 
         if(!publishedCourse){
           throw new CustomError('Failed to publish course', 400)
         }
-        console.log(publishedCourse.isPublished)
         res.status(200).json({message: `Course ${publishedCourse.isPublished ? 'published' : 'unpublished'} successfully`,
            success : true, data: publishedCourse})
     } catch (error) {

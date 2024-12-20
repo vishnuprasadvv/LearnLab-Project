@@ -144,7 +144,7 @@ async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>
 
 async getAllCoursesAdmin(filter:Filter, sort: Record<string, SortOrder>, pagination: Pagination):Promise<PaginatedResultCourses> {
 
-  const query = Courses.find({...filter, isPublished: true, isDeleted:false}).populate([
+  const query = Courses.find({...filter, isDeleted:false}).populate([
     {path: 'instructor', select: '-password -profileImagePublicId'},
     {path: 'category', select: 'name _id'}
   ])
