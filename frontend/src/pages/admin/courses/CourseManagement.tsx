@@ -91,7 +91,7 @@ const AdminCourseManagement = () => {
         setCourses(response.data.courses);
         console.log(response);
         //set values for pagination
-        setTotalPages(Math.ceil(response.data.totalPages / itemsPerPage));
+        setTotalPages(response.data.totalPages);
         setTotalCourses(response.data.totalCourses);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch courses");

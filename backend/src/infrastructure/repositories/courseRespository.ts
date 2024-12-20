@@ -160,7 +160,7 @@ async getAllCoursesAdmin(filter:Filter, sort: Record<string, SortOrder>, paginat
 
   const courses = await query.exec();
 
-  const totalCourses = await Courses.countDocuments({...filter, isPublished: true});
+  const totalCourses = await Courses.countDocuments({...filter, isDeleted: false});
   const totalPages = pagination ? Math.ceil(totalCourses / pagination.limit) : null;
 
   return {
