@@ -6,6 +6,7 @@ import { getAllCoursesController, getCategoriesController, getCourseController, 
 import { handleWebhook } from "../controllers/student/order/stripeWebhookController";
 import { createOrderController } from "../controllers/student/order/orderController";
 import { getUserCoursesController } from "../controllers/student/profile/userCoursesController";
+import { completeVideoController, getUserProgressController, markAsCompletedController, markAsIncompletedController } from "../controllers/student/course/progressController";
 
 const router = Router();
 
@@ -18,4 +19,9 @@ router.get('/courses/:id', getCourseController)
 
 router.post ('/order/create',isAuthenticated, authorizeRole(['student','instructor']),createOrderController)
 router.get('/profile/courses',isAuthenticated, authorizeRole(['student','instructor']), getUserCoursesController)
+router.get('/progress/:courseId',isAuthenticated, authorizeRole(['student','instructor']), getUserProgressController)
+router.put('/progress/:courseId/incompleted',isAuthenticated, authorizeRole(['student','instructor']), markAsIncompletedController )
+router.put('/progress/:courseId/completed',isAuthenticated, authorizeRole(['student','instructor']), markAsCompletedController )
+router.post('/progress/:courseId/lectures/:lectureId/videos/:videoId',isAuthenticated, authorizeRole(['student','instructor']), completeVideoController)
+
 export default router;

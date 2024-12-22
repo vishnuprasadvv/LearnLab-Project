@@ -4,6 +4,7 @@ export interface IVideo {
     publicId: string;
     duration: number;
     isFree: boolean;
+    _id: string;
     
 }
 
@@ -15,6 +16,7 @@ export interface ILectureDocument extends Document{
     createdAt: Date;
     updatedAt: Date;
     isFree: boolean;
+    _id: string;
 }
 
 export interface ICourses {

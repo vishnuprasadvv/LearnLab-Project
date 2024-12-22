@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "./pages/students/Login";
 import Home from "./pages/students/Home";
@@ -47,6 +52,7 @@ import AdminCourseManagement from "./pages/admin/courses/CourseManagement";
 import CourseOverviewAdmin from "./pages/admin/courses/CourseOverview";
 import PurchaseCancel from "./pages/students/purchase/PurchaseCancel";
 import PurchaseSuccess from "./pages/students/purchase/PurchaseSuccess";
+import LectureView from "./pages/students/courseDetails/LectureView";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -56,7 +62,7 @@ function App() {
   }
 
   const Layout = ({ children }: { children: React.ReactNode }) => {
-    const location = useLocation(); 
+    const location = useLocation();
     const isAdminRoute = location.pathname.startsWith("/admin");
     return (
       <>
@@ -70,87 +76,113 @@ function App() {
       <Router>
         {/* <Navbar /> */}
         <Layout>
+          <Toaster />
 
-        <Toaster />
-
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/verify-account" element={<VerifyAccount />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/verify-account" element={<VerifyAccount />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/courses/course-details/:id" element={<CourseDetails />} />
-            <Route path='/cancel' element={<PurchaseCancel />}/>
-            <Route path='/payment/success' element={<PurchaseSuccess />}/>
+            <Route
+              path="/courses/course-details/:id"
+              element={<CourseDetails />}
+            />
+            <Route
+              path="/courses/course-details/:id/lectures"
+              element={<LectureView />}
+            />
 
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+              {/* Profile */}
+              <Route path="/profile" element={<ProfileSidebar />}>
+                <Route index element={<ProfileDashboard />} />
+                <Route path="dashboard" element={<ProfileDashboard />} />
+                <Route path="courses" element={<ProfileCourses />} />
+                <Route path="edit" element={<ProfileEdit />} />
+                <Route
+                  path="change-password"
+                  element={<ProfileChangePassword />}
+                />
+              </Route>
 
-            {/* Profile */}
-            <Route path="/profile" element={<ProfileSidebar />}>
-              <Route index element={<ProfileDashboard />} />
-              <Route path="dashboard" element={<ProfileDashboard />} />
-              <Route path="courses" element={<ProfileCourses />} />
-              <Route path="edit" element={<ProfileEdit />} />
+              <Route path="/cancel" element={<PurchaseCancel />} />
+              <Route path="/payment/success" element={<PurchaseSuccess />} />
+
+              {/* Instructor registration */}
               <Route
-                path="change-password"
-                element={<ProfileChangePassword />}
+                path="/instructor/register"
+                element={<RegisterInstructor />}
               />
             </Route>
 
-            {/* Instructor registration */}
-            <Route
-              path="/instructor/register"
-              element={<RegisterInstructor />}
-            />
-          </Route>
+            {/* Instructor routes */}
+            <Route element={<ProtectedRoute requiredRole="instructor" />}>
+              <Route path="/instructor" element={<InstructorDashboard />}>
+                <Route
+                  path="dashboard"
+                  element={<InstructorDashboardComponent />}
+                />
+                <Route path="courses" element={<InstructorCourses />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="notifications" element={<Notifications />} />
 
-          {/* Instructor routes */}
-          <Route element={<ProtectedRoute requiredRole="instructor" />}>
-            <Route path="/instructor" element={<InstructorDashboard />}>
-              <Route path="dashboard" element={<InstructorDashboardComponent />} />
-              <Route path="courses" element={<InstructorCourses />} />
-              <Route path="messages" element={<Messages />} />
-              <Route path="notifications" element={<Notifications />} />
-
-
-              <Route path="courses/create" element={<CourseMainCreation />} />
-              <Route path="courses/create/:courseId/lecture" element={<LectureCreation />} />
-              <Route path="courses/create/:courseId/lecture/overview" element={<CourseOverview />} />
-              <Route path="courses/:courseId/overview" element={<CourseOverview />} />
-              <Route path="courses/:courseId/edit" element={<CourseMainEdit />} />
-              <Route path="courses/:courseId/edit/lecture" element={<LectureEdit />} />
+                <Route path="courses/create" element={<CourseMainCreation />} />
+                <Route
+                  path="courses/create/:courseId/lecture"
+                  element={<LectureCreation />}
+                />
+                <Route
+                  path="courses/create/:courseId/lecture/overview"
+                  element={<CourseOverview />}
+                />
+                <Route
+                  path="courses/:courseId/overview"
+                  element={<CourseOverview />}
+                />
+                <Route
+                  path="courses/:courseId/edit"
+                  element={<CourseMainEdit />}
+                />
+                <Route
+                  path="courses/:courseId/edit/lecture"
+                  element={<LectureEdit />}
+                />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Admin routes */}
-          <Route element={<AdminProtectedRoute requiredRole="admin" />}>
-            <Route path="/admin" element={<AdminDashboard />}>
-            <Route index element={<AdminDashboardComponent />} />
-            <Route path="dashboard" element={<AdminDashboardComponent />} />
-            <Route path="users" element={<UserManagement />} />
-            <Route path="users/create" element={<AddUser />} />
-            <Route path="users/edit/:id" element={<EditUser />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="categories/create" element={<CreateCategory />} />
-            <Route path="categories/:id/edit" element={<EditCategory />} />
-            <Route path="instructors" element={<InstructorManagement />} />
-            <Route path="courses" element={<AdminCourseManagement />} />
-            <Route path="courses/:courseId/overview" element={<CourseOverviewAdmin />} />
-            <Route
-              path="instructors/application/:id"
-              element={<InstructorApplication />}
-            />
+            {/* Admin routes */}
+            <Route element={<AdminProtectedRoute requiredRole="admin" />}>
+              <Route path="/admin" element={<AdminDashboard />}>
+                <Route index element={<AdminDashboardComponent />} />
+                <Route path="dashboard" element={<AdminDashboardComponent />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="users/create" element={<AddUser />} />
+                <Route path="users/edit/:id" element={<EditUser />} />
+                <Route path="categories" element={<Categories />} />
+                <Route path="categories/create" element={<CreateCategory />} />
+                <Route path="categories/:id/edit" element={<EditCategory />} />
+                <Route path="instructors" element={<InstructorManagement />} />
+                <Route path="courses" element={<AdminCourseManagement />} />
+                <Route
+                  path="courses/:courseId/overview"
+                  element={<CourseOverviewAdmin />}
+                />
+                <Route
+                  path="instructors/application/:id"
+                  element={<InstructorApplication />}
+                />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Fallbacks */}
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* Fallbacks */}
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Layout>
       </Router>
     </GoogleOAuthProvider>

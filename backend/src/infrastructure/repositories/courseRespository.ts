@@ -1,5 +1,5 @@
 import Courses, { ICourses } from "../../domain/models/Courses";
-import { ICourseRepository } from "../../application/repositories/ICourseRepository";
+import { ICoursePopulated, ICourseRepository } from "../../application/repositories/ICourseRepository";
 import { SortOrder } from "mongoose";
 
 interface Pagination {
@@ -30,7 +30,6 @@ export class CourseRepositoryClass implements ICourseRepository{
         ]
         )
    }
-
 
    async getCourseByIds(ids: string[]) : Promise<ICourses[] | null>{
     if (!Array.isArray(ids) || ids.length === 0) {

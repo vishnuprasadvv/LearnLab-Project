@@ -77,3 +77,39 @@ export const getAllCategoriesApi = async () => {
       }
     
   }
+
+  export const getCourseProgressApi = async(courseId: string) => {
+    try {
+      const response = await api.get(`${API_URL}/student/progress/${courseId}`, { withCredentials: true})
+      return response.data;
+    } catch (error: any) {
+      throw error?.response?.data || error
+    }
+  }
+  export const markAsIncompletedApi = async(courseId: string) => {
+    try {
+      const response = await api.put(`${API_URL}/student/progress/${courseId}/incompleted`, { withCredentials: true})
+      return response.data;
+    } catch (error: any) {
+      throw error?.response?.data || error
+    }
+  }
+  export const markAsCompletedApi = async(courseId: string) => {
+    try {
+      const response = await api.put(`${API_URL}/student/progress/${courseId}/completed`, { withCredentials: true})
+      return response.data;
+    } catch (error: any) {
+      throw error?.response?.data || error
+    }
+  }
+
+  export const markVideoCompleteApi = async (
+    courseId: string,
+    lectureId: string,
+    videoId: string
+  ) => {
+    const response = await api.post(
+      `${API_URL}/student/progress/${courseId}/lectures/${lectureId}/videos/${videoId}`
+    );
+    return response.data;
+  };

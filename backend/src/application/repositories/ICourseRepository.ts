@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
-import { ICourses } from "../../domain/models/Courses";
+import { Document } from "mongoose";
+import { ICourses, ILectureDocument } from "../../domain/models/Courses";
+import { IUser } from "../../domain/models/User";
 interface Pagination {
     page: number,
     limit: number
@@ -13,6 +14,22 @@ interface Pagination {
     courses: ICourses[];
     totalCourses: number;
     totalPages : number | null;
+  }
+
+  export interface ICoursePopulated extends Document{
+      instructor: IUser ,
+      title:string,
+      description?:string,
+      imageUrl ?: string,
+      imagePublicId ?: string,
+      price?: number,
+      isPublished? : boolean,
+      category ?: string,
+      level?: string,
+      _id: string,
+      duration? : number,
+      isDeleted : boolean,
+      lectures?: ILectureDocument[]
   }
 
 

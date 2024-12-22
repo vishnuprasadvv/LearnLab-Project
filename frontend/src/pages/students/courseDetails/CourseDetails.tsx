@@ -14,7 +14,7 @@ import { ICourses } from "@/types/course";
 import { BadgeInfo, Loader2, Lock, PlayCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {loadStripe} from '@stripe/stripe-js'
 import { config } from "@/config/config";
 import { useAppSelector } from "@/app/hooks";
@@ -56,7 +56,7 @@ const CourseDetails = () => {
         const response = await getCourseByIdUserApi(id , userId);
         setCourse(response.data);
         setUserCoursePurchaseStatus(response.purchaseStatus)
-        console.log(response.data);
+        console.log(response);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch course");
         navigate("/home");
@@ -106,6 +106,7 @@ const CourseDetails = () => {
       setLoading(false)
     }
   }
+
 
   return (
     <div className="mt-10 space-y-5">
@@ -157,7 +158,7 @@ const CourseDetails = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {course?.lectures?.map((lecture, index) => (
+              {course?.lectures?.sort((a,b)=> a.order - b.order).map((lecture, index) => (
                 <div key={index} className="flex items-center gap-3 text-sm">
                   <span>
                     {lecture.isFree ? (
@@ -185,8 +186,9 @@ const CourseDetails = () => {
             </CardContent>
             <CardFooter className="flex justify-center p-4">
               {userCoursePurchaseStatus ? (
-                
-                <Button className="w-full" >Continue course</Button>
+                <Link to={'lectures'}>
+                <Button className="w-full">Continue course</Button>
+                </Link>
               ) : (
                 <Button className="w-full" onClick={handleCheckout} disabled={loading}>
                   {loading && <Loader2 className="animate-spin" />}

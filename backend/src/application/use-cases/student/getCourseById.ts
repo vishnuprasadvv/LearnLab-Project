@@ -1,6 +1,6 @@
 import { ICourses, ILectureDocument } from "../../../domain/models/Courses";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
-import { ICourseRepository } from "../../repositories/ICourseRepository";
+import { ICoursePopulated, ICourseRepository } from "../../repositories/ICourseRepository";
 import { IOrderRepository } from "../../repositories/IOrderRepository";
 
 interface IGetCourseByIdStudentProps{
@@ -19,16 +19,24 @@ export class GetCourseByIdStudentUseCase {
     if (!courseId) {
       throw new CustomError("Course id not found", 404);
     }
-    const course = await this.courseRepository.getCourseById(courseId);
+    const course:any = await this.courseRepository.getCourseById(courseId);
     if (!course) {
       throw new CustomError("No course available with this id", 404);
+    }
+    //sort lectures based on lecture order
+    course.lectures.sort((a:any,b:any) => a.order - b.order)
+
+    //if the user is the author of the course
+    if(userId === course.instructor._id.toString()){
+      console.log('user is the author of the course')
+      return {course: course, purchased: true}
     }
     
     // Helper function to filter lectures
     const filterLectures = (lectures: ILectureDocument[] | undefined) => {
-        return lectures?.map((lecture) => ({
-          ...lecture, // Ensure plain object conversion
-          videos: [], // Restrict videos
+        return lectures?.sort((a,b)=> a.order - b.order).map((lecture) => ({
+          ...lecture,
+          videos: lecture.isFree ? lecture.videos : [], // Restrict videos
         }));
       };
   
@@ -47,7 +55,6 @@ export class GetCourseByIdStudentUseCase {
         userId,
         courseId
       );
-      console.log(hasPurchased)
       //for users who purchased course
       if (hasPurchased) {
         return {course, purchased: true};
@@ -61,19 +68,6 @@ export class GetCourseByIdStudentUseCase {
 
       return {course: filteredCourses, purchased:false}
   }
-}
-// export class GetCourseByIdStudentUseCase {
-//     constructor(private courseRepository: ICourseRepository){
 
-//     }
-//     async execute(courseId: string) : Promise<ICourses | null> {
-//         if(!courseId){
-//             throw new CustomError('Course id not found', 404)
-//         }
-//         const course = await this.courseRepository.getCourseById(courseId)
-//         if(!course) {
-//             throw new CustomError('No course available with this id', 404)
-//         }
-//         return course;
-//     }
-// }
+}
+
