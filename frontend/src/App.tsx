@@ -53,6 +53,8 @@ import CourseOverviewAdmin from "./pages/admin/courses/CourseOverview";
 import PurchaseCancel from "./pages/students/purchase/PurchaseCancel";
 import PurchaseSuccess from "./pages/students/purchase/PurchaseSuccess";
 import LectureView from "./pages/students/courseDetails/LectureView";
+import AdminPurchases from "./pages/admin/purchases/AdminPurchases";
+import InstructorPurchases from "./pages/instructor/purchases/InstructorPurchases";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -152,6 +154,10 @@ function App() {
                   path="courses/:courseId/edit/lecture"
                   element={<LectureEdit />}
                 />
+                <Route
+                  path="purchases"
+                  element={<InstructorPurchases />}
+                />
               </Route>
             </Route>
 
@@ -168,6 +174,7 @@ function App() {
                 <Route path="categories/:id/edit" element={<EditCategory />} />
                 <Route path="instructors" element={<InstructorManagement />} />
                 <Route path="courses" element={<AdminCourseManagement />} />
+                <Route path="purchases" element={<AdminPurchases />} />
                 <Route
                   path="courses/:courseId/overview"
                   element={<CourseOverviewAdmin />}

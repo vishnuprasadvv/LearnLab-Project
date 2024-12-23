@@ -65,9 +65,9 @@ const Navbar = () => {
 
           <ul
             className={`md:flex md:items-center uppercase gap-4
-            md:pb-0 pb-12 absolute md:static bg-blue-50 md:z-auto z-[-1] left-0 
+            md:pb-0 pb-5 absolute md:static bg-blue-50 md:z-auto z-[-1] left-0 
             w-full md:w-auto md:pl-0 pl-10 transistion-all duration-500 ease-in-out 
-            ${open ? "top-[65px]" : "top-[-500px]"}`}
+            ${open ? "top-[70px]" : "top-[-500px]"}`}
           >
             {Links.map((item) => (
               <li key={item.name} className=" md:mb-0 mb-5">

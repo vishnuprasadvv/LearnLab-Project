@@ -53,4 +53,12 @@ export class OrderRepository implements IOrderRepository{
         })
         return !!order
     }
+    async getAllOrders():Promise<IOrder[] | null> {
+        const orders = await OrderModel.find().populate({path: 'userId', select: '-password -profileImagePublicId'}).sort({createdAt: -1}).lean()
+        if (!orders) {
+            return null;
+          }
+        return orders;
+    }
+
 }

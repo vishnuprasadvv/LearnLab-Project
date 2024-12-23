@@ -9,11 +9,18 @@ import { RiArrowGoBackLine } from "react-icons/ri";
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
+import { ShoppingCart } from "lucide-react";
 
 const InstructorDashboard = () => {
   const profileItems = [
     { path: "dashboard", name: "Dashboard", icon: <RxDashboard /> },
     { path: "courses", name: "My courses", icon: <LiaBookReaderSolid /> },
+    
+    {
+      path: "purchases",
+      name: "Purchase Management",
+      icon: <ShoppingCart />,
+    },
     { path: "messages", name: "Messages", icon: <RiMessage2Line /> },
     {
       path: "notifications",

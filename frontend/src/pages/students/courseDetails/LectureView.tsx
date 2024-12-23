@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import ReactPlayer from "react-player";
 import { IoLogoYoutube } from "react-icons/io5";
-import { CheckCircle2, Lock, PlayCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { CheckCircle2, ChevronDown, Lock, PlayCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "@/app/hooks";
-import { ICourses, ILectureDocument, IVideo } from "@/types/course";
+import { ICourses, IVideo } from "@/types/course";
 import {
   getCourseByIdUserApi,
   getCourseProgressApi,
@@ -16,6 +15,7 @@ import {
   markAsIncompletedApi,
   markVideoCompleteApi,
 } from "@/api/student";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface ProgressVideo {
   videoId: string;
@@ -34,11 +34,11 @@ interface CourseProgress {
   progressPercentage: number;
 }
 
-interface ISelectedVideo{
-  video : IVideo,
-  lectureId: string,
-  lectureTitle: string,
-  lectureDescription: string
+interface ISelectedVideo {
+  video: IVideo;
+  lectureId: string;
+  lectureTitle: string;
+  lectureDescription: string;
 }
 const LectureView: React.FC = () => {
   const { id } = useParams();
@@ -48,7 +48,9 @@ const LectureView: React.FC = () => {
   const [progress, setProgress] = useState<CourseProgress | null>(null);
   const [userCoursePurchaseStatus, setUserCoursePurchaseStatus] =
     useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<ISelectedVideo | null>(null)
+  const [selectedVideo, setSelectedVideo] = useState<ISelectedVideo | null>(
+    null
+  );
   const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
@@ -64,13 +66,13 @@ const LectureView: React.FC = () => {
         const response = await getCourseByIdUserApi(id, userId);
         setCourse(response.data);
         setUserCoursePurchaseStatus(response.purchaseStatus);
-        if(response.data.lectures?.[0].videos?.[0]) {
+        if (response.data.lectures?.[0].videos?.[0]) {
           setSelectedVideo({
-            video:response.data.lectures[0].videos[0],
+            video: response.data.lectures[0].videos[0],
             lectureId: response.data.lectures[0]._id,
             lectureTitle: response.data.lectures[0].title,
-            lectureDescription: response.data.lectures[0].description
-          })
+            lectureDescription: response.data.lectures[0].description,
+          });
         }
         console.log(response.data);
       } catch (error: any) {
@@ -99,7 +101,7 @@ const LectureView: React.FC = () => {
   const handleMarkVideoComplete = async (
     lectureId: string,
     videoId: string,
-    videoTitle : string
+    videoTitle: string
   ) => {
     try {
       await markVideoCompleteApi(id!, lectureId, videoId);
@@ -123,22 +125,28 @@ const LectureView: React.FC = () => {
           return lecture;
         });
 
-          // Calculate progress percentage
-  const totalVideos = course?.lectures?.reduce(
-    (acc, lecture) => acc + lecture.videos.length,
-    0
-  );
-  const completedVideos = updatedLectures.reduce(
-    (acc, lecture) =>
-      acc +
-      lecture.completedVideos.filter((video) => video.isCompleted).length,
-    0
-  );
+        // Calculate progress percentage
+        const totalVideos = course?.lectures?.reduce(
+          (acc, lecture) => acc + lecture.videos.length,
+          0
+        );
+        const completedVideos = updatedLectures.reduce(
+          (acc, lecture) =>
+            acc +
+            lecture.completedVideos.filter((video) => video.isCompleted).length,
+          0
+        );
 
-  const progressPercentage =
-    totalVideos && completedVideos ? (completedVideos / totalVideos) * 100 : 0;
+        const progressPercentage =
+          totalVideos && completedVideos
+            ? (completedVideos / totalVideos) * 100
+            : 0;
 
-        return { ...prev, completedLectures: updatedLectures , progressPercentage };
+        return {
+          ...prev,
+          completedLectures: updatedLectures,
+          progressPercentage,
+        };
       });
     } catch (error) {
       console.error("Failed to mark video complete:", error);
@@ -150,8 +158,8 @@ const LectureView: React.FC = () => {
     if (!id) return "course id not found";
     try {
       const response = await markAsIncompletedApi(id);
-      toast.success(response.message)
-      setProgress(response.data)
+      toast.success(response.message);
+      setProgress(response.data);
       console.log(response);
     } catch (error) {
       console.error("failed to mark progress as incompleted", error);
@@ -162,17 +170,21 @@ const LectureView: React.FC = () => {
     try {
       const response = await markAsCompletedApi(id);
       console.log(response);
-      toast.success(response.message)
-      setProgress(response.data)
+      toast.success(response.message);
+      setProgress(response.data);
     } catch (error) {
       console.error("failed to mark progress as completed", error);
     }
   };
 
- 
+  const [openLecture, setOpenLecture] = useState<string | null>(null);
+
+  const toggleLecture = (lectureId: string) => {
+    setOpenLecture((prev) => (prev === lectureId ? null : lectureId));
+  };
   return (
-    <div className="flex flex-row h-[90vh] max-w-7xl place-self-center w-full">
-      <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full">
+    <div className="flex flex-col sm:flex-row h-[90vh] max-w-7xl place-self-center w-full">
+      <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full order-2 sm:order-1">
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center bg-blue-500 w-full text-white gap-2 p-2 h-14 max-h-14">
             <div className="flex items-center gap-2">
@@ -215,36 +227,61 @@ const LectureView: React.FC = () => {
                 width="100%"
                 height="100%"
                 controls
-                url={selectedVideo?.video.url || ''}
+                url={selectedVideo?.video.url || ""}
                 onEnded={() => {
-                  if(selectedVideo && id){
-                    handleMarkVideoComplete(selectedVideo.lectureId, selectedVideo.video._id, selectedVideo.video.title)
+                  if (selectedVideo && id) {
+                    handleMarkVideoComplete(
+                      selectedVideo.lectureId,
+                      selectedVideo.video._id,
+                      selectedVideo.video.title
+                    );
                   }
                 }}
               />
+            </div>
+            <div className="space-y-2 p-2">
+              <h1 className="font-semibold underline underline-offset-2">
+                Current video details
+              </h1>
+              <div className="flex flex-col">
+                
+                <span>{selectedVideo?.video.title}</span>
+              </div>
             </div>
             <div className="space-y-3 p-2">
               <h1 className="font-semibold underline underline-offset-2">
                 About lesson
               </h1>
-              <div>
-                <span>{selectedVideo?.video.title}</span>
-                <span>{selectedVideo?.video.duration}</span>
+              <div className="flex flex-col">
+                <h3 className="font-bold text-slate-800">{selectedVideo?.lectureTitle}</h3>
+                <p className="italic">{selectedVideo?.lectureDescription}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full sm:w-1/3 lg:w-1/4 bg-slate-100 p-1">
-        <h1 className="text-lg font-medium ">Table of contents</h1>
+      <div className="flex flex-col order-1 sm:order-2 w-full sm:w-1/3 lg:w-1/4 bg-slate-100 border border-l-slate-300">
+        <h1 className="text-lg font-medium bg-white py-3 pl-1 ">
+          Table of contents
+        </h1>
         <div className="flex">
-          <div className="w-full bg-slate-200 flex items-center shadow-sm">
+          <div className="w-full flex items-center shadow-sm">
             <div className="w-full">
               {course?.lectures
                 ?.sort((a, b) => a.order - b.order)
-                .map((lecture, index) => (
-                  <div key={index}>
-                    <div className="flex gap-2 items-center bg-blue-200 h-12 pl-2">
+                .map((lecture) => (
+                  <Collapsible 
+                  key={lecture._id}
+                  open={openLecture === lecture._id}
+                  onOpenChange={() => toggleLecture(lecture._id)}>
+                    <CollapsibleTrigger
+                      className={`w-full flex gap-2 items-center justify-between border border-b-gray-300 h-12 px-2 cursor-pointer ${
+                        lecture._id === selectedVideo?.lectureId
+                          ? "text-blue-600 bg-blue-100"
+                          : "bg-slate-200"
+                      }`}
+                    >
+                      <div className="flex gap-2 items-center">
                       {userCoursePurchaseStatus ? (
                         <IoLogoYoutube />
                       ) : lecture.isFree ? (
@@ -254,8 +291,14 @@ const LectureView: React.FC = () => {
                       )}
 
                       <h2 className="font-semibold">{lecture.title}</h2>
-                    </div>
-
+                      </div>
+                      <ChevronDown
+                  className={`transition-transform duration-200 ${
+                    openLecture === lecture._id ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
                     {lecture.videos.map((video) => {
                       const isCompleted = progress?.completedLectures
                         .find((l) => l.lectureId === lecture._id)
@@ -265,13 +308,19 @@ const LectureView: React.FC = () => {
                       return (
                         <div
                           key={video._id}
-                          className="flex gap-2 items-center p-2 cursor-pointer hover:bg-slate-300 w-full"
-                          onClick={() => setSelectedVideo({
-                            video: video,
-                            lectureId: lecture._id,
-                            lectureTitle:lecture.title,
-                            lectureDescription: lecture.description
-                          })}
+                          className={`flex gap-2 items-center p-2 pl-6 cursor-pointer w-full ${
+                            selectedVideo?.video._id === video._id
+                              ? "bg-blue-600 border shadow-md text-white hover:bg-blue-500"
+                              : "bg-white hover:bg-slate-100"
+                          }`}
+                          onClick={() =>
+                            setSelectedVideo({
+                              video: video,
+                              lectureId: lecture._id,
+                              lectureTitle: lecture.title,
+                              lectureDescription: lecture.description,
+                            })
+                          }
                         >
                           {isCompleted ? (
                             <CheckCircle2
@@ -281,21 +330,14 @@ const LectureView: React.FC = () => {
                           ) : (
                             <PlayCircle size={18} />
                           )}
-                          <span>{video.title || "Video Title"}</span>
-                          {!isCompleted && (
-                            <Button
-                              className="text-xs"
-                              onClick={() =>
-                                handleMarkVideoComplete(lecture._id, video._id, video.title)
-                              }
-                            >
-                              Mark Complete
-                            </Button>
-                          )}
+                          <span className="text-xs">
+                            {video.title || "Video Title"}
+                          </span>
                         </div>
                       );
                     })}
-                  </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 ))}
             </div>
           </div>

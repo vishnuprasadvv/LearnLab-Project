@@ -25,6 +25,7 @@ import { MdOutlineCategory } from "react-icons/md";
 import { adminLogout } from "@/api/adminApi";
 import { adminLogoutSliceAction } from "@/features/adminSlice";
 import { useState } from "react";
+import { ShoppingCart } from "lucide-react";
 
 const AdminPage = () => {
   const profileItems = [
@@ -47,6 +48,11 @@ const AdminPage = () => {
       path: "courses",
       name: "Course Management",
       icon: <LiaBookReaderSolid />,
+    },
+    {
+      path: "purchases",
+      name: "Purchase Management",
+      icon: <ShoppingCart />,
     },
     {
       path: "categories",

@@ -5,6 +5,7 @@ import { acceptInstructorApplicationHandler, getInstructorApplicationHandler, ge
 import { adminLoginHandler, adminLogoutHandler, refreshAdminTokenHandler } from "../controllers/authController";
 import { createCategoryController, getAllCategoriesAtOnceController, getCategories, updateCategoryController } from "../controllers/admin/categories/categoriesController";
 import { deleteCourseController, getAllCoursesController, getCourseController, publishCourseController } from "../controllers/admin/courses/coursesController";
+import { getPurchasesController } from "../controllers/admin/purchases/purchasesController";
 
 const adminRouter = Router();
 
@@ -37,6 +38,7 @@ adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
     .patch('/courses/:id/delete', deleteCourseController)
     .get('/courses/:id',getCourseController)
 
-
+adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
+    .get('/purchases', getPurchasesController)
 
 export default adminRouter

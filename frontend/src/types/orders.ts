@@ -1,3 +1,5 @@
+import { User } from "./userTypes";
+
 export interface ICoursesInOrder {
     courseId: string ;
     courseTitle : string;
@@ -16,7 +18,7 @@ export interface ICoursesInOrder {
 export interface IOrder {
     _id?: string ;
     orderId : string;
-    userId: string ;
+    userId:  User ;
     courses: ICoursesInOrder[];
     subTotal?: number | null;
     totalAmount: number;

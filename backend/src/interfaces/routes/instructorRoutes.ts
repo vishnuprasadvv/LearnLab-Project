@@ -2,6 +2,7 @@ import { Router } from "express";
 import { addLectureController, createCourseController, deleteCourseController, editCourseController, editLectureController, getAllCoursesController, getCourseController, publishCourseController } from "../controllers/instructor/course/courseController";
 import { upload, uploadVideo } from "../../infrastructure/middlewares/multer";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
+import { getPurchasesController } from "../controllers/instructor/purchases/purchasesController";
 
 
 const instructorRouter = Router();
@@ -15,5 +16,6 @@ instructorRouter.patch('/courses/:id/delete',isAuthenticated, authorizeRole(['in
 instructorRouter.patch('/courses/:id/edit', upload.single('courseImage'),isAuthenticated, authorizeRole(['instructor']), editCourseController)
 instructorRouter.patch('/courses/:courseId/edit/lecture', uploadVideo.any(),isAuthenticated, authorizeRole(['instructor']), editLectureController)
 instructorRouter.patch('/courses/:courseId/publish',isAuthenticated, authorizeRole(['instructor']), publishCourseController)
+instructorRouter.get('/purchases',isAuthenticated, authorizeRole(['instructor']), getPurchasesController)
 
 export default instructorRouter

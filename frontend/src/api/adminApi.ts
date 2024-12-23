@@ -218,3 +218,12 @@ export const publishCourseAdminApi = async (courseId: string , publishValue : bo
     }
   
 }
+export const getPurchasesApi = async () => {
+  try {
+      const response = await adminInterceptorApi.get(`${API_URL}/admin/purchases`, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    }
+  
+}
