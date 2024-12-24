@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CategoryRespository } from "../../../../infrastructure/repositories/categoryRespository";
+import { CategoryRespository } from "../../../../infrastructure/repositories/categoryRepository";
 import { GetCategoriesUseCase } from "../../../../application/use-cases/admin/category/getCategory";
 import { CreateCategoryUseCase } from "../../../../application/use-cases/admin/category/createCategory";
 import { UpdateCategoryUseCase } from "../../../../application/use-cases/admin/category/updateCategory";

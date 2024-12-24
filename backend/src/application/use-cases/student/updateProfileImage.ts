@@ -2,7 +2,7 @@
 import { deleteFromCloudinary, uploadToCloudinary } from "../../../infrastructure/cloud/cloudinary";
 import { updateUserProfileImage } from "../../../infrastructure/repositories/userRepository";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
-import { UserRepository } from "../../repositories/userRepository";
+import { UserRepository } from "../../repositories/IUserRepository";
 
 interface UpdateProfileImageParams {
     userId: string, 

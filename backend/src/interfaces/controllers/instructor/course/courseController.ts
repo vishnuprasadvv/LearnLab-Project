@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ICourses } from "../../../../domain/models/Courses";
 import { CustomError } from "../../../middlewares/errorMiddleWare";
-import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRespository";
+import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 import { CreateCourseUseCase } from "../../../../application/use-cases/instructor/course/createCourse";
 import { uploadVideoToCloudinary } from "../../../../infrastructure/cloud/cloudinary";
 import { GetAllCoursesUseCase } from "../../../../application/use-cases/instructor/course/getAllCourses";

@@ -3,6 +3,7 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import authReducer from "../features/authSlice";
 import adminReducer from "../features/adminSlice";
+import chatReducer from '../features/chatSlice'
 
 const userPersistConfig = {
   key: "auth",
@@ -15,9 +16,17 @@ const adminPersistConfig = {
   storage,
   whitelist: ["user", "isAuthenticated"],
 };
+
+const chatPersistConfig = {
+  key: 'chat',
+  storage,
+  whitelist: ['messages']
+}
+
 const rootReducer = combineReducers({
   admin: persistReducer(adminPersistConfig, adminReducer),
   auth: persistReducer(userPersistConfig, authReducer),
+  chat: persistReducer(chatPersistConfig, chatReducer)
 });
 
 export const store = configureStore({

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../../../middlewares/errorMiddleWare";
-import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRespository";
+import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 import { GetAllCoursesAdminUseCase } from "../../../../application/use-cases/admin/courses/getAllCourses";
 import { GetCourseByIdAdminUseCase } from "../../../../application/use-cases/admin/courses/getCourseById";
 import { DeleteCourseAdminUseCase } from "../../../../application/use-cases/admin/courses/deleteCourse";

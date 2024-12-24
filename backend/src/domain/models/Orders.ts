@@ -15,7 +15,7 @@ interface ICoursesInOrder {
 }
 
 export interface IOrder {
-    _id: string | ObjectId | mongoose.Types.ObjectId ;
+    _id?: string | ObjectId | mongoose.Types.ObjectId ;
     orderId : string;
     userId: string | ObjectId |  mongoose.Types.ObjectId;
     courses: ICoursesInOrder[];

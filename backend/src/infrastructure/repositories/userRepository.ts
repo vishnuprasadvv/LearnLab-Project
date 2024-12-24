@@ -8,3 +8,4 @@ export const updateUserProfileImage = async (userId: string, profileImageUrl : s
     user.profileImageUrl = profileImageUrl;
     return user;
 }
+

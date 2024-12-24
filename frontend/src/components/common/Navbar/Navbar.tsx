@@ -8,6 +8,7 @@ import { useAppSelector } from "@/app/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { LuShoppingCart, LuHeart } from "react-icons/lu";
+import { IoChatbubblesOutline } from "react-icons/io5";
 
 const Navbar = () => {
   let Links = [
@@ -34,6 +35,11 @@ const Navbar = () => {
       name: "Notifications",
       path: "/profile/notifications",
       icon: <IoIosNotificationsOutline />,
+    },
+    {
+      name: "Chat",
+      path: "/chat",
+      icon: <IoChatbubblesOutline />,
     },
     {
       name: "Wishlist",

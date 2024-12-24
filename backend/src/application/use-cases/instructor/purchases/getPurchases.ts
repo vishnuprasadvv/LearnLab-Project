@@ -1,4 +1,4 @@
-import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRespository";
+import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";
 
 export class GetPurchasesInstructorUseCase{

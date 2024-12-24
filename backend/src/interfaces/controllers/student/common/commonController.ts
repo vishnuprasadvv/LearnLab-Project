@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../../../middlewares/errorMiddleWare";
 import { GetAllCoursesUserUseCase } from "../../../../application/use-cases/student/getAllCourses";
-import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRespository";
+import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 import { GetAllCategoriesAtOnceUseCase } from "../../../../application/use-cases/admin/category/getAllCategoriesAtOnce";
-import { CategoryRespository } from "../../../../infrastructure/repositories/categoryRespository";
+import { CategoryRespository } from "../../../../infrastructure/repositories/categoryRepository";
 import { GetCourseByIdStudentUseCase } from "../../../../application/use-cases/student/getCourseById";
 import { GetAllFilteredCoursesUseCase } from "../../../../application/use-cases/student/getFilteredCourse";
 import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";

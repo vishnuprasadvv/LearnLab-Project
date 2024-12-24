@@ -13,38 +13,9 @@ import { config } from '../infrastructure/config/config';
 import instructorRouter from '../interfaces/routes/instructorRoutes';
 import webhookRouter from '../interfaces/routes/webhookRoute'
 
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import chatRouter from '../interfaces/routes/chatRoutes';
-
 const PORT = config.app.PORT
+
 const app = express();
-
-//create an HTTP server for socket 
-const server = createServer(app);
-//initialize socket.io
-const io = new Server(server, {
-    cors: {
-        origin: config.cors.CLIENT_URL,
-        methods: config.cors.ALLOWED_METHODS,
-        credentials: config.cors.CREDENTIALS
-    }
-})
-
-io.on('connection', (socket) => {
-    console.log('A user connected', socket.id);
-
-    //handle custom events 
-    socket.on('message', (data) => {
-        console.log('message received', data);
-        io.emit('message', data)
-    })
-
-    socket.on('disconnect', () => {
-        console.log('User disconnected', socket.id)
-    })
-})
-
 app.use('/api',webhookRouter)
 app.use(express.json());
 dotenv.config();
@@ -91,7 +62,6 @@ app.use('/api/auth', authRoutes)
 app.use('/api/student', studentRoutes)
 app.use('/api/admin', adminRouter)
 app.use('/api/instructor', instructorRouter)
-app.use('/api/chat', chatRouter)
 
 //unknown routes 
 app.all('*', (req: Request, res: Response, next : NextFunction) => {
