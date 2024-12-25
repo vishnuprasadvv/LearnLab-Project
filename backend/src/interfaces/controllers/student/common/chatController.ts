@@ -11,6 +11,7 @@ import { GetUserChatUseCase } from "../../../../application/use-cases/chat/getUs
 import { GetChatMessagesUseCase } from "../../../../application/use-cases/chat/getChatMessages";
 import { IMessages } from "../../../../domain/models/Messages";
 import { uploadChatImage } from "../../../../infrastructure/cloud/cloudinary";
+import { MarkAsReadUseCase } from "../../../../application/use-cases/chat/markAsRead";
 
 const messageRepository = new MessageRepository();
 const chatRepository = new ChatRepository()
@@ -21,6 +22,7 @@ const getAllChatUsersUseCase = new GetAllChatUsersUseCase(userRepository)
 const createChatUseCase = new CreateChatUseCase(chatRepository)
 const getUserChatUseCase = new GetUserChatUseCase(chatRepository)
 const getChatMessagesUseCase = new GetChatMessagesUseCase(messageRepository)
+const markAsReadUseCase = new MarkAsReadUseCase(messageRepository)
 
 export const getChatHistoryController = async(req: Request, res: Response, next: NextFunction) => {
     try {
@@ -121,4 +123,20 @@ export const getChatMessagesController = async(req: Request, res: Response, next
     } catch (error) {
         next(error)
     }
+}
+
+export const markMessageAsReadController = async(req:Request, res: Response, next:NextFunction) => {
+try {
+    const {chatId, userId} = req.body;
+    if(!chatId) {
+        throw new CustomError('Chat ID required', 400)
+    }
+    if(!userId) throw new CustomError('User ID is required', 400)
+    const markAsRead = await markAsReadUseCase.execute(chatId, userId)
+    if(!markAsRead) throw new CustomError('Error marking messages as read', 400)
+        console.log('message read')
+        res.status(200).json({success: true})
+} catch (error) {
+    next(error)
+}
 }

@@ -110,7 +110,7 @@ const ChatSidebar:React.FC = () => {
                                   <CircleCheck className="bg-white absolute top-0 -right-2 rounded-full text-blue-500" size={18}/>
                                 }
                                
-                                {onlineUsers.length && onlineUsers.includes(oppositeUser._id) && (
+                                {onlineUsers.length>0 && onlineUsers.includes(oppositeUser._id) && (
                                     <span className="absolute bottom-0 right-0 size-3 bg-green-400
                                     rounded-full"></span>
                                   )}

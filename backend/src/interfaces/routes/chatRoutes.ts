@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createChatController, getChatHistoryController, getChatMessagesController, getChatsController, getChatUsersController, sendMessageController } from "../controllers/student/common/chatController";
+import { createChatController, getChatHistoryController, getChatMessagesController, getChatsController, getChatUsersController, markMessageAsReadController, sendMessageController } from "../controllers/student/common/chatController";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
 import { upload } from "../../infrastructure/middlewares/multer";
 
@@ -14,6 +14,7 @@ chatRouter.post('/create', isAuthenticated,authorizeRole(['student', 'instructor
 chatRouter.get('/users', isAuthenticated,authorizeRole(['student', 'instructor']), getChatUsersController)
 chatRouter.get('/chats', isAuthenticated,authorizeRole(['student', 'instructor']),getChatsController)
 chatRouter.get('/messages/:chatId', isAuthenticated,authorizeRole(['student', 'instructor']),getChatMessagesController)
+chatRouter.post('/messages/markAsRead', isAuthenticated,authorizeRole(['student', 'instructor']),markMessageAsReadController)
 
 
 export default chatRouter;

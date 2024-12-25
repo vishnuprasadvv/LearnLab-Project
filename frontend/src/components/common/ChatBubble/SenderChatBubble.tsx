@@ -1,3 +1,4 @@
+import { Check, CheckCheck } from "lucide-react";
 import React from "react";
 
 interface ChatBubbleProps {
@@ -5,13 +6,15 @@ interface ChatBubbleProps {
   time: string;
   message: string;
   image?:string;
+  isRead?: boolean;
 }
 
 const SenderChatBubble: React.FC<ChatBubbleProps> = ({
   profileImageUrl,
   time,
   message,
-  image
+  image,
+  isRead
 }) => {
   return (
     <div className="flex flex-row-reverse items-start gap-2">
@@ -45,7 +48,7 @@ const SenderChatBubble: React.FC<ChatBubbleProps> = ({
           </span>
 
           <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
-            Delivered
+          {isRead ? (<CheckCheck className="text-blue-400" size={16}/>) : (<Check size={16}/> )}
           </span>
         </div>
       </div>

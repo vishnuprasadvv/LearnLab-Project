@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import MessageInput from "./MessageInput";
 import ChatHeader from "./ChatHeader";
 import { useAppSelector } from "@/app/hooks";
-import { getChatMessages } from "@/api/chatApi";
+import { getChatMessages, markAsReadApi } from "@/api/chatApi";
 import ChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import SenderChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import ReceiverChatBubble from "@/components/common/ChatBubble/ReceiverChatBubble";
@@ -57,6 +57,8 @@ const ChatContainer = () => {
         const response = await getChatMessages(selectedChat?._id);
         console.log(response);
         setMessages(response.data);
+
+        const markAsReadResponse = await markAsReadApi({chatId: selectedChat._id, userId: authUser._id})
       } catch (error) {
         console.error("error fetching messages", error);
       }
@@ -95,6 +97,7 @@ const ChatContainer = () => {
                   time={formatMessageTime(message.sentAt)}
                   message={message.messageText}
                   image={message.image}
+                  isRead={message.isRead}
                   profileImageUrl={
                     authUser.profileImageUrl ||
                     "https://www.pngall.com/wp-content/uploads/12/Avatar-PNG-Image.png"

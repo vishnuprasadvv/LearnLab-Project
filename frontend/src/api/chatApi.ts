@@ -35,3 +35,8 @@ export const sendMessageApi = async (data:{senderId: string, messageText: string
     const response = await api.post(`${API_URL}/chat/messages/send`,formData, { headers:{ 'Content-Type':"multipart/form-data" }, withCredentials: true});
     return response.data;
 }
+
+export const markAsReadApi = async (data:{chatId: string, userId: string} ) => {
+    const response = await api.post(`${API_URL}/chat/messages/markAsRead`,{...data}, { withCredentials: true});
+    return response.data;
+}
