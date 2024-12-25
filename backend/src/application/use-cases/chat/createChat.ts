@@ -11,7 +11,7 @@ export class CreateChatUseCase {
             const existingChat = await this.chatRepository.getChatByParticipants(participants);
             if(existingChat) {
                 console.log('chat already in db')
-                return existingChat
+                throw new CustomError('Already a chat present between users.',400)
             }
         }
         

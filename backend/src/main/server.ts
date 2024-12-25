@@ -28,8 +28,11 @@ const io = new Server(server, {
         origin: config.cors.CLIENT_URL,
         methods: config.cors.ALLOWED_METHODS,
         credentials: config.cors.CREDENTIALS
-    }
+    },
 })
+
+
+const onlineUsers = new Map<string, string>();
 
 io.on('connection', (socket) => {
     console.log('A user connected', socket.id);
@@ -40,8 +43,36 @@ io.on('connection', (socket) => {
         io.emit('message', data)
     })
 
+    //handle incoming messges from users 
+    socket.on('sendMessage', (data) => {
+        //broadcast message to the same chat room
+        console.log('sendmessage', data)
+        io.to(data.chatId).emit('newMessage', data)
+    })
+    //handle diconnections
     socket.on('disconnect', () => {
         console.log('User disconnected', socket.id)
+        onlineUsers.delete(socket.id);
+        io.emit('updateUserStatus',  Array.from(onlineUsers.values()));
+    })
+
+    //handle user login and save the user as online 
+    socket.on('setUserOnline', (userId: string) => {
+        onlineUsers.set(socket.id, userId);
+        io.emit('updateUserStatus', Array.from(onlineUsers.values()));
+        console.log(`User ${userId} is online`)
+    })
+
+    socket.on('setUserOffline', (userId: string) => {
+        onlineUsers.delete(socket.id)
+        io.emit('updateUserStatus', Array.from(onlineUsers.values()))
+        console.log(`User ${userId} is offline`)
+    })
+
+    //join the socket to a specific room chat
+    socket.on('joinChat', (chatId) => {
+        socket.join(chatId); //join the room with the provided chatId
+        console.log(`User ${socket.id} joined chat ${chatId}`)
     })
 })
 
@@ -105,7 +136,7 @@ app.all('*', (req: Request, res: Response, next : NextFunction) => {
 app.use(errorMiddleWare)
 
 //create server 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`server is running on port : http://localhost:${PORT}'`)
     connectDB();
 });  

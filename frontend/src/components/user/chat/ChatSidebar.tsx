@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ChatSidebarSkeleton from "./ChatSidebarSkeleton";
-import { PlusCircle, Users } from "lucide-react";
+import { CircleCheck, PlusCircle, Users } from "lucide-react";
 import { createChatApi, getChatUsersApi, getUserChatsApi } from "@/api/chatApi";
 import { User } from "@/types/userTypes";
 import { IChat } from "@/types/chat";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { setSelectedChat } from "@/features/chatSlice";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 const ChatSidebar:React.FC = () => {
-  const onlineUsers = [];
+  const onlineUsers  :string[] = useAppSelector((state) => state.chat.onlineUsers) || []
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [chats, setChats] = useState<IChat[]> ([])
     const [users, setUsers] = useState<User[] | []>([])
@@ -19,6 +21,7 @@ const ChatSidebar:React.FC = () => {
     const dispatch = useAppDispatch()
     const selectedChat = useAppSelector((state) => state.chat.selectedChat)
 
+    console.log(onlineUsers)
     useEffect(() => {
         const fetchUsers = async() => {
             try {
@@ -31,6 +34,7 @@ const ChatSidebar:React.FC = () => {
         }
         fetchUsers()
     },[])
+
 
     useEffect(()=> {
         const fetchChats = async() => {
@@ -49,13 +53,18 @@ const ChatSidebar:React.FC = () => {
     const handleCreateChat = async () => {
         if (!selectedUser) return;
         if(!currentUser) return
+        setIsLoading(true)
         try {
           const response = await createChatApi({participants: [currentUser?._id, selectedUser._id] , chatType:'private' });
           setChats((prevChats) => [response.data, ...prevChats]); // Add new chat to chat list
           setShowPopup(false); // Close the popup
           setSelectedUser(null); // Reset selected user
-        } catch (error) {
-          console.error("Error creating chat", error);
+          console.log(response)
+        } catch (error:any) {
+          console.error("Error creating chat", error.response.data.message);
+          toast.error(error.response.data.message || 'Error creating chat')
+        }finally{
+          setIsLoading(false)
         }
       };
 
@@ -96,10 +105,15 @@ const ChatSidebar:React.FC = () => {
                             <div className="relative mx-auto lg:mx-0">
                                 <img src={oppositeUser.profileImageUrl || 'https://www.pngall.com/wp-content/uploads/12/Avatar-PNG-Image.png'} alt="profile pic" 
                                 className="size-10 object-cover rounded-full"/>
-                                {/* {onlineUsers.includes(user._id) && ( */}
+                                {
+                                  oppositeUser.role === 'instructor' && 
+                                  <CircleCheck className="bg-white absolute top-0 -right-2 rounded-full text-blue-500" size={18}/>
+                                }
+                               
+                                {onlineUsers.length && onlineUsers.includes(oppositeUser._id) && (
                                     <span className="absolute bottom-0 right-0 size-3 bg-green-400
                                     rounded-full"></span>
-                                {/* )} */}
+                                  )}
                                 
                             </div>
 
@@ -107,8 +121,8 @@ const ChatSidebar:React.FC = () => {
                                 <div className="font-medium truncate">
                                     {oppositeUser.firstName +' ' + oppositeUser.lastName}
                                 </div>
-                                <div className="text-sm text-zinc-400">
-                                    'online'
+                                <div className="text-xs text-zinc-400">
+                                    online
                                 </div>
                             </div>
                         </button>
@@ -145,16 +159,16 @@ const ChatSidebar:React.FC = () => {
                 ))}
             </div>
             <div className="mt-4 flex justify-end gap-2">
-              <button className="btn btn-secondary" onClick={() => setShowPopup(false)}>
+              <Button variant={'outline'} className=" rounded-full" onClick={() => setShowPopup(false)}>
                 Cancel
-              </button>
-              <button
-                className="btn btn-primary"
+              </Button>
+              <Button
+                className="rounded-full bg-blue-600 hover:bg-blue-500"
                 onClick={handleCreateChat}
                 disabled={!selectedUser} // Disable button if no user is selected
               >
-                Create Chat
-              </button>
+                Start Chat
+              </Button>
             </div>
           </div>
         </div>

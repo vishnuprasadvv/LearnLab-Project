@@ -6,6 +6,10 @@ import { getChatMessages } from "@/api/chatApi";
 import ChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import SenderChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import ReceiverChatBubble from "@/components/common/ChatBubble/ReceiverChatBubble";
+import {io} from 'socket.io-client'
+import { config } from "@/config/config";
+
+const socket = io(config.app.BASE_URL)
 
 export function formatMessageTime(date: any) {
   return new Date(date).toLocaleTimeString("en-US", {
@@ -26,6 +30,24 @@ const ChatContainer = () => {
   const otherUser = selectedChat?.participants?.find(
     (p: any) => p._id !== authUser?._id
   );
+
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      console.log('new message received', message)
+      if(selectedChat?._id === message.chatId){
+        setMessages((prev) => [...prev, message])
+      }
+    })
+
+    if(selectedChat?._id) {
+      socket.emit('joinChat', selectedChat._id)
+    }
+    return () => {
+      socket.off('newMessage')
+    }
+  }, [selectedChat])
+
+
   useEffect(() => {
     const getMessages = async () => {
       try {

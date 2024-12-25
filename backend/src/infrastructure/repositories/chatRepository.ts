@@ -18,7 +18,8 @@ export class ChatRepository {
     }
     async createChat (chat:IChat):Promise<IChat>{
         const result = await Chat.create(chat)
-        return result;
+        const populatedResult = await result.populate('participants', 'firstName lastName profileImageUrl role')
+        return populatedResult;
     }
 
     async getChatById (chatId: string) :Promise<IChat | null> {

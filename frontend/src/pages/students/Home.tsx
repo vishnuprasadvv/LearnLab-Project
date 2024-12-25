@@ -10,6 +10,9 @@ function Home() {
   const {user}  = useAppSelector((state) => state.auth)
 
   return (
+
+    
+
     <div>{user && user.role ==='student' && 
 
           <div className='bg-blue-200 p-3'>

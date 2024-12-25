@@ -1,9 +1,13 @@
 import { sendMessageApi } from '@/api/chatApi';
 import { useAppSelector } from '@/app/hooks';
 import { Input } from '@/components/ui/input';
+import { config } from '@/config/config';
 import { Image, Send, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
+import {io} from 'socket.io-client'
+
+const socket = io(config.app.BASE_URL )
 
 const MessageInput = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -13,6 +17,7 @@ const MessageInput = () => {
     const selectedChat = useAppSelector((state) => state.chat.selectedChat)
     const currentUser = useAppSelector((state)=> state.auth.user)
     const [isLoading, setIsLoading] = useState(false)
+
 
     const handleSendMessage = async(e:React.FormEvent) => {
         e.preventDefault();
@@ -27,7 +32,18 @@ const MessageInput = () => {
         try {
           const response = await sendMessageApi({senderId: currentUser?._id, messageText: text, chatId: selectedChat?._id, image: imageFile})
           console.log(response)
+
+          //emit the message to the server so it can be broadcasted to other user
+          socket.emit('sendMessage',{
+            senderId: currentUser._id,
+            messageText: text,
+            chatId: selectedChat._id,
+            image:response.data.image || null,
+            sentAt: response.data.sentAt,
+          })
           setText('')
+          setImagePreview(null)
+          setImageFile(null);
         } catch (error:any) {
           toast.error(error.message || 'Error sending message')
           console.error('error sending message', error)

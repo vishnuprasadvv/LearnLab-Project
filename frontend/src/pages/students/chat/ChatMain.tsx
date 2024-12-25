@@ -3,13 +3,16 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import ChatContainer from '@/components/user/chat/ChatContainer'
 import ChatSidebar from '@/components/user/chat/ChatSidebar'
 import NoChatSelected from '@/components/user/chat/NoChatSelected'
-import { resetSelectedChat, } from '@/features/chatSlice'
+import { resetSelectedChat } from '@/features/chatSlice'
+import { useSocket } from '@/hooks/use-socket'
 import React, { useEffect, } from 'react'
 
 const ChatMain:React.FC = () => {
-    const selectedChat = useAppSelector((state) => state.chat.selectedChat) || null;
-    const dispatch = useAppDispatch()
-    useEffect(() => {
+  const currentUser = useAppSelector((state) => state.auth.user)
+  const dispatch = useAppDispatch()
+  const socket = useSocket(currentUser)
+  const selectedChat = useAppSelector((state) => state.chat.selectedChat) || null;
+      useEffect(() => {
         // Cleanup action to reset selected chat when component unmounts
         return () => {
           dispatch(resetSelectedChat());
