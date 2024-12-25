@@ -1,34 +1,57 @@
+import { sendMessageApi } from '@/api/chatApi';
+import { useAppSelector } from '@/app/hooks';
 import { Input } from '@/components/ui/input';
 import { Image, Send, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 
 const MessageInput = () => {
-
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
     const [text, setText] = useState<string>('')
     const fileInputRef : any = useRef(null)
+    const selectedChat = useAppSelector((state) => state.chat.selectedChat)
+    const currentUser = useAppSelector((state)=> state.auth.user)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleSendMessage = () => {
-        console.log('send')
-    }
-
-    const handleImageChange = (e :any) => {
-        const file = e.target.files[0];
-        if (!file.type.startsWith("image/")) {
-          toast.error("Please select an image file");
+    const handleSendMessage = async(e:React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true)
+        if(!text.trim() && !imageFile) {
+          toast.error('Message cannot be empty')
           return;
         }
-    
+        if(!selectedChat?._id || !currentUser?._id){
+          return;
+        }
+        try {
+          const response = await sendMessageApi({senderId: currentUser?._id, messageText: text, chatId: selectedChat?._id, image: imageFile})
+          console.log(response)
+          setText('')
+        } catch (error:any) {
+          toast.error(error.message || 'Error sending message')
+          console.error('error sending message', error)
+        }finally{
+          setIsLoading(false)
+        }
+    }
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        const file = event.target.files[0]
+        setImageFile(event.target.files[0]);
+        // Generate the image preview
         const reader = new FileReader();
         reader.onloadend = () => {
           setImagePreview(reader.result);
         };
-        reader.readAsDataURL(file);
-      };
+        reader.readAsDataURL(file); // Convert the file to a base64 URL
+      }
+      }
     
       const removeImage = () => {
         setImagePreview(null);
+        setImageFile(null)
         if (fileInputRef.current) fileInputRef.current.value = "";
       };
 
@@ -38,17 +61,17 @@ const MessageInput = () => {
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
             <img
-              src={"imagePreview"}
+              src={imagePreview.toString()}
               alt="Preview"
               className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
             />
             <button
                onClick={removeImage}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
+              className="absolute -top-4 -right-4 w-5 h-5 rounded-full bg-base-300
               flex items-center justify-center"
               type="button"
             >
-              <X className="size-3" />
+              <X className="size-4 hover:text-red-500 hover:scale-125 duration-300" />
             </button>
           </div>
         </div>
@@ -80,12 +103,12 @@ const MessageInput = () => {
             <Image size={25} />
           </button>
         </div>
-        <button
+        <button 
           type="submit"
           className="btn btn-sm btn-circle"
-          disabled={!text.trim() && !imagePreview}
+          disabled={!text.trim() && !imageFile || isLoading}
         >
-          <Send size={22} />
+          <Send size={22} className={`${isLoading || !text.trim() && !imageFile && 'text-gray-400'}`}/>
         </button>
       </form>
     </div>

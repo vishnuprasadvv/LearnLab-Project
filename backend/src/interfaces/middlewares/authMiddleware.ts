@@ -6,7 +6,7 @@ import User from "../../domain/models/User";
 export const isAuthenticated = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     const accessToken = req.cookies?.accessToken;
     const refreshToken = req.cookies?.refreshToken;
-    console.log('isAuthMiddleware',accessToken)
+    //console.log('isAuthMiddleware',accessToken)
     if(!accessToken && !refreshToken){
         res.status(401).json({message: 'accessToken and refreshToken not found'})
     }

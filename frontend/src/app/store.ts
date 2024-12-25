@@ -20,7 +20,7 @@ const adminPersistConfig = {
 const chatPersistConfig = {
   key: 'chat',
   storage,
-  whitelist: ['messages']
+  whitelist: ['messages', 'selectedChat']
 }
 
 const rootReducer = combineReducers({

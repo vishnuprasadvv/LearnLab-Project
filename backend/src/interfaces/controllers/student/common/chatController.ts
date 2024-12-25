@@ -8,15 +8,19 @@ import { CustomError } from "../../../middlewares/errorMiddleWare";
 import { CreateChatUseCase } from "../../../../application/use-cases/chat/createChat";
 import { ChatRepository } from "../../../../infrastructure/repositories/chatRepository";
 import { GetUserChatUseCase } from "../../../../application/use-cases/chat/getUserChat";
+import { GetChatMessagesUseCase } from "../../../../application/use-cases/chat/getChatMessages";
+import { IMessages } from "../../../../domain/models/Messages";
+import { uploadChatImage } from "../../../../infrastructure/cloud/cloudinary";
 
 const messageRepository = new MessageRepository();
 const chatRepository = new ChatRepository()
 const getChatHistory = new GetChatHistory(messageRepository);
-const sendMessage = new SendMessageUseCase(messageRepository)
+const sendMessageUseCase = new SendMessageUseCase(messageRepository)
 const userRepository = new UserRepositoryImpl();
 const getAllChatUsersUseCase = new GetAllChatUsersUseCase(userRepository)
 const createChatUseCase = new CreateChatUseCase(chatRepository)
 const getUserChatUseCase = new GetUserChatUseCase(chatRepository)
+const getChatMessagesUseCase = new GetChatMessagesUseCase(messageRepository)
 
 export const getChatHistoryController = async(req: Request, res: Response, next: NextFunction) => {
     try {
@@ -30,8 +34,31 @@ export const getChatHistoryController = async(req: Request, res: Response, next:
 }
 export const sendMessageController = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const message = 'message'
-        const result = await sendMessage.execute(message)
+        const {senderId, replyToMessageId, messageText, chatId} = req.body;
+        console.log(req.body)
+        if(!senderId || !chatId) {
+            throw new CustomError('Sender ID and Chat ID are required', 400)
+        }
+        let image = null;
+        let imagePublicUrl = null;
+        if(req.file){
+            const imageUploadResult = await uploadChatImage(req.file.buffer)
+            image = imageUploadResult.secure_url;
+            imagePublicUrl = imageUploadResult.public_id
+        }
+        const messageData : IMessages ={
+            senderId,
+            replyToMessageId : replyToMessageId || null,
+            messageText,
+            image: image || null,
+            imagePublicUrl : imagePublicUrl || null,
+            isRead: false,
+            sentAt: new Date(),
+            chatId
+        }
+        const result = await sendMessageUseCase.execute(messageData)
+        if(!result) throw new CustomError('Error sending message', 400)
+        res.status(200).json({success: true, message: 'Message send successfully', data:result })
     } catch (error) {
         next(error)
     }
@@ -80,6 +107,17 @@ export const getChatsController = async(req: Request, res: Response, next: NextF
         const chat = await getUserChatUseCase.execute(user.id)
         if(!chat) throw new CustomError('chat not found', 404)
             res.status(200).json({success: true, message:'fetching chats success', data:chat})
+    } catch (error) {
+        next(error)
+    }
+}
+export const getChatMessagesController = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {chatId} = req.params;
+        if(!chatId) throw new CustomError('Chat id not found', 400);
+        const messages = await getChatMessagesUseCase.execute(chatId)
+        if(!messages) throw new CustomError('chat not found', 404)
+            res.status(200).json({success: true, message:'fetching chat message success', data:messages})
     } catch (error) {
         next(error)
     }

@@ -107,3 +107,34 @@ export const uploadVideoToCloudinary = async (fileBuffer: Buffer) => {
     throw new Error("Failed to upload video to Cloudinary");
   }
 };
+
+
+export const uploadChatImage = async (fileBuffer:Buffer) => {
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'auto',
+          folder: 'chat_images',
+        },
+        (error, result) => {
+          if (error) {
+            console.error('Cloudinary upload failed:', error);
+            return reject(new Error('Failed to upload to Cloudinary'));
+          }
+          resolve(result);
+        }
+      );
+
+      // Pipe the file buffer to the upload stream
+      streamifier.createReadStream(fileBuffer).pipe(uploadStream);
+    });
+
+    return (result as any)
+
+    } catch (error) {
+        console.error('error uploading to cloudinary', error)
+        throw new Error('Failed to upload image to Cloudinary')
+    }
+}

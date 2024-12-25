@@ -2,11 +2,12 @@ import { IMessageRespository } from "../../application/repositories/IMessageRepo
 import { IMessages, Message } from "../../domain/models/Messages";
 
 export class MessageRepository implements IMessageRespository{
-        async save(messageData: any) {
-          return await Message.create(messageData);
+        async sendMessage(message: IMessages): Promise<IMessages> {
+          return await Message.create(message);
         }
       
-        async findByChatId(chatId: string):Promise<IMessages[] | null> {
-          return await Message.find({ chatId: chatId }).sort({ sentAt: 1 });
+        async findByChatId(chatId: string):Promise<IMessages[]> {
+          const messages =  await Message.find({ chatId: chatId }).sort({ sentAt: 1 });
+          return messages || [];
         }
 }

@@ -25,9 +25,12 @@ const chatSlice = createSlice({
         },
         setSelectedChat(state, action: PayloadAction<IChat|null>){
             state.selectedChat = action.payload;
-        }
+        },
+        resetSelectedChat(state) {
+            state.selectedChat = null;
+        },
     }
 })
 
-export const {addMessage, setTypingStatus, setSelectedChat} = chatSlice.actions;
+export const {addMessage, setTypingStatus, setSelectedChat, resetSelectedChat} = chatSlice.actions;
 export default chatSlice.reducer;

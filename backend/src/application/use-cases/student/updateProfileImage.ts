@@ -2,13 +2,13 @@
 import { deleteFromCloudinary, uploadToCloudinary } from "../../../infrastructure/cloud/cloudinary";
 import { updateUserProfileImage } from "../../../infrastructure/repositories/userRepository";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
-import { UserRepository } from "../../repositories/IUserRepository";
+import { IUserRepository } from "../../repositories/IUserRepository";
 
 interface UpdateProfileImageParams {
     userId: string, 
     fileBuffer : Buffer
 }
-export const updateProfileImage = async ({userId, fileBuffer}: UpdateProfileImageParams, userRepository: UserRepository) => {
+export const updateProfileImage = async ({userId, fileBuffer}: UpdateProfileImageParams, userRepository: IUserRepository) => {
     if(!fileBuffer) throw new CustomError('No file provided', 400)
 
        const user = await userRepository.findById(userId);

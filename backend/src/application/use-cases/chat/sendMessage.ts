@@ -3,7 +3,7 @@ import { IMessageRespository } from "../../repositories/IMessageRepository";
 
 export class SendMessageUseCase {
     constructor(private messageRepository : IMessageRespository){}
-    async execute(messageData: any) {
-        return await this.messageRepository.save(messageData)
+    async execute(messageData: IMessages) {
+        return await this.messageRepository.sendMessage(messageData)
     }
 }
