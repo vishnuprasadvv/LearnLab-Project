@@ -23,7 +23,7 @@ const app = express();
 //create an HTTP server for socket 
 const server = createServer(app);
 //initialize socket.io
-const io = new Server(server, {
+export const io = new Server(server, {
     cors: {
         origin: config.cors.CLIENT_URL,
         methods: config.cors.ALLOWED_METHODS,

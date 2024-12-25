@@ -12,6 +12,7 @@ import { GetChatMessagesUseCase } from "../../../../application/use-cases/chat/g
 import { IMessages } from "../../../../domain/models/Messages";
 import { uploadChatImage } from "../../../../infrastructure/cloud/cloudinary";
 import { MarkAsReadUseCase } from "../../../../application/use-cases/chat/markAsRead";
+import { io } from "../../../../main/server";
 
 const messageRepository = new MessageRepository();
 const chatRepository = new ChatRepository()
@@ -135,6 +136,9 @@ try {
     const markAsRead = await markAsReadUseCase.execute(chatId, userId)
     if(!markAsRead) throw new CustomError('Error marking messages as read', 400)
         console.log('message read')
+
+    io.to(chatId).emit('messagesRead', {chatId})
+    
         res.status(200).json({success: true})
 } catch (error) {
     next(error)

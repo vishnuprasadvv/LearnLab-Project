@@ -3,7 +3,6 @@ import MessageInput from "./MessageInput";
 import ChatHeader from "./ChatHeader";
 import { useAppSelector } from "@/app/hooks";
 import { getChatMessages, markAsReadApi } from "@/api/chatApi";
-import ChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import SenderChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import ReceiverChatBubble from "@/components/common/ChatBubble/ReceiverChatBubble";
 import {io} from 'socket.io-client'
@@ -31,7 +30,38 @@ const ChatContainer = () => {
     (p: any) => p._id !== authUser?._id
   );
 
+  
   useEffect(() => {
+    const markMessagesAsRead = async () => {
+      if (!selectedChat?._id || !authUser) return;
+      // Check if there are any unread messages
+      const hasUnreadMessages = messages.some(
+        (message) => !message.isRead && message.senderId !== authUser._id
+      );
+  
+      if (hasUnreadMessages) {
+        try {
+          await markAsReadApi({ chatId: selectedChat._id, userId: authUser._id });
+          // Update the message state locally to reflect the read status
+          setMessages((prevMessages) =>
+            prevMessages.map((msg) =>
+              msg.senderId !== authUser._id ? { ...msg, isRead: true } : msg
+            )
+          );
+        } catch (error) {
+          console.error("Error marking messages as read:", error);
+        }
+      }
+    };
+  
+    markMessagesAsRead();
+  }, [messages, selectedChat, authUser]);
+
+  
+
+
+  useEffect(() => {
+
     socket.on('newMessage', (message) => {
       console.log('new message received', message)
       if(selectedChat?._id === message.chatId){
@@ -39,14 +69,27 @@ const ChatContainer = () => {
       }
     })
 
+    socket.on('messagesRead', (data) => {
+      console.log(data.chatId)
+      if (selectedChat?._id === data.chatId) {
+        // Update the isRead status of all messages in the current chat
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg.senderId === authUser._id && !msg.isRead ? { ...msg, isRead: true } : msg
+          )
+        );
+      }
+     
+    });
+
     if(selectedChat?._id) {
       socket.emit('joinChat', selectedChat._id)
     }
     return () => {
       socket.off('newMessage')
+      socket.off('messagesRead')
     }
   }, [selectedChat])
-
 
   useEffect(() => {
     const getMessages = async () => {
@@ -57,8 +100,6 @@ const ChatContainer = () => {
         const response = await getChatMessages(selectedChat?._id);
         console.log(response);
         setMessages(response.data);
-
-        const markAsReadResponse = await markAsReadApi({chatId: selectedChat._id, userId: authUser._id})
       } catch (error) {
         console.error("error fetching messages", error);
       }
@@ -71,7 +112,7 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
+console.log('messages', messages)
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
@@ -92,6 +133,7 @@ const ChatContainer = () => {
               }`}
               ref={messageEndRef}
             >
+              {message.isRead ? 'true' : 'false'}
               {message.senderId === authUser._id ? (
                 <SenderChatBubble
                   time={formatMessageTime(message.sentAt)}

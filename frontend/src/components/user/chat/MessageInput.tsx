@@ -40,6 +40,9 @@ const MessageInput = () => {
             chatId: selectedChat._id,
             image:response.data.image || null,
             sentAt: response.data.sentAt,
+            isRead: response.data.isRead,
+            _id: response.data._id,
+            replyToMessageId: response.data.replyToMessageId,
           })
           setText('')
           setImagePreview(null)
