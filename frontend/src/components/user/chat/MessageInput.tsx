@@ -1,13 +1,10 @@
 import { sendMessageApi } from '@/api/chatApi';
 import { useAppSelector } from '@/app/hooks';
 import { Input } from '@/components/ui/input';
-import { config } from '@/config/config';
+import socket from '@/utils/socket';
 import { Image, Send, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
-import {io} from 'socket.io-client'
-
-const socket = io(config.app.BASE_URL )
 
 const MessageInput = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);

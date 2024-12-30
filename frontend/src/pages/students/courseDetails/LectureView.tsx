@@ -16,6 +16,7 @@ import {
   markVideoCompleteApi,
 } from "@/api/student";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { getVideoUrl } from "@/utils/getVideoUrl";
 
 interface ProgressVideo {
   videoId: string;
@@ -52,6 +53,12 @@ const LectureView: React.FC = () => {
     null
   );
   const navigate = useNavigate();
+
+  if(!id){
+    navigate(-1)
+    toast.error('Course details not found')
+    return;
+  }
   useEffect(() => {
     const fetchCourse = async () => {
       if (!id) {
@@ -182,6 +189,11 @@ const LectureView: React.FC = () => {
   const toggleLecture = (lectureId: string) => {
     setOpenLecture((prev) => (prev === lectureId ? null : lectureId));
   };
+
+  const videoUrl = selectedVideo ? getVideoUrl(id, selectedVideo.video._id) : ''
+
+ 
+
   return (
     <div className="flex flex-col sm:flex-row h-[90vh] max-w-7xl place-self-center w-full">
       <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full order-2 sm:order-1">
@@ -223,11 +235,19 @@ const LectureView: React.FC = () => {
           <div className="w-full h-max flex flex-col gap-2">
             <div className="player-wrapper">
               <ReactPlayer
+              // Disable download button
+  config={{ file: { attributes: { controlsList: 'nodownload' } } }}
+
+  // Disable right click
+  onContextMenu={(e:React.MouseEvent) => e.preventDefault()}
+
                 className="react-player"
                 width="100%"
                 height="100%"
                 controls
-                url={selectedVideo?.video.url || ""}
+                playing
+
+                url={videoUrl}
                 onEnded={() => {
                   if (selectedVideo && id) {
                     handleMarkVideoComplete(
@@ -238,6 +258,7 @@ const LectureView: React.FC = () => {
                   }
                 }}
               />
+              
             </div>
             <div className="space-y-2 p-2">
               <h1 className="font-semibold underline underline-offset-2">

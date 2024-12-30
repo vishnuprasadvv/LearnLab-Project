@@ -43,8 +43,8 @@ export const createOrderController = async(req:Request, res: Response, next:Next
             
         });
         res.status(200).json({sessionId: stripeCheckoutSessionId })
-        
     } catch (error) {
+        console.log('create order' , error)
         next(error)
     }
 }

@@ -2,10 +2,7 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { setOnlineUsers, resetOnlineUsers } from '@/features/chatSlice';
-import { io } from 'socket.io-client';
-import { config } from '@/config/config';
-
-const socket = io(config.app.BASE_URL);
+import socket from '@/utils/socket';
 
 export const useSocket = (currentUser: any) => {
   const dispatch = useAppDispatch();

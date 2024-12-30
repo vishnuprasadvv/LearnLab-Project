@@ -5,7 +5,8 @@ export interface IVideo {
     url: string;
     publicId: string;
     duration: number;
-    isFree: boolean
+    isFree: boolean;
+    _id? : string | mongoose.Types.ObjectId;
 }
 
 export interface ILectureDocument extends Document{
@@ -31,7 +32,8 @@ export interface ICourses extends Document{
     _id: string,
     duration? : number,
     isDeleted : boolean,
-    lectures?: ILectureDocument[]
+    lectures?: ILectureDocument[],
+    enrolledCount?: number,
 }
 
 const VideoSchema : Schema = new Schema({
@@ -65,6 +67,7 @@ const CourseSchema  : Schema = new Schema({
     isDeleted: {type: Boolean, default: false},
     level: {type:String, enum: ['beginner','intermediate', 'advanced'], required: true},
     lectures: {type: [LectureSchema], default: []},
+    enrolledCount:{type:Number, default:0}
     
 },{timestamps: true});
 

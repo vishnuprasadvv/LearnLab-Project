@@ -84,6 +84,7 @@ export const uploadVideoToCloudinary = async (fileBuffer: Buffer) => {
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
+          
           resource_type: "video", // Specify that this is a video
           folder: "lecture_videos", // Organize videos in a folder in Cloudinary
         },
@@ -138,3 +139,22 @@ export const uploadChatImage = async (fileBuffer:Buffer) => {
         throw new Error('Failed to upload image to Cloudinary')
     }
 }
+
+export const generateSignedUrl = (publicId : string) => {
+  return cloudinary.url(publicId, {
+    resource_type: 'video',
+    type: 'upload',
+    sign_url : true,
+    secure : true,
+    expires_at: Math.floor(Date.now() / 1000) + (60 * 60), //valid for one hour
+  })
+}
+// export const generateSignedUrl = (publicId : string, expiryInSeconds: number) => {
+//   return cloudinary.url(publicId, {
+//     resource_type: 'video',
+//     type: 'authenticated',
+//     sign_url : true,
+//     secure : true,
+//     expires_at: Math.floor(Date.now() / 1000) + expiryInSeconds,
+//   })
+// }

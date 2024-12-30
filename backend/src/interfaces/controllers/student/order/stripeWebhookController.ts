@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import Stripe from "stripe";
 import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";
 import { config } from "../../../../infrastructure/config/config";
+import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 
 const stripe = new Stripe(config.stripe.STRIPE_SECRET_KEY!, { apiVersion: "2024-11-20.acacia" });
 const orderRepository = new OrderRepository();
+const courseRepository = new CourseRepositoryClass();
 
 export const handleWebhook = async (req: Request, res: Response): Promise<void> => {
     console.log('handlewebhook', config.stripe.STRIPE_WEBHOOK_SECRET)
@@ -50,9 +52,10 @@ const handleCheckoutSessionCompleted = async (event: Stripe.Event): Promise<void
 
     // Retrieve metadata (userId and courseIds from the session)
     const userId = session.metadata?.userId;
-    const courseIds = JSON.parse(session.metadata?.courses || "[]");
+    const courses = JSON.parse(session.metadata?.courses || "[]");
 
-    if (!userId || courseIds.length === 0) {
+
+    if (!userId || courses.length === 0) {
         console.error("Invalid session metadata.");
         return;
     }
@@ -71,6 +74,19 @@ const handleCheckoutSessionCompleted = async (event: Stripe.Event): Promise<void
     });
 
     console.log(`Order ${order.orderId} marked as completed.`);
+
+    for(const course of courses) {
+        const {courseId} = course;
+        try{
+        if(!courseId) {
+            console.error('Course ID is missing in the course object:', course)
+        }
+            await courseRepository.incrementEnrolledCount(courseId);
+            console.log(`Enrolled count incremented for course:${courseId}`)
+        }catch(error){
+            console.error(`Failed to update enrolled count for course: ${courseId}`, error)
+        }
+    }
 };
 
 

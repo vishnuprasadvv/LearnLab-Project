@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
         setLoading(false);
       } catch (error) {
         console.log('protected route', error)
-        toast.error('Unauthorized')
+        toast.error('Please login')
         dispatch(logoutSliceAction())
         setLoading(false); 
       }

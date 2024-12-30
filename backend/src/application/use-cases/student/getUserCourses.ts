@@ -21,7 +21,7 @@ export class GetUserCoursesUseCase {
       console.error("Courses IDs not found")
     }
 
-    const userCourses = await this.courseRepository.getCourseByIds(coursesIds);
+    const userCourses = await this.courseRepository.getCourseByIdsUser(coursesIds);
     if (!userCourses || userCourses.length === 0) {
       console.error("No courses found for the provided IDs");
     }

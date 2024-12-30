@@ -55,11 +55,15 @@ export interface ICourseRepository{
     publishCourse(courseId: string, publishValue : boolean) : Promise<ICourses | null>
 
     //users
+    getCourseByIdUser(id: string) : Promise<ICourses | null>
+    getCourseByIdsUser(ids: string[]) : Promise<ICourses[] | null>
     getAllCoursesUsers () : Promise<ICourses[] | null >
-
     getAllFilteredCoursesUsers (filter:any, sort:any, pagination:any) : Promise<PaginatedResultCourses > 
 
     //admin
     getAllCoursesAdmin(filter:Filter, sort :any, pagination: Pagination | null) : Promise <PaginatedResultCourses>
 
+    incrementEnrolledCount(courseId: string, incrementBy:number): Promise<void>
+
+    getVideoPublicUrl(courseId: string, videoId: string): Promise<string | null>
 }

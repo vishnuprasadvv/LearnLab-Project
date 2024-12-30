@@ -14,12 +14,12 @@ interface GetFilteredCourseParams {
 }
 
 export const getFilteredCoursesUserApi = async (params: GetFilteredCourseParams) => {
-    const response = await api.get(`${API_URL}/student/courses-filtered`, {params : params, withCredentials: true});
+    const response = await api.get(`${API_URL}/student/courses-filtered`, {params : params});
     return response.data;
 }
 
 export const getAllCoursesUserApi = async () => {
-    const response = await api.get(`${API_URL}/student/home/courses`, { withCredentials: true});
+    const response = await api.get(`${API_URL}/student/home/courses`);
     return response.data;
 }
 
@@ -113,3 +113,16 @@ export const getAllCategoriesApi = async () => {
     );
     return response.data;
   };
+  export const getVideoSecureUrl = async (
+    courseId: string,
+    lectureId: string,
+    videoId: string
+  ) => {
+    const response = await api.get(
+      `${API_URL}/student/stream/${courseId}/${lectureId}/${videoId}`,
+      {responseType: 'blob', withCredentials: true}
+    );
+    return response.data;
+  };
+
+  

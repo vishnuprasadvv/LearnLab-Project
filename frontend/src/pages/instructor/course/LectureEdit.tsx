@@ -87,8 +87,6 @@ const LectureEdit: React.FC = () => {
         const response = await getCourseById(courseId);
         const courseData = response.data;
 
-        console.log("editlecture coursedata", courseData);
-
         const formattedData: CourseData = {
           lectures: (courseData.lectures || []).map(
             (lecture: any, lectureIndex: number) => ({

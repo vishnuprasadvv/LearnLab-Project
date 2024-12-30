@@ -108,6 +108,7 @@ export const getChatsController = async(req: Request, res: Response, next: NextF
         const user = req.user;
         if(!user) throw new CustomError('User not found', 400)
         const chat = await getUserChatUseCase.execute(user.id)
+    console.log('chats', chat)
         if(!chat) throw new CustomError('chat not found', 404)
             res.status(200).json({success: true, message:'fetching chats success', data:chat})
     } catch (error) {

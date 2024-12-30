@@ -11,4 +11,5 @@ export interface IChat {
     chatName?: string | null;
     createdAt?: Date;
     updatedAt?: Date;
+    unReadCount?:number
 }

@@ -46,11 +46,11 @@ const Navbar = () => {
       path: "/wishlist",
       icon: <LuHeart />,
     },
-    {
-      name: "Cart",
-      path: "/cart",
-      icon: <LuShoppingCart />,
-    },
+    // {
+    //   name: "Cart",
+    //   path: "/cart",
+    //   icon: <LuShoppingCart />,
+    // },
   ];
 
   const [open, setOpen] = useState(false);

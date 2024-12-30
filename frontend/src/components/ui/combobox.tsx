@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
@@ -25,18 +23,20 @@ interface ComboboxProps {
     onChange: (value : string) => void;
 }
 
-
-export const Combobox = ({
+export const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
+(
+  {
     options,
     value,
     onChange
-}:ComboboxProps) => {
+},ref) => {
   const [open, setOpen] = React.useState(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={ref}
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -79,3 +79,4 @@ export const Combobox = ({
     </Popover>
   )
 }
+)

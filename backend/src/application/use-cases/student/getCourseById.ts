@@ -19,7 +19,7 @@ export class GetCourseByIdStudentUseCase {
     if (!courseId) {
       throw new CustomError("Course id not found", 404);
     }
-    const course:any = await this.courseRepository.getCourseById(courseId);
+    const course:any = await this.courseRepository.getCourseByIdUser(courseId);
     if (!course) {
       throw new CustomError("No course available with this id", 404);
     }

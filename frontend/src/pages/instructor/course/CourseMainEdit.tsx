@@ -149,16 +149,12 @@ const CourseMainEdit = () => {
   const { control, handleSubmit, watch, setValue } = methods;
 
   const onSubmit = async (data: any) => {
-    console.log("create course", data);
     setLoading(true);
-
     try {
       if(!courseId){
         console.error('course id not found')
         return 
       }
-      console.log('data', data)
-      console.log('initial data', initialFormData)
       const isUnchanged =  _.isEqual({...data, duration: data.duration.toString(), price: data.price.toString()}, initialFormData)
       if(isUnchanged){
         console.log('value not changed')
@@ -291,7 +287,7 @@ const CourseMainEdit = () => {
                       Course category
                     </div>
                     <FormControl className="w-full">
-                      {categories &&  <Combobox options={categories?.map((item) => ({label: item.name , value: item.name}))}
+                      {categories &&  <Combobox options={categories.map((item) => ({label: item.name , value: item.name}))}
                       {...field} />}
                     </FormControl>
                     <FormMessage />

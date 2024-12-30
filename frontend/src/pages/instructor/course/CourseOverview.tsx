@@ -104,10 +104,8 @@ const CourseOverview = () => {
           <div className="space-x-2">
             {course && !course.isPublished ? (
               <AlertDialog>
-                <AlertDialogTrigger>
-                  <Button className="bg-blue-600 rounded-full hover:bg-blue-500">
-                    Publish
-                  </Button>
+                <AlertDialogTrigger className="bg-blue-600 rounded-full hover:bg-blue-500 font-medium p-2 px-4 text-white"> 
+                  Publish
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -133,13 +131,8 @@ const CourseOverview = () => {
               </AlertDialog>
             ) : (
               <AlertDialog>
-                <AlertDialogTrigger>
-                  <Button
-                    variant="outline"
-                    className="rounded-full hover:bg-gray-100"
-                  >
-                    Unpublish
-                  </Button>
+                <AlertDialogTrigger className="rounded-full hover:text-blue-600 hover:border-blue-600 border font-medium p-2 px-4">
+                  Unpublish
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -215,18 +208,13 @@ const CourseOverview = () => {
                   </div>
                 </div>
                 <div className="font-bold ">Price ₹{course?.price}</div>
-                <div className="space-x-1 place-self-end">
+                <div className="space-x-1 place-self-end flex">
                   <Button size="icon" onClick={() => handleEditCourse()}>
                     <PiNotePencil />
                   </Button>
                   <AlertDialog>
-                    <AlertDialogTrigger>
-                      <Button
-                        size="icon"
-                        className="bg-red-600 hover:bg-red-500"
-                      >
-                        <LiaTrashAlt />
-                      </Button>
+                    <AlertDialogTrigger className="bg-red-600 hover:bg-red-500 p-2 rounded-md flex items-center justify-center">
+                      <LiaTrashAlt className="text-white" size={20} />
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
@@ -277,7 +265,7 @@ const CourseOverview = () => {
                   {course?.lectures
                     ?.sort((a, b) => a.order - b.order)
                     .map((lecture) => (
-                      <div className="bg-white p-2 pl-5 rounded-lg">
+                      <div className="bg-white p-2 pl-5 rounded-lg" key={lecture._id}>
                         <li className="list-decimal space-y-3">
                           <div className="flex justify-between">
                             <h4 className="font-semibold text-lg">
@@ -335,7 +323,7 @@ const CourseOverview = () => {
                                     width="250"
                                     className="rounded-lg"
                                   >
-                                    <source src={video.url} />
+                                    <source src={video.url || ''} />
                                   </video>
                                 </div>
                               ))}

@@ -18,6 +18,9 @@ interface PaginatedResultCourses {
 }
 
 export class CourseRepositoryClass implements ICourseRepository{
+
+  //for instructors
+
     async createCourse(data: Partial<ICourses>): Promise<ICourses>{
         const category = new Courses(data);
         return await category.save()
@@ -105,20 +108,22 @@ async publishCourse(courseId: string, publishValue : boolean): Promise<ICourses 
     { new: true})
 }
 
+//for users 
+
 async getAllCoursesUsers(): Promise<ICourses[] | null> {
   return await Courses.find({isDeleted: false, isPublished: true}).populate([
     {path: 'instructor', select: '-password -profileImagePublicId'},
     {path: 'category', select: 'name _id'}
-  ]).sort({createdAt: -1})
+  ]).sort({createdAt: -1}).select('-lectures.videos.url -lectures.videos.publicId')
 }
 
 //filtered course for users (search, filter, sort)
 
 async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>, pagination : Pagination): Promise<PaginatedResultCourses> {
   const query = Courses.find({...filter, isPublished: true, isDeleted : false}).populate([
-    {path: 'instructor', select: '-password -profileImagePublicId'},
+    {path: 'instructor', select: '-password -profileImagePublicId '},
     {path: 'category', select: 'name _id'}
-  ])
+  ]).select('-lectures.videos.url -lectures.videos.publicId')
 
   if(sort){
     query.sort(sort).collation({ locale: 'en', strength: 2 })
@@ -130,7 +135,6 @@ async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>
   }
 
   const courses = await query.exec();
-
   const totalCourses = await Courses.countDocuments({...filter, isPublished: true, isDeleted: false});
   const totalPages = pagination ? Math.ceil(totalCourses / pagination.limit) : null;
 
@@ -140,6 +144,26 @@ async getAllFilteredCoursesUsers(filter : Filter, sort:Record<string, SortOrder>
     totalPages
   }
 }
+
+async getCourseByIdUser(id: string) : Promise<ICourses | null>{
+  return await Courses.findOne({_id:id, isDeleted: false}).populate([
+      { path: 'category'},
+      {path : 'instructor', select:'-password -phone -profileImagePublicId'}
+  ]
+  ).select('-lectures.videos.url -lectures.videos.publicId')
+}
+
+async getCourseByIdsUser(ids: string[]) : Promise<ICourses[] | null>{
+  if (!Array.isArray(ids) || ids.length === 0) {
+    console.error("Invalid or empty IDs array provided.");
+    return null;
+  }
+      return await Courses.find({_id:{ $in: ids }, isDeleted: false}).populate([
+          { path: 'category'},
+          {path : 'instructor', select:'-password -phone -profileImagePublicId'}
+      ]
+      ).select('-lectures.videos.url -lectures.videos.publicId')
+ }
 
 async getAllCoursesAdmin(filter:Filter, sort: Record<string, SortOrder>, pagination: Pagination):Promise<PaginatedResultCourses> {
 
@@ -168,5 +192,25 @@ async getAllCoursesAdmin(filter:Filter, sort: Record<string, SortOrder>, paginat
     totalPages
   }
 }
+
+//increment enrolledcount
+async incrementEnrolledCount(courseId: string, incrementBy = 1): Promise<void> {
+  await Courses.findByIdAndUpdate(
+    courseId,
+    {$inc: {enrolledCount: incrementBy}},
+    {new : true}
+  )
+}
+
+  async getVideoPublicUrl(courseId: string, videoId: string): Promise<string | null> {
+    const course = await Courses.findOne({
+      _id: courseId,
+      'lectures.videos._id': videoId,
+    }).select('lectures.videos.$');
+
+    if(!course || !course.lectures) return null;
+    const video = course.lectures[0].videos.find((vid) => vid._id?.toString() === videoId)
+    return video ? video.publicId : null;
+  }
 
 }

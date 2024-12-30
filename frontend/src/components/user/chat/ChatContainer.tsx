@@ -5,10 +5,7 @@ import { useAppSelector } from "@/app/hooks";
 import { getChatMessages, markAsReadApi } from "@/api/chatApi";
 import SenderChatBubble from "@/components/common/ChatBubble/SenderChatBubble";
 import ReceiverChatBubble from "@/components/common/ChatBubble/ReceiverChatBubble";
-import {io} from 'socket.io-client'
-import { config } from "@/config/config";
-
-const socket = io(config.app.BASE_URL)
+import socket from "@/utils/socket";
 
 export function formatMessageTime(date: any) {
   return new Date(date).toLocaleTimeString("en-US", {
@@ -61,16 +58,27 @@ const ChatContainer = () => {
 
 
   useEffect(() => {
-
     socket.on('newMessage', (message) => {
       console.log('new message received', message)
+      console.log('selected chat', selectedChat?._id)
       if(selectedChat?._id === message.chatId){
-        setMessages((prev) => [...prev, message])
+        console.log('same chat')
+        setMessages((prev) => 
+        {
+          const messageIds = new Set(prev.map((m) => m._id));
+    
+          if(messageIds.has(message._id)){
+            console.log('message already exists')
+            return prev
+          }
+          return [...prev, message]
+        }
+      )
       }
+
     })
 
     socket.on('messagesRead', (data) => {
-      console.log(data.chatId)
       if (selectedChat?._id === data.chatId) {
         // Update the isRead status of all messages in the current chat
         setMessages((prevMessages) =>
@@ -86,10 +94,10 @@ const ChatContainer = () => {
       socket.emit('joinChat', selectedChat._id)
     }
     return () => {
-      socket.off('newMessage')
-      socket.off('messagesRead')
+     // socket.off('newMessage')
+      //socket.off('messagesRead')
     }
-  }, [selectedChat])
+  }, [selectedChat, ])
 
   useEffect(() => {
     const getMessages = async () => {
@@ -98,7 +106,6 @@ const ChatContainer = () => {
           return;
         }
         const response = await getChatMessages(selectedChat?._id);
-        console.log(response);
         setMessages(response.data);
       } catch (error) {
         console.error("error fetching messages", error);
@@ -112,7 +119,6 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-console.log('messages', messages)
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
@@ -133,7 +139,6 @@ console.log('messages', messages)
               }`}
               ref={messageEndRef}
             >
-              {message.isRead ? 'true' : 'false'}
               {message.senderId === authUser._id ? (
                 <SenderChatBubble
                   time={formatMessageTime(message.sentAt)}

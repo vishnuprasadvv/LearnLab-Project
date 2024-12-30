@@ -14,6 +14,7 @@ const ChatMain:React.FC = () => {
   const selectedChat = useAppSelector((state) => state.chat.selectedChat) || null;
       useEffect(() => {
         // Cleanup action to reset selected chat when component unmounts
+        
         return () => {
           dispatch(resetSelectedChat());
         };
