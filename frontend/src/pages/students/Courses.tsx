@@ -36,7 +36,6 @@ const isLoading = false;
             <h1 className="text-lg font-semibold text-slate-600">No courses available</h1>
             </div>
         )}
-
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
           {isLoading
             ? Array.from({ length: 8 }).map((_, index) => (
@@ -44,8 +43,6 @@ const isLoading = false;
               ))
             : displayedCourses.map((course, index) => <Course {...course}/>)}
         </div>
-
-
       </div>
     </div>
   );

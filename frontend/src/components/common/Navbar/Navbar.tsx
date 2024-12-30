@@ -46,11 +46,6 @@ const Navbar = () => {
       path: "/wishlist",
       icon: <LuHeart />,
     },
-    // {
-    //   name: "Cart",
-    //   path: "/cart",
-    //   icon: <LuShoppingCart />,
-    // },
   ];
 
   const [open, setOpen] = useState(false);
@@ -79,7 +74,7 @@ const Navbar = () => {
               <li key={item.name} className=" md:mb-0 mb-5">
                 <NavLink
                   to={item.path}
-                  className="text-gray-700 hover:text-blue-400 duration-500 "
+                  className={({isActive}) => `${isActive ? 'text-blue-500 border-b-2 border-blue-400 p-1' : 'text-gray-700'}  hover:text-blue-400 duration-300` }
                   onClick={() => setOpen(false)}
                 >
                   {item.name}
@@ -91,7 +86,7 @@ const Navbar = () => {
               <li key={item.name} className="flex gap-3 md:mb-0 mb-5">
                 <NavLink
                   to={item.path}
-                  className="text-gray-700 hover:text-blue-400 duration-500 text-xl hidden md:block"
+                  className={({isActive}) => `${isActive ? 'text-blue-500 border-b-2 border-blue-400 p-1' : 'text-gray-700'} hover:text-blue-400 duration-500 text-xl hidden md:block`}
                   onClick={() => setOpen(false)}
                 >
                   {item.icon}

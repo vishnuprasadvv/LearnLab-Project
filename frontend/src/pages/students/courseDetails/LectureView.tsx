@@ -15,7 +15,11 @@ import {
   markAsIncompletedApi,
   markVideoCompleteApi,
 } from "@/api/student";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { getVideoUrl } from "@/utils/getVideoUrl";
 
 interface ProgressVideo {
@@ -54,9 +58,9 @@ const LectureView: React.FC = () => {
   );
   const navigate = useNavigate();
 
-  if(!id){
-    navigate(-1)
-    toast.error('Course details not found')
+  if (!id) {
+    navigate(-1);
+    toast.error("Course details not found");
     return;
   }
   useEffect(() => {
@@ -190,9 +194,9 @@ const LectureView: React.FC = () => {
     setOpenLecture((prev) => (prev === lectureId ? null : lectureId));
   };
 
-  const videoUrl = selectedVideo ? getVideoUrl(id, selectedVideo.video._id) : ''
-
- 
+  const videoUrl = selectedVideo
+    ? getVideoUrl(id, selectedVideo.video._id)
+    : "";
 
   return (
     <div className="flex flex-col sm:flex-row h-[90vh] max-w-7xl place-self-center w-full">
@@ -235,18 +239,17 @@ const LectureView: React.FC = () => {
           <div className="w-full h-max flex flex-col gap-2">
             <div className="player-wrapper">
               <ReactPlayer
-              // Disable download button
-  config={{ file: { attributes: { controlsList: 'nodownload' } } }}
-
-  // Disable right click
-  onContextMenu={(e:React.MouseEvent) => e.preventDefault()}
-
+                // Disable download button
+                config={{
+                  file: { attributes: { controlsList: "nodownload" } },
+                }}
+                // Disable right click
+                onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
                 className="react-player"
                 width="100%"
                 height="100%"
                 controls
                 playing
-
                 url={videoUrl}
                 onEnded={() => {
                   if (selectedVideo && id) {
@@ -258,14 +261,12 @@ const LectureView: React.FC = () => {
                   }
                 }}
               />
-              
             </div>
             <div className="space-y-2 p-2">
               <h1 className="font-semibold underline underline-offset-2">
                 Current video details
               </h1>
               <div className="flex flex-col">
-                
                 <span>{selectedVideo?.video.title}</span>
               </div>
             </div>
@@ -274,7 +275,9 @@ const LectureView: React.FC = () => {
                 About lesson
               </h1>
               <div className="flex flex-col">
-                <h3 className="font-bold text-slate-800">{selectedVideo?.lectureTitle}</h3>
+                <h3 className="font-bold text-slate-800">
+                  {selectedVideo?.lectureTitle}
+                </h3>
                 <p className="italic">{selectedVideo?.lectureDescription}</p>
               </div>
             </div>
@@ -291,10 +294,11 @@ const LectureView: React.FC = () => {
               {course?.lectures
                 ?.sort((a, b) => a.order - b.order)
                 .map((lecture) => (
-                  <Collapsible 
-                  key={lecture._id}
-                  open={openLecture === lecture._id}
-                  onOpenChange={() => toggleLecture(lecture._id)}>
+                  <Collapsible
+                    key={lecture._id}
+                    open={openLecture === lecture._id}
+                    onOpenChange={() => toggleLecture(lecture._id)}
+                  >
                     <CollapsibleTrigger
                       className={`w-full flex gap-2 items-center justify-between border border-b-gray-300 h-12 px-2 cursor-pointer ${
                         lecture._id === selectedVideo?.lectureId
@@ -303,60 +307,62 @@ const LectureView: React.FC = () => {
                       }`}
                     >
                       <div className="flex gap-2 items-center">
-                      {userCoursePurchaseStatus ? (
-                        <IoLogoYoutube />
-                      ) : lecture.isFree ? (
-                        <IoLogoYoutube />
-                      ) : (
-                        <Lock size={16} />
-                      )}
+                        {userCoursePurchaseStatus ? (
+                          <IoLogoYoutube />
+                        ) : lecture.isFree ? (
+                          <IoLogoYoutube />
+                        ) : (
+                          <Lock size={16} />
+                        )}
 
-                      <h2 className="font-semibold">{lecture.title}</h2>
+                        <h2 className="font-semibold">{lecture.title}</h2>
                       </div>
                       <ChevronDown
-                  className={`transition-transform duration-200 ${
-                    openLecture === lecture._id ? "rotate-180" : "rotate-0"
-                  }`}
-                />
+                        className={`transition-transform duration-200 ${
+                          openLecture === lecture._id
+                            ? "rotate-180"
+                            : "rotate-0"
+                        }`}
+                      />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                    {lecture.videos.map((video) => {
-                      const isCompleted = progress?.completedLectures
-                        .find((l) => l.lectureId === lecture._id)
-                        ?.completedVideos.some(
-                          (v) => v.videoId === video._id && v.isCompleted
+                      {lecture.videos.map((video) => {
+                        const isCompleted = progress?.completedLectures
+                          .find((l) => l.lectureId === lecture._id)
+                          ?.completedVideos.some(
+                            (v) => v.videoId === video._id && v.isCompleted
+                          );
+                        return (
+                          <div
+                            key={video._id}
+                            className={`flex gap-2 items-center p-2 pl-6 cursor-pointer w-full ${
+                              selectedVideo?.video._id === video._id
+                                ? "bg-blue-600 border shadow-md text-white hover:bg-blue-500"
+                                : "bg-white hover:bg-slate-100"
+                            }`}
+                            onClick={() =>
+                              setSelectedVideo({
+                                video: video,
+                                lectureId: lecture._id,
+                                lectureTitle: lecture.title,
+                                lectureDescription: lecture.description,
+                              })
+                            }
+                          >
+                            {isCompleted ? (
+                              <CheckCircle2
+                                size={18}
+                                className="text-green-500"
+                              />
+                            ) : (
+                              <PlayCircle size={18} />
+                            )}
+                            <span className="text-xs">
+                              {video.title || "Video Title"}
+                            </span>
+                          </div>
                         );
-                      return (
-                        <div
-                          key={video._id}
-                          className={`flex gap-2 items-center p-2 pl-6 cursor-pointer w-full ${
-                            selectedVideo?.video._id === video._id
-                              ? "bg-blue-600 border shadow-md text-white hover:bg-blue-500"
-                              : "bg-white hover:bg-slate-100"
-                          }`}
-                          onClick={() =>
-                            setSelectedVideo({
-                              video: video,
-                              lectureId: lecture._id,
-                              lectureTitle: lecture.title,
-                              lectureDescription: lecture.description,
-                            })
-                          }
-                        >
-                          {isCompleted ? (
-                            <CheckCircle2
-                              size={18}
-                              className="text-green-500"
-                            />
-                          ) : (
-                            <PlayCircle size={18} />
-                          )}
-                          <span className="text-xs">
-                            {video.title || "Video Title"}
-                          </span>
-                        </div>
-                      );
-                    })}
+                      })}
                     </CollapsibleContent>
                   </Collapsible>
                 ))}

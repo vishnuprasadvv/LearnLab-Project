@@ -56,6 +56,7 @@ import LectureView from "./pages/students/courseDetails/LectureView";
 import AdminPurchases from "./pages/admin/purchases/AdminPurchases";
 import InstructorPurchases from "./pages/instructor/purchases/InstructorPurchases";
 import ChatMain from "./pages/students/chat/ChatMain";
+import Wishlist from "./pages/students/wishlist/Wishlist";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -116,6 +117,7 @@ function App() {
               <Route path="/cancel" element={<PurchaseCancel />} />
               <Route path="/payment/success" element={<PurchaseSuccess />} />
               <Route path="/chat" element={<ChatMain />} />
+              <Route path="/wishlist" element={<Wishlist />} />
 
               {/* Instructor registration */}
               <Route

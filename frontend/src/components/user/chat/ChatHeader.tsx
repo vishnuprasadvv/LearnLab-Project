@@ -1,12 +1,15 @@
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { X } from "lucide-react"
 import groupChatImg from '../../../assets/chat/groupchat.png'
 import privateChatAvatarImg from '../../../assets/chat/private-chat-avatar-612x612.jpg'
+import { resetSelectedChat } from "@/features/chatSlice";
 
 
 const ChatHeader = () => {
   const selectedChat = useAppSelector((state) => state.chat.selectedChat) || null;
   const currentUser = useAppSelector((state) => state.auth.user)
+  const dispatch = useAppDispatch();
+
 
   const isGroupChat = selectedChat?.chatType === 'group';
 
@@ -32,10 +35,7 @@ const ChatHeader = () => {
         </div>
 
         {/* Close button */}
-        {/* <button onClick={() => setSelectedUser(null)}>
-          <X />
-        </button> */}
-        <button>
+        <button onClick={() => dispatch(resetSelectedChat())}>
           <X />
         </button>
       </div>

@@ -125,4 +125,12 @@ export const getAllCategoriesApi = async () => {
     return response.data;
   };
 
+  export const addToWishlistApi = async(courseId: string)=> {
+    const response = await api.post(`${API_URL}/student/wishlist/add`, {courseId})
+    return response.data
+  }
+  export const removeFromWishlistApi = async(courseId: string)=> {
+    const response = await api.post(`${API_URL}/student/wishlist/delete`, {courseId})
+    return response.data
+  }
   
