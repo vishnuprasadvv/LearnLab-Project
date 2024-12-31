@@ -138,3 +138,7 @@ export const getAllCategoriesApi = async () => {
     return response.data
   }
   
+export const getWishlistCourseIds = async() => {
+  const response = await api.get(`${API_URL}/student/wishlist/ids`)
+  return response.data;
+}

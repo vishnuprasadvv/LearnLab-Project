@@ -5,4 +5,5 @@ export interface IWishlistRepository {
     addToWishList(userId: string, courseId: string):Promise<boolean > ;
     removeFromWishList(userId: string, courseId : string) : Promise<boolean> 
     getWishlistByCourseId(userId: string, courseId: string) : Promise<boolean>
+    getWishlistCourseIds ( userId: string):Promise<string[] | []>
 }

@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { config } from "@/config/config";
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   Carousel,
   CarouselContent,
@@ -30,6 +30,7 @@ import {
 import ReactPlayer from "react-player";
 import { getVideoUrl } from "@/utils/getVideoUrl";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import { addIdToWishlist, removeIdFromWishlist } from "@/features/wishlistSlice";
 
 interface Course {
   courseId: string;
@@ -51,6 +52,7 @@ const CourseDetails = () => {
   const [course, setCourse] = useState<ICourses | null>(null);
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const [userCoursePurchaseStatus, setUserCoursePurchaseStatus] =
     useState(false);
   const [userCourseWishlistedStatus, setUserCourseWishlistedStatus] =
@@ -136,6 +138,7 @@ const CourseDetails = () => {
       console.log("adding wishlist", response);
       toast.success(response.message || "Course added to wishlist");
       setUserCourseWishlistedStatus(true)
+      dispatch(addIdToWishlist({courseId: id}))
     } catch (error: any) {
       console.error("add to wishlist error", error.response.data);
       toast.error(error.response.data.message || "Error adding to wishlist");
@@ -147,6 +150,7 @@ const CourseDetails = () => {
       console.log("removing from wishlist", response);
       toast.success(response.message || "Course removed from wishlist");
       setUserCourseWishlistedStatus(false)
+      dispatch(removeIdFromWishlist({courseId:id}))
     } catch (error: any) {
       console.error("remove from wishlist error", error);
       toast.error(

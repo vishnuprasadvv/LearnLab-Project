@@ -9,11 +9,10 @@ interface IWishlistCourseListProps {
 }
 const WishlistCourseList:React.FC<IWishlistCourseListProps> = ({item, handleRemoveFromWishlist}) => {
   const course = item.courseId;
-
   return (
     <div className="flex w-full items-start border-b border-gray-300 py-4 gap-4 hover:bg-gray-100 p-2 hover:rounded-xl">
-     <div className="flex flex-grow justify-between w-full ">
-        <div className="flex flex-col sm:flex-row gap-4 md:w-3/4 w-full ">
+     <div className="flex flex-grow justify-between w-full">
+        <div className="flex flex-col sm:flex-row gap-4 md:w-3/4 w-full">
           <img
             src={
               course.imageUrl ||

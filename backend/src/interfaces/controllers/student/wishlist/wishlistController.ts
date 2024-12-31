@@ -4,11 +4,13 @@ import { WishlistRepository } from "../../../../infrastructure/repositories/wish
 import { AddToWishlistUseCase } from "../../../../application/use-cases/student/addToWishlist";
 import { RemoveFromWishlistUseCase } from "../../../../application/use-cases/student/removeFromWishlist";
 import { GetWishlistUseCase } from "../../../../application/use-cases/student/getWishlist";
+import { GetWishlistCountUseCase } from "../../../../application/use-cases/student/wishlistCount";
 
 const wishlistRepository = new WishlistRepository()
 const addToWishlistUseCase = new AddToWishlistUseCase(wishlistRepository)
 const removeFromWishlistUseCase = new RemoveFromWishlistUseCase(wishlistRepository)
 const getWishlistUseCase = new GetWishlistUseCase(wishlistRepository)
+const getWishlistCountUseCase = new GetWishlistCountUseCase(wishlistRepository)
 
 export const addToWishlistController = async(req:Request, res:Response, next:NextFunction)=> {
 try {
@@ -52,3 +54,15 @@ try {
 }
 }
 
+export const getWishlistCountController = async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {user} = req;
+        let wishlistCount:[] | string[] = []
+        if(user){
+             wishlistCount = await getWishlistCountUseCase.execute(user.id)
+        }
+        res.status(200).json({success:true, data: wishlistCount})
+    } catch (error) {
+        next(error)
+    }
+}

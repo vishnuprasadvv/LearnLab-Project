@@ -2,15 +2,38 @@ import { NavLink, Outlet } from "react-router-dom";
 import Logo from "../../../assets/LearnLab-Main-LOGO.svg";
 import { Button } from "@/components/ui/button";
 import { CiMenuBurger } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiMinimize1 } from "react-icons/ci";
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { LuShoppingCart, LuHeart } from "react-icons/lu";
+import { LuHeart } from "react-icons/lu";
 import { IoChatbubblesOutline } from "react-icons/io5";
+import { getWishlistCourseIds } from "@/api/student";
+import { setWishlistIds } from "@/features/wishlistSlice";
+import { Badge } from "lucide-react";
 
 const Navbar = () => {
+  
+  const [open, setOpen] = useState(false);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const wishlistCourseIds = useAppSelector((state) => state.wishlist.courseIds) || [];
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const getWishlistCount = async() => {
+      try {
+        const response = await getWishlistCourseIds()
+        const courseIds = response.data || []
+        console.log('wishlistcount',response)
+        console.log(courseIds)
+        dispatch(setWishlistIds({courseIds: courseIds}))
+      } catch (error) {
+        console.error('getting wishlist course ids error', error)
+      }
+    }
+    getWishlistCount()
+  }, [dispatch])
+
   let Links = [
     {
       path: "/",
@@ -34,22 +57,29 @@ const Navbar = () => {
     {
       name: "Notifications",
       path: "/profile/notifications",
-      icon: <IoIosNotificationsOutline />,
+      icon: <IoIosNotificationsOutline  className="hidden md:block" />,
     },
     {
       name: "Chat",
       path: "/chat",
-      icon: <IoChatbubblesOutline />,
+      icon: <IoChatbubblesOutline  className="hidden md:block"/>,
     },
     {
       name: "Wishlist",
       path: "/wishlist",
-      icon: <LuHeart />,
+      icon: (
+        <div className="relative">
+          <LuHeart className="hidden md:block"/>
+          {wishlistCourseIds.length > 0 && (
+            <div className="absolute -top-2 -right-2  bg-red-500 text-white text-xs rounded-full flex items-center justify-center min-w-4 px-auto h-4">
+              {wishlistCourseIds.length}
+            </div>
+          )}
+        </div>
+    ),
     },
   ];
 
-  const [open, setOpen] = useState(false);
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   return (
     <div className="">
       <div className="shadow-md w-full fixed top-0 left-0 z-20">
@@ -93,10 +123,11 @@ const Navbar = () => {
                 </NavLink>
                 <NavLink
                   to={item.path}
-                  className="text-gray-700 hover:text-blue-400 duration-500 md:hidden"
+                  className="flex items-center gap-2 text-gray-700 hover:text-blue-400 duration-500 md:hidden"
                   onClick={() => setOpen(false)}
                 >
                   {item.name}
+                  {item.icon}
                 </NavLink>
               </li>
             ))}

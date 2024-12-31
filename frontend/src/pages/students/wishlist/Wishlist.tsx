@@ -8,10 +8,18 @@ import toast from "react-hot-toast";
 import Emptywishlisticon from "../../../assets/wishlist/empty-wishlist.jpg";
 import BreadCrumb from "@/components/common/BreadCrumb/BreadCrumb";
 import LoadingScreen from "@/components/common/Loading/LoadingScreen";
+import PaginationComponent from "@/components/common/Pagination/Pagination";
+import { WISHLIST_ITEMS_PER_PAGE } from "@/config/paginationConifig";
+import { removeIdFromWishlist } from "@/features/wishlistSlice";
 
 const Wishlist: React.FC = () => {
   const [wishlist, setWishlist] = useState<IPopulatedWishlist[] | []>([]);
   const { loading } = useAppSelector((state) => state.auth);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const itemsPerPage = WISHLIST_ITEMS_PER_PAGE;
+  const [limitedWishlist, setLimitedWishlist] = useState<IPopulatedWishlist[] | []>([])
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -19,6 +27,10 @@ const Wishlist: React.FC = () => {
         dispatch(startLoading());
         const response = await getWishlistApi();
         setWishlist(response.data);
+        const totalItems = response.data.length;
+        setTotalPages(Math.ceil(totalItems / itemsPerPage));
+
+        paginatedData(response.data, currentPage)
       } catch (error: any) {
         toast.error(error.response.data.message || "Something went wrong");
         console.error("fetching wishlist failed", error);
@@ -27,15 +39,30 @@ const Wishlist: React.FC = () => {
       }
     };
     fetchWishlist();
-  }, []);
+  }, [dispatch, currentPage]);
+
+const paginatedData = (data:IPopulatedWishlist[], page: number) => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setLimitedWishlist(data.slice(startIndex, endIndex));
+}
 
   const handleRemoveFromWishlist = async (courseId: string) => {
     try {
       const response = await removeFromWishlistApi(courseId);
       toast.success(response.message || "Course removed from wishlist");
-      setWishlist((prev) =>
-        prev.filter((item) => item.courseId._id !== courseId)
-      );
+      //remove item from wishlist
+       const updatedWishlist =  wishlist.filter((item) => item.courseId._id !== courseId);
+        setWishlist(updatedWishlist);
+
+        //recalculate the paginated data 
+        const totalItems = updatedWishlist.length;
+        setTotalPages(Math.ceil(totalItems / itemsPerPage))
+
+        //recalculate the items for the current page 
+        paginatedData(updatedWishlist, currentPage)
+
+      dispatch(removeIdFromWishlist({courseId}))
     } catch (error: any) {
       console.error("remove from wishlist error", error);
       toast.error(
@@ -44,15 +71,15 @@ const Wishlist: React.FC = () => {
     }
   };
   return (
-    <div className="pt-2 flex items-center justify-center">
-      <div className="max-w-7xl w-full">
+    <div className="pt-2 flex flex-col items-center justify-between h-[90vh]">
+      <div className="max-w-7xl w-full ">
         <h1 className="text-2xl font-bold text-center ">Wishlist</h1>
         <BreadCrumb />
         <div className="p-2 w-full">
           {loading ? (
-            <LoadingScreen/>
+            <LoadingScreen />
           ) : wishlist.length > 0 ? (
-            wishlist.map((item, index) => (
+            limitedWishlist.map((item, index) => (
               <div className="flex justify-between" key={index}>
                 <WishlistCourseList
                   item={item}
@@ -72,6 +99,13 @@ const Wishlist: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
+      <div  className="py-5 mt-auto">
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
     </div>
   );

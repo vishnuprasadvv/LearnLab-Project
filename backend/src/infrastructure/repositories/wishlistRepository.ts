@@ -21,7 +21,7 @@ export class WishlistRepository implements IWishlistRepository {
           select: 'name', // Select fields you need for the category
         },
       ],
-    }).lean()
+    }).sort({'items.addedAt' : -1}).lean()
 
     if (!wishlist) {
       return null; // Explicitly handle null case
@@ -99,5 +99,12 @@ export class WishlistRepository implements IWishlistRepository {
       { $pull: { items: { courseId: courseObjectId } } }
     );
     return updatedWishlist.modifiedCount > 0;
+  }
+
+  async getWishlistCourseIds ( userId: string):Promise<string[] | []> {
+    const userWishlist = await Wishlist.findOne({userId})
+    if(!userWishlist) return [];
+    const courseIds =  userWishlist.items.map((item) => item.courseId.toString() ) || [];
+    return courseIds;
   }
 }
