@@ -7,13 +7,15 @@ import { CategoryRespository } from "../../../../infrastructure/repositories/cat
 import { GetCourseByIdStudentUseCase } from "../../../../application/use-cases/student/getCourseById";
 import { GetAllFilteredCoursesUseCase } from "../../../../application/use-cases/student/getFilteredCourse";
 import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";
+import { WishlistRepository } from "../../../../infrastructure/repositories/wishlistRepository";
 
 const courseRepository = new CourseRepositoryClass()
 const categoryRepository = new CategoryRespository()
 const orderRepository = new OrderRepository()
+const wishlistRepository = new WishlistRepository()
 const getAllCoursesUserUseCase = new GetAllCoursesUserUseCase(courseRepository)
 const getAllCategoriesUseCase = new GetAllCategoriesAtOnceUseCase(categoryRepository)
-const getCourseByIdUseCase = new GetCourseByIdStudentUseCase(courseRepository, orderRepository)
+const getCourseByIdUseCase = new GetCourseByIdStudentUseCase(courseRepository, orderRepository, wishlistRepository)
 const getAllFilteredCoursesUseCase = new GetAllFilteredCoursesUseCase(courseRepository)
 
 export const getAllCoursesController = async(req: Request, res: Response, next: NextFunction) => {
@@ -77,7 +79,7 @@ export const getCourseController = async(req: Request, res: Response, next: Next
         if(!result){
             throw new CustomError('Course not found', 400)
         }
-        res.status(200).json({message: 'Course fetched successfully', success : true, data: result?.course, purchaseStatus: result?.purchased})
+        res.status(200).json({message: 'Course fetched successfully', success : true, data: result?.course, purchaseStatus: result?.purchased, wishlisted: result?.wishlisted})
     } catch (error) {
         next(error)
     }

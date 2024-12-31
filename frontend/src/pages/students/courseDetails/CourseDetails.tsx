@@ -1,15 +1,17 @@
-import { addToWishlistApi, getCourseByIdUserApi, purchaseCourseApi, removeFromWishlistApi } from "@/api/student";
+import {
+  addToWishlistApi,
+  getCourseByIdUserApi,
+  purchaseCourseApi,
+  removeFromWishlistApi,
+} from "@/api/student";
 import BreadCrumb from "@/components/common/BreadCrumb/BreadCrumb";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { ICourses } from "@/types/course";
 import { BadgeInfo, Loader2, Lock, PlayCircle } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -51,11 +53,13 @@ const CourseDetails = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [userCoursePurchaseStatus, setUserCoursePurchaseStatus] =
     useState(false);
+  const [userCourseWishlistedStatus, setUserCourseWishlistedStatus] =
+    useState(false);
   const navigate = useNavigate();
 
-  if(!id) {
-    toast.error('Course not found')
-    navigate(-1)
+  if (!id) {
+    toast.error("Course not found");
+    navigate(-1);
     return;
   }
   useEffect(() => {
@@ -72,6 +76,7 @@ const CourseDetails = () => {
         const response = await getCourseByIdUserApi(id, userId);
         setCourse(response.data);
         setUserCoursePurchaseStatus(response.purchaseStatus);
+        setUserCourseWishlistedStatus(response.wishlisted);
         console.log(response);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch course");
@@ -125,30 +130,37 @@ const CourseDetails = () => {
     }
   };
 
-  const handleAddToWishlist = async() => {
+  const handleAddToWishlist = async () => {
     try {
-      const response = await addToWishlistApi(id)
-      console.log('adding wishlist', response)
-      toast.success(response.message || 'Course added to wishlist')
+      const response = await addToWishlistApi(id);
+      console.log("adding wishlist", response);
+      toast.success(response.message || "Course added to wishlist");
+      setUserCourseWishlistedStatus(true)
     } catch (error: any) {
-      console.error('add to wishlist error', error.response.data)
-      toast.error(error.response.data.message || 'Error adding to wishlist')
+      console.error("add to wishlist error", error.response.data);
+      toast.error(error.response.data.message || "Error adding to wishlist");
     }
-  }
-  const handleRemoveFromWishlist = async() => {
+  };
+  const handleRemoveFromWishlist = async () => {
     try {
-      const response = await removeFromWishlistApi(id)
+      const response = await removeFromWishlistApi(id);
+      console.log("removing from wishlist", response);
+      toast.success(response.message || "Course removed from wishlist");
+      setUserCourseWishlistedStatus(false)
     } catch (error: any) {
-      console.error('remove from wishlist error', error)
-      toast.error('Error removing from wishlist')
+      console.error("remove from wishlist error", error);
+      toast.error(
+        error.response.data.message || "Error removing from wishlist"
+      );
     }
-  }
+  };
 
   return (
-    <div className="mt-10 space-y-5">
+    <div className="mt-10 space-y-5 max-w-7xl w-full place-self-center">
       <BreadCrumb />
       <div className="bg-blue-500 bg-gradient-to-r from-blue-500 to-sky-400 text-white ">
         <div className="max-w-7xl flex flex-col md:flex-row mx-auto py-8 px-4 md:px-8 justify-between">
+          
           <div className="flex flex-col gap-2">
             <div className="text-xs bg-blue-200 text-blue-600 w-max h-max py-1 rounded-full px-2">
               {course?.category?.name || "category"}
@@ -171,6 +183,14 @@ const CourseDetails = () => {
               </p>
             </div>
             <p>Students enrolled : {course?.enrolledCount}</p>
+            <div className="flex gap-2 items-center">
+                <h1 className="">
+                  Course price : 
+                </h1>
+                <h1 className="text-lg md:text-xl font-bold">
+                  ₹{course?.price}
+                </h1>
+              </div>
           </div>
           <div className="place-content-center mt-6 md:mt-0 justify-items-center">
             <img
@@ -179,20 +199,42 @@ const CourseDetails = () => {
               alt="Course image"
             />
           </div>
-        </div>
-        <div className="flex items-center justify-center space-x-5 pb-3 md:w-1/2">
-          <button 
-          onClick={handleRemoveFromWishlist}
-          className="text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1">
-            <IoMdHeart className="text-red-500 text-2xl" />
-            Remove from wishlist
-          </button>
-          <button 
-          onClick={handleAddToWishlist}
-          className="text-slate-800 flex justify-center items-center font-medium rounded-md hover:bg-gray-100 hover:text-blue-600 bg-white shadow-md px-3 py-2 gap-1">
-            <IoMdHeartEmpty className="text-2xl" />
-            Add to wishlist
-          </button>
+          </div>
+        <div className="flex items-center justify-center pb-3 md:w-1/2 px-5">
+        <div className="flex space-x-5 w-full justify-between">
+        {userCoursePurchaseStatus ? (
+                <Link to={"lectures"} className="w-1/2 text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1">
+                  <button>Continue course</button>
+                </Link>
+              ) : (
+                <button
+                  className="w-1/2 text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1"
+                  onClick={handleCheckout}
+                  disabled={loading}
+                >
+                  {loading && <Loader2 className="animate-spin" />}
+                  Purchase course
+                </button>
+              )}
+
+          {userCourseWishlistedStatus ? (
+            <button
+              onClick={handleRemoveFromWishlist}
+              className="w-1/2 text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1"
+            >
+              <IoMdHeart className="text-red-500 text-2xl" />
+              Remove from wishlist
+            </button>
+          ) : (
+            <button
+              onClick={handleAddToWishlist}
+              className="w-1/2 text-slate-800 flex justify-center items-center font-medium rounded-md hover:bg-gray-100 hover:text-blue-600 bg-white shadow-md px-3 py-2 gap-1"
+            >
+              <IoMdHeartEmpty className="text-2xl" />
+              Add to wishlist
+            </button>
+          )}
+           </div>
         </div>
       </div>
 
@@ -277,35 +319,9 @@ const CourseDetails = () => {
                     <CarouselPrevious className="-left-3" />
                     <CarouselNext className="-right-3" />
                   </Carousel>
-                  <Separator className="my-2" />
                 </div>
               )}
-
-              <div className="flex gap-2">
-                <h1 className="text-lg md:text-lg font-semibold">
-                  Course price
-                </h1>
-                <h1 className="text-lg md:text-xl font-bold">
-                  ₹{course?.price}
-                </h1>
-              </div>
             </CardContent>
-            <CardFooter className="flex justify-center p-4">
-              {userCoursePurchaseStatus ? (
-                <Link to={"lectures"} className="w-full">
-                  <Button className="w-full">Continue course</Button>
-                </Link>
-              ) : (
-                <Button
-                  className="w-full"
-                  onClick={handleCheckout}
-                  disabled={loading}
-                >
-                  {loading && <Loader2 className="animate-spin" />}
-                  Purchase course
-                </Button>
-              )}
-            </CardFooter>
           </Card>
         </div>
       </div>

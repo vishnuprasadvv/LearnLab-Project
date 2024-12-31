@@ -8,7 +8,7 @@ import { createOrderController } from "../controllers/student/order/orderControl
 import { getUserCoursesController } from "../controllers/student/profile/userCoursesController";
 import { completeVideoController, getUserProgressController, markAsCompletedController, markAsIncompletedController } from "../controllers/student/course/progressController";
 import { streamVideoController } from "../controllers/student/course/videoStreamController";
-import { addToWishlistController } from "../controllers/student/wishlist/wishlistController";
+import { addToWishlistController, deleteFromWishlistController, getWishlistController } from "../controllers/student/wishlist/wishlistController";
 
 const router = Router();
 
@@ -28,5 +28,7 @@ router.post('/progress/:courseId/lectures/:lectureId/videos/:videoId',isAuthenti
 
 router.get('/stream/:courseId/:videoId', streamVideoController)
 router.post('/wishlist/add',isAuthenticated, authorizeRole(['student','instructor']), addToWishlistController)
+router.post('/wishlist/delete',isAuthenticated, authorizeRole(['student','instructor']), deleteFromWishlistController)
+router.get('/wishlist',isAuthenticated, authorizeRole(['student','instructor']), getWishlistController)
 
 export default router;

@@ -133,4 +133,8 @@ export const getAllCategoriesApi = async () => {
     const response = await api.post(`${API_URL}/student/wishlist/delete`, {courseId})
     return response.data
   }
+  export const getWishlistApi = async()=> {
+    const response = await api.get(`${API_URL}/student/wishlist`)
+    return response.data
+  }
   

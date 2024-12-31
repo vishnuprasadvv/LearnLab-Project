@@ -6,6 +6,6 @@ export class GetWishlistUseCase {
     async execute(userId: string){
         const userWishlist = await this.wishlistRepository.getWishlistById(userId);
         if(!userWishlist) throw new Error('Wishlist not found');
-        return userWishlist;
+        return userWishlist.items;
     }
 }

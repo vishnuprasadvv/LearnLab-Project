@@ -7,13 +7,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 const BreadCrumb = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
-
-  console.log(pathnames)
   const formatPaths = (value: string, isLast : boolean) => {
     if(isLast && value.length === 24){
         return value.slice(1).toUpperCase();
@@ -30,7 +29,7 @@ const BreadCrumb = () => {
         {pathnames.map((value, index) => {
           const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
           const isLast = index === pathnames.length - 1;
-          return (<>
+          return (<React.Fragment key={index}>
             <BreadcrumbItem key={routeTo}>
               {isLast ? (
                 <BreadcrumbPage>
@@ -43,7 +42,7 @@ const BreadCrumb = () => {
               )}
             </BreadcrumbItem>
         <BreadcrumbSeparator />
-        </>
+        </React.Fragment>
           );
         })}
       </BreadcrumbList>

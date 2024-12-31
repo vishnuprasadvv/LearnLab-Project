@@ -1,11 +1,12 @@
 import { WishlistRepository } from "../../../infrastructure/repositories/wishlistRepository";
+import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 
-export class AddToWishlistUseCase {
+export class RemoveFromWishlistUseCase {
     constructor(private wishlistRepository: WishlistRepository){}
     async execute(userId: string, courseId: string){
         const removeFromWishlist = await this.wishlistRepository.removeFromWishList(userId, courseId)
         if(!removeFromWishlist){
-            throw new Error('Failed remove from wishlist')
+            throw new CustomError('Failed remove from wishlist', 400)
         }
         return removeFromWishlist;
     }

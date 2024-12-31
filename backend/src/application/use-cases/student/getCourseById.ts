@@ -2,15 +2,18 @@ import { ICourses, ILectureDocument } from "../../../domain/models/Courses";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import { ICoursePopulated, ICourseRepository } from "../../repositories/ICourseRepository";
 import { IOrderRepository } from "../../repositories/IOrderRepository";
+import { IWishlistRepository } from "../../repositories/IWishlistRepository";
 
 interface IGetCourseByIdStudentProps{
     course: ICourses;
-    purchased : boolean
+    purchased : boolean;
+    wishlisted : boolean;
 }
 export class GetCourseByIdStudentUseCase {
   constructor(
     private courseRepository: ICourseRepository,
-    private orderRepository: IOrderRepository
+    private orderRepository: IOrderRepository,
+    private wishlistRepository : IWishlistRepository
   ) {}
   async execute(
     courseId: string,
@@ -26,10 +29,16 @@ export class GetCourseByIdStudentUseCase {
     //sort lectures based on lecture order
     course.lectures.sort((a:any,b:any) => a.order - b.order)
 
+
+    //check course added to user wishlist 
+    let wishlisted = false;
+    if(userId){
+       wishlisted = await this.wishlistRepository.getWishlistByCourseId(userId, courseId)
+    }
     //if the user is the author of the course
     if(userId === course.instructor._id.toString()){
       console.log('user is the author of the course')
-      return {course: course, purchased: true}
+      return {course: course, purchased: true , wishlisted}
     }
     
     // Helper function to filter lectures
@@ -47,7 +56,7 @@ export class GetCourseByIdStudentUseCase {
           ...courseWithoutVideos,
           lectures: filterLectures(lectures),
         } as ICourses
-        return {course: filteredCourses, purchased: false}
+        return {course: filteredCourses, purchased: false, wishlisted}
       }
   
       // Check if user has purchased the course
@@ -57,7 +66,7 @@ export class GetCourseByIdStudentUseCase {
       );
       //for users who purchased course
       if (hasPurchased) {
-        return {course, purchased: true};
+        return {course, purchased: true, wishlisted};
       }
       // for users not purchased the couse
       const { lectures, ...courseWithoutVideos } = course.toObject();
@@ -66,7 +75,7 @@ export class GetCourseByIdStudentUseCase {
         lectures: filterLectures(lectures),
       } as ICourses;
 
-      return {course: filteredCourses, purchased:false}
+      return {course: filteredCourses, purchased:false, wishlisted}
   }
 
 }

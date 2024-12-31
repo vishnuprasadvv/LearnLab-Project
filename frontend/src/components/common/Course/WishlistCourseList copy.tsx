@@ -1,18 +1,17 @@
+import { removeFromWishlistApi } from "@/api/student";
 import { Badge } from "@/components/ui/badge";
+import { IPopulatedWishlist } from "@/types/wishlist";
+import toast from "react-hot-toast";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-const CourseWide = () => {
-  const course = {
-    _id: 23,
-    imageUrl:
-      "https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp",
-    title: "title",
-    category: { name: "cate name" },
-    instructor: { firstName: "firstname", lastName: "lastName" },
-    level: "beginner",
-    price: 1555,
-  };
+interface IWishlistCourseListProps {
+  item : IPopulatedWishlist,
+  handleRemoveFromWishlist: (courseId:string) => void;
+}
+const WishlistCourseList:React.FC<IWishlistCourseListProps> = ({item, handleRemoveFromWishlist}) => {
+  const course = item.courseId;
+
   return (
     <div className="flex w-full items-start border-b border-gray-300 py-4 gap-4 hover:bg-gray-100 p-2 hover:rounded-xl">
      <div className="flex flex-grow justify-between w-full">
@@ -27,29 +26,28 @@ const CourseWide = () => {
           />
 
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-5 md:gap-10 lg:gap-28 justify-between w-full">
-            <div className="flex flex-col gap-1">
-              <h1 className="font-bold text-lg md:text-xl">{course.title}</h1>
+            <div className="flex flex-col gap-1 bg-green-100 ">
+              <Link to={`/courses/course-details/${course._id}`} className="font-bold text-lg md:text-xl hover:text-blue-600 hover:underline">{course.title}</Link>
               <span className="text-xs bg-blue-100 w-max px-2 rounded-full text-blue-600">
                 {course.category?.name}
               </span>
               <div className="text-sm text-gray-600">
-                <span>Instructor : {`${course.instructor.firstName} ${course.instructor.lastName}`}</span>
+                <span>Instructor : {course.instructor.name}</span>
               </div>
               <Badge className="w-fit md:mt-0 bg-blue-600 hover:bg-blue-600 cursor-default">
                 {course.level}
               </Badge>
             </div>
-            <div className="flex items-center justify-start sm:justify-center ">
+            <div className="bg-blue-50 flex items-center justify-start sm:justify-center ">
               <span className="font-bold text-blue-500 text-lg">₹ {course.price}</span>
             </div>
           </div>
         </div>
         <div className="flex items-start sm:items-center justify-center">
-          <button className=" bg-white p-1 border rounded-md shadow-sm hover:bg-gray-100">
+          <button 
+          onClick={() => handleRemoveFromWishlist(course._id)} 
+          className=" bg-white p-1 border rounded-md shadow-sm hover:bg-gray-100">
             <IoMdHeart className="text-red-500 text-2xl" />
-          </button>
-          <button className="bg-white p-1 text-2xl border rounded-md shadow-sm hover:bg-gray-100">
-            <IoMdHeartEmpty />
           </button>
         </div>
     </div>
@@ -59,4 +57,4 @@ const CourseWide = () => {
   );
 };
 
-export default CourseWide;
+export default WishlistCourseList;

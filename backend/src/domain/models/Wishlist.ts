@@ -4,10 +4,33 @@ export interface IWishlist {
     userId : string | mongoose.Types.ObjectId;
     items: [
         {
-            courseId: string | mongoose.Types.ObjectId,
+            courseId: string | mongoose.Types.ObjectId ,
             addedAt: Date,
         }
     ]
+}
+ interface ICourseDetailsWishlist {
+  _id: string | mongoose.Types.ObjectId;
+  title: string;
+  description: string;
+  price: number;
+  instructor: {
+    name: string,
+    _id:string,
+  }
+  imageUrl ?: string,
+  category ?: {
+    _id:string,
+    name:string
+  },
+  level? : string;
+}
+export interface IPopulatedWishlist {
+  userId: string | mongoose.Types.ObjectId;
+  items: {
+    courseId: ICourseDetailsWishlist; 
+    addedAt: Date;
+  }[];
 }
 
 const WishlistSchema = new mongoose.Schema({

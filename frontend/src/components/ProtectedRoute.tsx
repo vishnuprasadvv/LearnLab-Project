@@ -13,13 +13,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
 
-    console.log('role;' , user?.role)
   useEffect(() => {
     const checkAuth = async () => {
       try {
        const response = await dispatch(validateUser()).unwrap();
        const user = response.user
-        console.log('protected route res',response)
         dispatch(authSuccess({user:{...user}}))
         setLoading(false);
       } catch (error) {
