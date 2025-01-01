@@ -21,7 +21,8 @@ export class RatingRepository implements IRatingRepository{
             rating: rating.rating,
             review:rating.review,
             createdAt:rating.createdAt,
-            updatedAt: rating.updatedAt
+            updatedAt: rating.updatedAt,
+            _id: rating._id
         }));
     }
 
@@ -30,5 +31,17 @@ export class RatingRepository implements IRatingRepository{
         const userIdObject = new mongoose.Types.ObjectId(userId)
         const existRating = await CourseRating.findOne({courseId:courseIdObject, userId:userIdObject});
         return existRating || null;
+    }
+
+    async updateRating(rating: ICourseRating): Promise<void> {
+        const {_id, ...updateData} = rating
+         await CourseRating.findByIdAndUpdate(_id, updateData, {new: true})
+    }
+
+    async findById(ratingId:string):Promise<ICourseRating | null> {
+        return await CourseRating.findById(ratingId)
+    }
+    async deleteById(ratingId: string):Promise<void>{
+        await CourseRating.findByIdAndDelete(ratingId)
     }
 }

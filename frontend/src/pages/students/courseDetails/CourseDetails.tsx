@@ -274,7 +274,7 @@ const CourseDetails = () => {
         </div>
         {/* Rating */}
         <div>
-          <CourseRatingComponent courseId={id} />
+          <CourseRatingComponent courseId={id} purchased={userCoursePurchaseStatus}/>
         </div>
 
         <div className="w-full lg:w-1/3 ">

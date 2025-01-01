@@ -67,7 +67,7 @@ const CourseSchema  : Schema = new Schema({
     isDeleted: {type: Boolean, default: false},
     level: {type:String, enum: ['beginner','intermediate', 'advanced'], required: true},
     lectures: {type: [LectureSchema], default: []},
-    enrolledCount:{type:Number, default:0}
+    enrolledCount:{type:Number, default:0},
     
 },{timestamps: true});
 

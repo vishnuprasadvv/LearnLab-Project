@@ -3,10 +3,14 @@ import { CustomError } from "../../../middlewares/errorMiddleWare";
 import { RatingRepository } from "../../../../infrastructure/repositories/ratingRepository";
 import { SubmitRatingUseCase } from "../../../../application/use-cases/student/submitRating";
 import { GetCourseRatingUseCase } from "../../../../application/use-cases/student/getCourseRating";
+import { UpdateRatingUseCase } from "../../../../application/use-cases/student/updateRating";
+import { DeleteRatingUseCase } from "../../../../application/use-cases/student/deleteRating";
 
 const ratingRepository = new RatingRepository();
 const addRatingUseCase = new SubmitRatingUseCase(ratingRepository)
 const getCourseRatingsUseCase = new GetCourseRatingUseCase(ratingRepository)
+const updateCoureRatingUseCase = new UpdateRatingUseCase(ratingRepository)
+const deleteCourseRatingUseCase = new DeleteRatingUseCase(ratingRepository)
 export const addRatingController = async(req:Request, res:Response, next:NextFunction) => {
     try {
         const {courseId, rating, review} = req.body;
@@ -34,3 +38,37 @@ export const getCourseRatingsController = async (req:Request, res:Response, next
         next(error)
     }
 }
+
+export const updateRatingController = async (req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {ratingId} = req.params;
+        const {rating, review } = req.body
+        console.log(ratingId, rating, review)
+        const userId = req.user?.id
+        if(!userId) throw new CustomError('User ID is required', 400)
+        if(!ratingId) throw new CustomError('Rating ID is required',400);
+        await updateCoureRatingUseCase.execute({
+            ratingId, 
+            userId, 
+            review, 
+            rating
+        })
+        res.status(200).json({success:true, message:'Rating updated successfully'})
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteRatingController = async (req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {ratingId} = req.params;
+        const userId = req.user?.id
+        if(!userId) throw new CustomError('User ID is required', 400)
+        if(!ratingId) throw new CustomError('Rating ID is required',400);
+        await deleteCourseRatingUseCase.execute(ratingId, userId)
+        res.status(200).json({success:true, message:'Rating deleted successfully'})
+    } catch (error) {
+        next(error)
+    }
+}
+

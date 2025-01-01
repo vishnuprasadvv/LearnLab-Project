@@ -150,3 +150,11 @@ export const submitRatingApi = async(data:{courseId:string, rating: number, revi
   const response = await api.post(`${API_URL}/student/rate`, {...data})
   return response.data;
 }
+export const updateRatingApi = async(data:{ratingId: string, rating: number, review:string}) => {
+  const response = await api.put(`${API_URL}/student/rate/${data.ratingId}`, {rating:data.rating, review: data.review})
+  return response.data;
+}
+export const deleteRatingApi = async(ratingId:string) => {
+  const response = await api.delete(`${API_URL}/student/rate/${ratingId}`)
+  return response.data;
+}

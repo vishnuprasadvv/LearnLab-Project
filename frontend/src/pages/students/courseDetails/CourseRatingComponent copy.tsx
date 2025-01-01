@@ -4,17 +4,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Rating } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import profileimg from "../../../assets/chat/private-chat-avatar-612x612.jpg";
-import {
-  deleteRatingApi,
-  getCourseRatingsApi,
-  submitRatingApi,
-  updateRatingApi,
-} from "@/api/student";
+import { getCourseRatingsApi, submitRatingApi } from "@/api/student";
 import { z } from "zod";
 import toast from "react-hot-toast";
 import { ICourseRating } from "@/types/rating";
 import { useAppSelector } from "@/app/hooks";
-import { Pencil, SquarePen, Trash2 } from "lucide-react";
+import { Pencil, SquarePen } from "lucide-react";
 
 const ratingSchema = z.object({
   rating: z
@@ -35,9 +30,6 @@ const CourseRatingComponent: React.FC<{
   const [rating, setRating] = useState<number | null>(0);
   const [review, setReview] = useState<string>("");
   const user = useAppSelector((state) => state.auth.user);
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const [editRatingId, setEditRatingId] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchRatings = async () => {
       try {
@@ -57,33 +49,13 @@ const CourseRatingComponent: React.FC<{
         rating,
         review,
       });
-      console.log("editmode", editMode, editRatingId);
-      //for edit
-      if (editMode && editRatingId) {
-        //update review
-        console.log("edit mode");
-        const response = await updateRatingApi({
-          ratingId: editRatingId,
-          ...parsedData,
-        });
-        console.log(response);
-        setCourseRatings((prev) =>
-          prev.map((item) =>
-            item._id === editRatingId ? { ...item, ...parsedData } : item
-          )
-        );
-        toast.success("Review updated successfully");
-      } else {
-        //Add new review
-        const response = await submitRatingApi({ courseId, ...parsedData });
-        console.log(response);
-        toast.success("Rating submitted successfully");
-        setCourseRatings((prev) => [...prev, response.data]);
-      }
+
+      const response = await submitRatingApi({ courseId, ...parsedData });
+      console.log(response);
+      toast.success("Rating submitted successfully");
       setRating(null);
       setReview("");
-      setEditMode(false);
-      setEditRatingId(null);
+      setCourseRatings((prev) => [...prev, response.data]);
     } catch (error: any) {
       console.error("Rating submitting error", error);
       if (error instanceof z.ZodError) {
@@ -93,42 +65,24 @@ const CourseRatingComponent: React.FC<{
       }
     }
   };
-  const handleEdit = (rating: ICourseRating) => {
-    setEditMode(true);
-    setEditRatingId(rating._id || null);
-    setRating(rating.rating);
-    setReview(rating.review || "");
-  };
-
-  const handleDelete = async(ratingId: string) => {
-    try {
-      const response = await deleteRatingApi(ratingId)
-      setCourseRatings((prev) => prev.filter((rating) => rating._id !== ratingId))
-      toast.success('Your rating removed successfully')
-    } catch (error:any) {
-      console.error("Error deleting rating:", error);
-      toast.error(error.response.data.message || 'Failed to remove your rating')
-    }
-  }
   return (
     <div className="w-full lg:w-1/2 space-y-5">
       <h1 className="font-bold text-xl md:text-2xl">Ratings</h1>
       <div className="border rounded-lg p-3 shadow-md">
-        {/* Give rating or edit rating */}
+        {/* Give rating */}
         {purchased && (
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
               <img
                 className="rounded-full h-max"
-                src={user?.profileImageUrl || profileimg}
+                src={profileimg}
                 alt="profilepic"
                 width={50}
                 height={50}
               />
               <div>
                 <h3 className="pt-2 font-semibold">
-                  {editMode ? "Edit rating" : "Give rating"}{" "}
-                  <span className="text-red-500">*</span>
+                  Give rating <span className="text-red-500">*</span>
                 </h3>
                 <Rating
                   size="small"
@@ -146,27 +100,12 @@ const CourseRatingComponent: React.FC<{
               onChange={(e) => setReview(e.target.value)}
               placeholder="Write your review here..."
             />
-            <div className="flex justify-end gap-3">
-              {editMode && (
-                <Button
-                  className="rounded-full bg-gray-500"
-                  onClick={() => {
-                    setEditMode(false);
-                    setEditRatingId(null);
-                    setRating(null);
-                    setReview("");
-                  }}
-                >
-                  Cancel
-                </Button>
-              )}
-              <Button
-                className="w-max place-self-end rounded-full bg-blue-600"
-                onClick={handleSubmit}
-              >
-                {editMode ? "Update" : "Submit"}
-              </Button>
-            </div>
+            <Button
+              className="w-max place-self-end rounded-full bg-blue-600"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
             <Separator className="bg-slate-300" />
           </div>
         )}
@@ -194,20 +133,9 @@ const CourseRatingComponent: React.FC<{
                     />
                   </div>
                 </div>
-                {user && user._id === rating.userId._id && (
-                  <div className="flex gap-2">
-                    <div
-                      className="flex items-center justify-center text-slate-800 dark:text-white hover:text-blue-500 duration-300 transition-colors"
-                    >
-                      <SquarePen size={20} onClick={() => handleEdit(rating)}/>
-                    </div>
-                    <div
-                      className="flex items-center justify-center text-slate-800 dark:text-white hover:text-red-500 duration-300 transition-colors"
-                    >
-                      <Trash2 size={20}  onClick={() => rating._id && handleDelete(rating._id)} />
-                    </div>
-                  </div>
-                )}
+                <div className="flex items-center justify-center text-slate-800 dark:text-white hover:text-blue-500 duration-300 transition-colors">
+                  <SquarePen size={20} />
+                </div>
               </div>
               <p className="ml-16">{rating.review || ""}</p>
               <Separator className="bg-slate-300 mt-2" />

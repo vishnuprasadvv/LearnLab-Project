@@ -9,7 +9,7 @@ import { getUserCoursesController } from "../controllers/student/profile/userCou
 import { completeVideoController, getUserProgressController, markAsCompletedController, markAsIncompletedController } from "../controllers/student/course/progressController";
 import { streamVideoController } from "../controllers/student/course/videoStreamController";
 import { addToWishlistController, deleteFromWishlistController, getWishlistController, getWishlistCountController } from "../controllers/student/wishlist/wishlistController";
-import { addRatingController, getCourseRatingsController } from "../controllers/student/course/ratingController";
+import { addRatingController, deleteRatingController, getCourseRatingsController, updateRatingController } from "../controllers/student/course/ratingController";
 
 const router = Router();
 
@@ -27,12 +27,22 @@ router.put('/progress/:courseId/incompleted',isAuthenticated, authorizeRole(['st
 router.put('/progress/:courseId/completed',isAuthenticated, authorizeRole(['student','instructor']), markAsCompletedController )
 router.post('/progress/:courseId/lectures/:lectureId/videos/:videoId',isAuthenticated, authorizeRole(['student','instructor']), completeVideoController)
 
+//video stream routes
 router.get('/stream/:courseId/:videoId', streamVideoController)
-router.post('/wishlist/add',isAuthenticated, authorizeRole(['student','instructor']), addToWishlistController)
-router.post('/wishlist/delete',isAuthenticated, authorizeRole(['student','instructor']), deleteFromWishlistController)
-router.get('/wishlist',isAuthenticated, authorizeRole(['student','instructor']), getWishlistController)
-router.get('/wishlist/ids',isAuthenticated, authorizeRole(['student','instructor']), getWishlistCountController)
-router.post('/rate',isAuthenticated, authorizeRole(['student','instructor']), addRatingController)
+
+//wishlistroutes
+router.use(isAuthenticated, authorizeRole(['student','instructor']),)
+    .post('/wishlist/add', addToWishlistController)
+    .post('/wishlist/delete',deleteFromWishlistController)
+    .get('/wishlist',getWishlistController)
+    .get('/wishlist/ids', getWishlistCountController)
+
+//rating routes
 router.get('/rating/:courseId', getCourseRatingsController)
+router.use(isAuthenticated, authorizeRole(['student','instructor']))
+    .put('/rate/:ratingId',updateRatingController)
+    .delete('/rate/:ratingId', deleteRatingController)
+    .post('/rate', addRatingController)
+ 
 
 export default router;
