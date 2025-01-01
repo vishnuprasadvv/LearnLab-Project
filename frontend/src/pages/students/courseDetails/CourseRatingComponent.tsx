@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { ICourseRating } from "@/types/rating";
 import { useAppSelector } from "@/app/hooks";
 import { SquarePen, Trash2 } from "lucide-react";
+import { ICourses } from "@/types/course";
 
 const ratingSchema = z.object({
   rating: z
@@ -30,7 +31,9 @@ const ratingSchema = z.object({
 const CourseRatingComponent: React.FC<{
   courseId: string;
   purchased: boolean;
-}> = ({ courseId, purchased }) => {
+  setCourse:(course:ICourses) => void;
+  course : ICourses;
+}> = ({ courseId, purchased,setCourse , course}) => {
   const [courseRatings, setCourseRatings] = useState<ICourseRating[] | []>([]);
   const [rating, setRating] = useState<number | null>(0);
   const [review, setReview] = useState<string>("");
@@ -57,9 +60,15 @@ const CourseRatingComponent: React.FC<{
         rating,
         review,
       });
-      console.log("editmode", editMode, editRatingId);
+
+      //for updating course average rating 
+      let currentAvgRating = course.averageRating;
+      let totalRatingCount = course.ratingsCount;
+      let updatedAvgRating;
       //for edit
       if (editMode && editRatingId) {
+
+        let previousRatingData = courseRatings.filter((rating)=> rating._id === editRatingId)
         //update review
         console.log("edit mode");
         const response = await updateRatingApi({
@@ -73,13 +82,32 @@ const CourseRatingComponent: React.FC<{
           )
         );
         toast.success("Review updated successfully");
+
+        //update rating after update rating
+        if(totalRatingCount === 1) {
+          updatedAvgRating = parsedData.rating
+        }else{
+          updatedAvgRating = (currentAvgRating * totalRatingCount - previousRatingData[0].rating + parsedData.rating)/ totalRatingCount;
+        }
+
       } else {
         //Add new review
         const response = await submitRatingApi({ courseId, ...parsedData });
         console.log(response);
         toast.success("Rating submitted successfully");
         setCourseRatings((prev) => [...prev, response.data]);
+
+        //update avg rating after new rating
+        updatedAvgRating = (currentAvgRating * totalRatingCount + parsedData.rating) / (totalRatingCount + 1);
+        updatedAvgRating = Math.round(updatedAvgRating * 100)/ 100;
+        totalRatingCount += 1; //add rating count
       }
+
+      setCourse({
+        ...course,
+        averageRating : updatedAvgRating,
+        ratingsCount : totalRatingCount
+      })
       setRating(null);
       setReview("");
       setEditMode(false);
@@ -105,6 +133,23 @@ const CourseRatingComponent: React.FC<{
       const response = await deleteRatingApi(ratingId)
       setCourseRatings((prev) => prev.filter((rating) => rating._id !== ratingId))
       toast.success('Your rating removed successfully')
+      //change rating 
+      let previousRatingData = courseRatings.filter((rating) => rating._id === ratingId)
+      let currentAvgRating = course.averageRating;
+      let totalRatingCount = course.ratingsCount;
+      let updatedRating ;
+      totalRatingCount -= 1;
+      if(totalRatingCount > 0) {
+        updatedRating = (currentAvgRating * (totalRatingCount + 1) - previousRatingData[0].rating) / totalRatingCount;
+      }else{
+        updatedRating = 0;
+      }
+      //update course 
+      setCourse({
+        ...course,
+        averageRating: updatedRating,
+        ratingsCount : totalRatingCount
+      })
     } catch (error:any) {
       console.error("Error deleting rating:", error);
       toast.error(error.response.data.message || 'Failed to remove your rating')
