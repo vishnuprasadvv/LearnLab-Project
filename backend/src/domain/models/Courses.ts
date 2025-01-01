@@ -34,6 +34,8 @@ export interface ICourses extends Document{
     isDeleted : boolean,
     lectures?: ILectureDocument[],
     enrolledCount?: number,
+    averageRating?: number,
+    ratingsCount?: number,
 }
 
 const VideoSchema : Schema = new Schema({
@@ -68,6 +70,8 @@ const CourseSchema  : Schema = new Schema({
     level: {type:String, enum: ['beginner','intermediate', 'advanced'], required: true},
     lectures: {type: [LectureSchema], default: []},
     enrolledCount:{type:Number, default:0},
+    averageRating:{type: Number, default: 0},
+    ratingsCount: {type: Number, default: 0},
     
 },{timestamps: true});
 

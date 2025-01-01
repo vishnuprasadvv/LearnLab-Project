@@ -14,7 +14,7 @@ export class RatingRepository implements IRatingRepository{
     }
 
     async getCourseRatings(courseId: string): Promise<ICourseRating[] | null> {
-        const ratings = await CourseRating.find({courseId}).populate('userId', 'firstName lastName role profileImageUrl').sort({createdAt: -1})
+        const ratings = await CourseRating.find({courseId}).populate('userId', 'firstName lastName role profileImageUrl').sort({updatedAt: -1})
         return ratings.map((rating) => ({
             courseId: rating.courseId,
             userId: rating.userId,

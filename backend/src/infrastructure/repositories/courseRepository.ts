@@ -33,6 +33,9 @@ export class CourseRepositoryClass implements ICourseRepository{
         ]
         )
    }
+   async findById(id:string):Promise<ICourses | null> {
+    return await Courses.findById(id)
+   }
 
    async getCourseByIds(ids: string[]) : Promise<ICourses[] | null>{
     if (!Array.isArray(ids) || ids.length === 0) {
@@ -211,6 +214,13 @@ async incrementEnrolledCount(courseId: string, incrementBy = 1): Promise<void> {
     if(!course || !course.lectures) return null;
     const video = course.lectures[0].videos.find((vid) => vid._id?.toString() === videoId)
     return video ? video.publicId : null;
+  }
+
+  async updateRating(course: ICourses ):Promise<void> {
+    await Courses.findByIdAndUpdate(course._id, {
+      averageRating:course.averageRating,
+      ratingsCount : course.ratingsCount,
+    })
   }
 
 }

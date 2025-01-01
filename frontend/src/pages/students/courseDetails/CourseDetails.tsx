@@ -32,6 +32,7 @@ import { getVideoUrl } from "@/utils/getVideoUrl";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { addIdToWishlist, removeIdFromWishlist } from "@/features/wishlistSlice";
 import CourseRatingComponent from "./CourseRatingComponent";
+import { Rating } from "@mui/material";
 
 interface Course {
   courseId: string;
@@ -188,6 +189,10 @@ const CourseDetails = () => {
               </p>
             </div>
             <p>Students enrolled : {course?.enrolledCount}</p>
+            <div className="flex gap-1 items-center">
+            <Rating value={course?.averageRating || 0} readOnly/>
+            <span>({course?.ratingsCount || 0})</span>
+            </div>
             <div className="flex gap-2 items-center">
                 <h1 className="">
                   Course price : 

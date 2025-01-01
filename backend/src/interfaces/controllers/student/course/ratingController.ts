@@ -5,12 +5,15 @@ import { SubmitRatingUseCase } from "../../../../application/use-cases/student/s
 import { GetCourseRatingUseCase } from "../../../../application/use-cases/student/getCourseRating";
 import { UpdateRatingUseCase } from "../../../../application/use-cases/student/updateRating";
 import { DeleteRatingUseCase } from "../../../../application/use-cases/student/deleteRating";
+import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 
 const ratingRepository = new RatingRepository();
-const addRatingUseCase = new SubmitRatingUseCase(ratingRepository)
+const courseRepository = new CourseRepositoryClass()
+const addRatingUseCase = new SubmitRatingUseCase(ratingRepository, courseRepository)
 const getCourseRatingsUseCase = new GetCourseRatingUseCase(ratingRepository)
-const updateCoureRatingUseCase = new UpdateRatingUseCase(ratingRepository)
-const deleteCourseRatingUseCase = new DeleteRatingUseCase(ratingRepository)
+const updateCoureRatingUseCase = new UpdateRatingUseCase(ratingRepository,courseRepository)
+const deleteCourseRatingUseCase = new DeleteRatingUseCase(ratingRepository,courseRepository)
+
 export const addRatingController = async(req:Request, res:Response, next:NextFunction) => {
     try {
         const {courseId, rating, review} = req.body;

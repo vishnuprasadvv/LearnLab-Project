@@ -10,6 +10,6 @@ export interface ICourseRating {
     rating: number;
     review?: string;
     _id? : string ;
-    createdAt ?: Date;
-    updatedAt ?: Date;
+    createdAt : Date;
+    updatedAt : Date;
 }

@@ -14,7 +14,7 @@ import { z } from "zod";
 import toast from "react-hot-toast";
 import { ICourseRating } from "@/types/rating";
 import { useAppSelector } from "@/app/hooks";
-import { Pencil, SquarePen, Trash2 } from "lucide-react";
+import { SquarePen, Trash2 } from "lucide-react";
 
 const ratingSchema = z.object({
   rating: z
@@ -173,7 +173,12 @@ const CourseRatingComponent: React.FC<{
 
         {/* Display ratings section */}
         <div className="flex  flex-col">
-          {courseRatings.map((rating, index) => (
+          {courseRatings.sort((a,b) => {
+            if(a.userId._id === user?._id) return -1;
+            if(b.userId._id === user?._id) return 1;
+            return 0;
+          })
+          .map((rating, index) => (
             <div key={index} className="flex flex-col mb-4 ">
               <div className="flex justify-between px-2">
                 <div className="flex gap-3">
@@ -210,6 +215,10 @@ const CourseRatingComponent: React.FC<{
                 )}
               </div>
               <p className="ml-16">{rating.review || ""}</p>
+              <p className="text-xs text-gray-500 place-self-end">
+                {new Date(rating.updatedAt).toDateString()}{" "}
+                {new Date(rating.updatedAt).toLocaleTimeString()}
+              </p>
               <Separator className="bg-slate-300 mt-2" />
             </div>
           ))}

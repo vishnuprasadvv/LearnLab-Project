@@ -44,4 +44,6 @@ export interface ICourses {
     lectures?: ILectureDocument[] | [],
     rating ?: number,
     enrolledCount: number,
+    averageRating:number,
+    ratingsCount: number
 }

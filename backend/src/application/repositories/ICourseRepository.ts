@@ -39,6 +39,7 @@ export interface ICourseRepository{
 
     getCourseById(id: string) : Promise<ICourses | null>
     getCourseByIds(id: string[]) : Promise<ICourses[] | null>
+    findById(id:string):Promise<ICourses | null> 
 
     getCourseByName(title: string) : Promise<ICourses | null>
 
@@ -66,4 +67,5 @@ export interface ICourseRepository{
     incrementEnrolledCount(courseId: string, incrementBy:number): Promise<void>
 
     getVideoPublicUrl(courseId: string, videoId: string): Promise<string | null>
+    updateRating(course: ICourses ):Promise<void> 
 }
