@@ -9,6 +9,7 @@ export const isAuthenticated = async(req: Request, res: Response, next: NextFunc
     //console.log('isAuthMiddleware',accessToken)
     if(!accessToken && !refreshToken){
         res.status(401).json({message: 'accessToken and refreshToken not found'})
+        console.log('accessToken and refreshToken not found')
         return;
     }
     if (!accessToken) {

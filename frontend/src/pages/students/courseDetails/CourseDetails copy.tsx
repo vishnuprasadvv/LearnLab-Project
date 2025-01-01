@@ -31,7 +31,6 @@ import ReactPlayer from "react-player";
 import { getVideoUrl } from "@/utils/getVideoUrl";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { addIdToWishlist, removeIdFromWishlist } from "@/features/wishlistSlice";
-import CourseRatingComponent from "./CourseRatingComponent";
 
 interface Course {
   courseId: string;
@@ -271,10 +270,6 @@ const CourseDetails = () => {
                 ))}
             </CardContent>
           </Card>
-        </div>
-        {/* Rating */}
-        <div>
-          <CourseRatingComponent courseId={id} />
         </div>
 
         <div className="w-full lg:w-1/3 ">

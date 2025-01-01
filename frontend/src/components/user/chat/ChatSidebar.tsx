@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ChatSidebarSkeleton from "./ChatSidebarSkeleton";
 import { CircleCheck, PlusCircle, Users } from "lucide-react";
 import { createChatApi, getChatUsersApi, getUserChatsApi } from "@/api/chatApi";
@@ -9,6 +9,7 @@ import { setSelectedChat } from "@/features/chatSlice";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import socket from "@/utils/socket";
+import profileimg from '../../../assets/chat/private-chat-avatar-612x612.jpg'
 
 
 const ChatSidebar: React.FC = () => {
@@ -168,8 +169,7 @@ const ChatSidebar: React.FC = () => {
                 <div className="relative mx-auto md:mx-0">
                   <img
                     src={
-                      oppositeUser.profileImageUrl ||
-                      "https://www.pngall.com/wp-content/uploads/12/Avatar-PNG-Image.png"
+                      oppositeUser.profileImageUrl || profileimg 
                     }
                     alt="profile pic"
                     className="size-10 object-cover rounded-full"

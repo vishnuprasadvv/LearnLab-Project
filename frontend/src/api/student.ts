@@ -142,3 +142,11 @@ export const getWishlistCourseIds = async() => {
   const response = await api.get(`${API_URL}/student/wishlist/ids`)
   return response.data;
 }
+export const getCourseRatingsApi = async(courseId: string) => {
+  const response = await api.get(`${API_URL}/student/rating/${courseId}`)
+  return response.data;
+}
+export const submitRatingApi = async(data:{courseId:string, rating: number, review:string}) => {
+  const response = await api.post(`${API_URL}/student/rate`, {...data})
+  return response.data;
+}
