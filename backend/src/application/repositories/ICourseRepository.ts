@@ -68,4 +68,9 @@ export interface ICourseRepository{
 
     getVideoPublicUrl(courseId: string, videoId: string): Promise<string | null>
     updateRating(course: ICourses ):Promise<void> 
+
+    //admin dashboard
+    countAll():Promise<number>
+    countPublished(): Promise<number>
+    getBestSellingCourses(limit: number):Promise<ICourses[]>
 }

@@ -6,6 +6,7 @@ import { adminLoginHandler, adminLogoutHandler, refreshAdminTokenHandler } from 
 import { createCategoryController, getAllCategoriesAtOnceController, getCategories, updateCategoryController } from "../controllers/admin/categories/categoriesController";
 import { deleteCourseController, getAllCoursesController, getCourseController, publishCourseController } from "../controllers/admin/courses/coursesController";
 import { getPurchasesController } from "../controllers/admin/purchases/purchasesController";
+import { getBestSellingCoursesController, getDashboardDataController, getTopInstructorsController } from "../controllers/admin/dashboard/dashboard";
 
 const adminRouter = Router();
 
@@ -40,5 +41,11 @@ adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
 
 adminRouter.use(isAdminAuthenticated, authorizeRole(['admin']))
     .get('/purchases', getPurchasesController)
+
+//dashboard
+adminRouter.use(isAdminAuthenticated,  authorizeRole(['admin']))
+    .get('/dashboard', getDashboardDataController)
+    .get('/best-courses', getBestSellingCoursesController)
+    .get('/top-instructors', getTopInstructorsController)
 
 export default adminRouter

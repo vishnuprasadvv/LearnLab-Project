@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { ICourses } from "@/types/course";
+import { Rating } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const SearchResults = ( course :ICourses) => {
@@ -17,13 +18,17 @@ const SearchResults = ( course :ICourses) => {
           className="h-32 w-full sm:w-56 object-cover rounded"
         />
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           <h1 className="font-bold text-lg md:text-xl">{course.title}</h1>
           <p className="text-sm text-gray-600">{course.category?.name}</p>
           <p className="text-sm text-gray-600">
             Instructor :<span>{`${course.instructor.firstName} ${course.instructor.lastName}`}</span>
           </p>
-          <Badge className="w-fit mt-2 md:mt-0">{course.level}</Badge>
+          <div className="flex gap-1 items-center">
+          <Rating size="small" value={course.averageRating}/>
+          <span className="text-xs">({course.ratingsCount})</span>
+          </div>
+          <Badge className="w-fit md:mt-0">{course.level}</Badge>
         </div>
       </div>
     </Link>

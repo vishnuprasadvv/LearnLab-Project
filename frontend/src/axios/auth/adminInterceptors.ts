@@ -25,7 +25,8 @@ adminInterceptorApi.interceptors.response.use(
         return response
     },
     async(error) => {
-        console.log('interceptor error::',error)
+        console.log('admin interceptor error::',error)
+        console.log(error.response.data.message)
         if(error.response?.status === 401){
             const errorMessage = error.response?.data?.message;
             if(errorMessage === 'Admin access token expired'){
@@ -55,6 +56,11 @@ adminInterceptorApi.interceptors.response.use(
                    return Promise.reject(refreshError)
                }
 
+            }
+            else if(errorMessage == 'Admin accessToken and refreshToken not found' || errorMessage == 'Invalid admin access token'){
+                clearSpecificPersistedData('persist:admin')
+                window.location.href = '/admin/login'
+                return Promise.reject(error)
             }
             
         } 

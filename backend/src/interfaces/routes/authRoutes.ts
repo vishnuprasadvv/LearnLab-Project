@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { signUp , loginHandler, sendOtpHandler, verifyOtpHandler, refreshTokenHandler, logoutHandler, validateUser, resetPasswordOtpSendHandler, resetPasswordHandler, googleLoginSuccess, googleLoginFailure, adminLogoutHandler, adminLoginHandler, getUserDataController, } from "../controllers/authController";
+import { signUp , loginHandler, sendOtpHandler, verifyOtpHandler, refreshTokenHandler, logoutHandler, validateUser, resetPasswordOtpSendHandler, resetPasswordHandler, googleLoginSuccess, googleLoginFailure, adminLogoutHandler, adminLoginHandler, getUserDataController, validateAdmin, } from "../controllers/authController";
 import passport from "passport";
 import { googleLogin } from "../controllers/googleAuthLibrary";
 import { registerInstuctorHandler } from "../controllers/instructorController";
@@ -17,6 +17,7 @@ router.post('/send-otp', sendOtpHandler)
 router.post('/verify-otp', verifyOtpHandler)
 router.post('/logout', logoutHandler)
 router.post('/verify-user-token', validateUser)
+router.post('/verify-admin-token', validateAdmin)
 router.post('/forgot-password', resetPasswordOtpSendHandler)
 router.post('/reset-password', resetPasswordHandler)
 

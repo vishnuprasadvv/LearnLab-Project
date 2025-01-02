@@ -183,6 +183,25 @@ export const validateUser = async(req: Request, res: Response):Promise<any> =>{
     }
 }
 
+export const validateAdmin = async(req: Request, res: Response):Promise<any> =>{
+    const accessToken = req.cookies.adminAccessToken;
+    if(!accessToken){
+        return res.status(401).json({message : 'Admin access token expired'})
+    }
+    try{
+        const verifyUser = await verifyAccessTokenUseCase(accessToken);
+        return res.status(200).json({user:verifyUser, message: 'Admin verified'})
+    }catch(error){
+        if (error instanceof TokenExpiredError) {
+            res.status(401).json({ message: 'Admin access token expired' })
+        } else if (error instanceof JsonWebTokenError) {
+            res.status(401).json({ message: 'Invalid admin access token' })
+        } else {
+            res.status(400).json({ message: 'Unauthorized' })
+        }
+    }
+}
+
 //reset password 
 
 export const resetPasswordOtpSendHandler = async(req: Request, res: Response, next: NextFunction) => {

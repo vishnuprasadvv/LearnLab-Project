@@ -33,6 +33,8 @@ import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { addIdToWishlist, removeIdFromWishlist } from "@/features/wishlistSlice";
 import CourseRatingComponent from "./CourseRatingComponent";
 import { Rating } from "@mui/material";
+import NotFound from "@/pages/NotFound";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 
 interface Course {
   courseId: string;
@@ -161,6 +163,13 @@ const CourseDetails = () => {
     }
   };
 
+  if(loading ) {
+    return <LoadingScreen/>
+  }
+  if(course === null) {
+    return (<NotFound/>)
+  }
+
   return (
     <div className="mt-10 space-y-5 max-w-7xl w-full place-self-center">
       <BreadCrumb />
@@ -279,7 +288,7 @@ const CourseDetails = () => {
         </div>
         {/* Rating */}
         <div>
-          <CourseRatingComponent courseId={id} purchased={userCoursePurchaseStatus}/>
+          <CourseRatingComponent courseId={id} purchased={userCoursePurchaseStatus} setCourse={setCourse} course={course}/>
         </div>
 
         <div className="w-full lg:w-1/3 ">

@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { IPopulatedWishlist } from "@/types/wishlist";
+import { Rating } from "@mui/material";
 import { IoMdHeart,  } from "react-icons/io";
 import { Link } from "react-router-dom";
 
@@ -31,6 +32,10 @@ const WishlistCourseList:React.FC<IWishlistCourseListProps> = ({item, handleRemo
               <div className="text-sm text-gray-600">
                 <span>Instructor : {course.instructor.name}</span>
               </div>
+              <div className="flex gap-1 items-center">
+          <Rating size="small" value={course.averageRating || 0}/>
+          <span className="text-xs">({course.ratingsCount || 0})</span>
+          </div>
               <Badge className="w-fit md:mt-0 bg-blue-600 hover:bg-blue-600 cursor-default">
                 {course.level}
               </Badge>

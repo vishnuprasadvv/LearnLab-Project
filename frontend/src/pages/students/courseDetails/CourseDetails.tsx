@@ -35,6 +35,7 @@ import CourseRatingComponent from "./CourseRatingComponent";
 import { Rating } from "@mui/material";
 import NotFound from "@/pages/NotFound";
 import LoadingScreen from "@/components/common/Loading/LoadingScreen";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Course {
   courseId: string;
@@ -257,44 +258,10 @@ const CourseDetails = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-2">
-        <div className="w-full lg:w-1/2 space-y-5">
-          <h1 className="font-bold text-xl md:text-2xl">Description</h1>
-          <p className="text-sm">{course?.description}</p>
-          <Card>
-            <CardHeader>
-              <CardTitle>Course Content</CardTitle>
-              <CardDescription>
-                {course?.lectures?.length} lectures
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {course?.lectures
-                ?.sort((a, b) => a.order - b.order)
-                .map((lecture, index) => (
-                  <div key={index} className="flex items-center gap-3 text-sm">
-                    <span>
-                      {lecture.isFree ? (
-                        <PlayCircle size={14} />
-                      ) : (
-                        <Lock size={14} />
-                      )}
-                    </span>
-                    <p>{lecture.title || "Lecture title"}</p>
-                  </div>
-                ))}
-            </CardContent>
-          </Card>
-        </div>
-        {/* Rating */}
-        <div>
-          <CourseRatingComponent courseId={id} purchased={userCoursePurchaseStatus} setCourse={setCourse} course={course}/>
-        </div>
-
-        <div className="w-full lg:w-1/3 ">
+      <div className="w-full p-10">
+              {course?.lectures?.some((lecture) => lecture.isFree) && (
           <Card>
             <CardContent className="p-4 flex flex-col">
-              {course?.lectures?.some((lecture) => lecture.isFree) && (
                 <div className="w-full place-self-center px-10">
                   <Carousel>
                     <CarouselContent>
@@ -330,9 +297,9 @@ const CourseDetails = () => {
                                       width="100%"
                                       height="100%"
                                     />
-                                    <span className="">
+                                    <h3 className=" pt-3 uppercase">
                                       {video.title || ""}
-                                    </span>
+                                    </h3>
                                   </CardContent>
                                 </div>
                               </div>
@@ -343,10 +310,55 @@ const CourseDetails = () => {
                     <CarouselNext className="-right-3" />
                   </Carousel>
                 </div>
+            </CardContent>
+          </Card>
               )}
+        </div>
+
+      <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-2">
+      
+      <Tabs defaultValue="about" className="w-full max-h-screen overflow-hidden">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="about">About</TabsTrigger>
+        <TabsTrigger value="ratings">Review & rating</TabsTrigger>
+      </TabsList>
+      <TabsContent value="about" className="overflow-y-auto max-h-[calc(100vh-50px)] p-4">
+        <div className="w-full space-y-5">
+          <h1 className="font-bold text-xl md:text-2xl">Description</h1>
+          <p className="text-sm">{course?.description}</p>
+          <Card>
+            <CardHeader>
+              <CardTitle>Course Content</CardTitle>
+              <CardDescription>
+                {course?.lectures?.length} lectures
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {course?.lectures
+                ?.sort((a, b) => a.order - b.order)
+                .map((lecture, index) => (
+                  <div key={index} className="flex items-center gap-3 text-sm">
+                    <span>
+                      {lecture.isFree ? (
+                        <PlayCircle size={14} />
+                      ) : (
+                        <Lock size={14} />
+                      )}
+                    </span>
+                    <p>{lecture.title || "Lecture title"}</p>
+                  </div>
+                ))}
             </CardContent>
           </Card>
         </div>
+        </TabsContent>
+        {/* Rating */}
+        <TabsContent value="ratings" className="overflow-y-auto max-h-[calc(100vh-50px)] p-4">
+        <div>
+          <CourseRatingComponent courseId={id} purchased={userCoursePurchaseStatus} setCourse={setCourse} course={course}/>
+        </div>
+        </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

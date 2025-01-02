@@ -223,4 +223,20 @@ async incrementEnrolledCount(courseId: string, incrementBy = 1): Promise<void> {
     })
   }
 
+  //admin dashboard
+  async countAll(): Promise<number> {
+    return await Courses.countDocuments();
+  }
+
+  async countPublished(): Promise<number> {
+    return await Courses.countDocuments({isPublished:true})
+  }
+
+  async getBestSellingCourses(limit: number = 10):Promise<ICourses[]> {
+    return await Courses.find({ isDeleted : false, isPublished : true, enrolledCount: {$gt: 0}})
+      .sort({enrolledCount: -1})
+      .limit(limit)
+      .exec()
+  }
+
 }

@@ -8,4 +8,9 @@ export interface IOrderRepository {
     getOrdersByUserId(userId: string):Promise<IOrder[]>
     hasUserPurchasedCourse (userId: string, courseId: string) : Promise<boolean> 
     getAllOrders () : Promise<IOrder[] | null>
+
+    //admin dashboard
+    countAll(): Promise<number>;
+    calculateTotalRevenue(): Promise<number>;
+    getRevenueByMonth(): Promise<{ date: string; revenue: number ,orderCount : number}[]>;
 }

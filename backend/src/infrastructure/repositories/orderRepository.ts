@@ -61,4 +61,44 @@ export class OrderRepository implements IOrderRepository{
         return orders;
     }
 
+    //admin dashboard
+    async countAll(): Promise<number> {
+        return OrderModel.countDocuments();
+    }
+
+    async calculateTotalRevenue(): Promise<number> {
+        const result = await OrderModel.aggregate([
+            { $group: { _id: null , total: { $sum : '$totalAmount'}}}
+        ])
+
+        return result[0].total || 0;
+    }
+
+    async getRevenueByMonth(): Promise<{ date: string, revenue: number, orderCount : number}[]> {
+        const result =  await OrderModel.aggregate([
+            {
+                $addFields: {
+                    createdAtDate: { $toDate: "$createdAt" }, // Convert createdAt to Date
+                }
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: '%Y-%m-%d', date: "$createdAtDate" } }, // Group by year and month
+                    orderCount: { $sum: 1 }, // Count the orders
+                    revenue: { $sum: "$totalAmount" }, // Sum the revenue
+                }
+            },
+            {
+                $sort: { _id: 1 } // Sort by month in ascending order
+            },
+        ]);
+
+        return result.map(item => ({
+            date: item._id, // Rename _id to month
+            revenue: item.revenue, // Total revenue for the month
+            orderCount: item.orderCount, // Order count for the month
+        }));
+    }
+    
+
 }

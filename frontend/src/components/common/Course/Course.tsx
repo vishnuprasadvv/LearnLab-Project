@@ -18,8 +18,8 @@ const Course = (course:ICourses) => {
         <CardContent className="mt-2 px-5 py-3 space-y-2">
             <h1 className="hover:underline font-semibold text-lg truncate">{course.title}</h1>
             <div className="text-xs flex items-center text-gray-500">
-            <Rating size="small" defaultValue={2.5} precision={0.5} readOnly/>
-            <span>(10)</span>
+            <Rating size="small" value={course.averageRating} precision={0.5} readOnly/>
+            <span>({course.ratingsCount})</span>
             </div>
             <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">

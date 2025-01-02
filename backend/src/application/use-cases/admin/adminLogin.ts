@@ -10,7 +10,7 @@ export const loginAdmin = async (email : string, password: string ) => {
         if(nonVerifiedUser){
             throw new CustomError('User not verified',400)
         }
-        throw new Error('User not found')
+        throw new CustomError('User not found',404)
     }
     if(user.googleId){
         throw new CustomError('User registered with social login', 400)
@@ -20,10 +20,10 @@ export const loginAdmin = async (email : string, password: string ) => {
         throw new CustomError('You are not authorized, only admin can login', 400)
     }
     const isPasswordValid = await comparePassword(password, user.password)
-    if(!isPasswordValid) throw new Error('Invalid credentials');
+    if(!isPasswordValid) throw new CustomError('Invalid credentials', 400);
 
     const accessToken = generateAccessToken({id:user._id, role:user.role})
     const refreshToken = generateRefreshToken({id : user._id})
     
-    return {accessToken, refreshToken, user:{ id: user._id, firstName : user.firstName, lastName: user.lastName, email: user.email, role: user.role, phone: user.phone , createdAt: user.createdAt}}
+    return {accessToken, refreshToken, user:{ _id: user._id, firstName : user.firstName, lastName: user.lastName, email: user.email, role: user.role, phone: user.phone , createdAt: user.createdAt}}
 }

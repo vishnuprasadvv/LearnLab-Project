@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { validateUser } from "../features/authSlice"; 
+import { validateAdminAuth } from "@/api/adminApi";
+import toast from "react-hot-toast";
+import { adminLogoutSliceAction } from "@/features/adminSlice";
 
 interface ProtectedRouteProps {
   requiredRole?: string
@@ -12,16 +14,18 @@ const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) =>
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
 
-    console.log('role;' , user)
+    console.log('role;' , user,isAuthenticated)
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        //const res = await dispatch(validateUser());
-        //console.log(res)
+          const res = await validateAdminAuth();
+          console.log('admin user auth check',res)
         
         setLoading(false);
       } catch (error) {
         setLoading(false); 
+        toast.error('Please login')
+        dispatch(adminLogoutSliceAction())
       }
     };
 

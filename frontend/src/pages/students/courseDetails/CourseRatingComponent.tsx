@@ -156,7 +156,7 @@ const CourseRatingComponent: React.FC<{
     }
   }
   return (
-    <div className="w-full lg:w-1/2 space-y-5">
+    <div className="w-full space-y-5">
       <h1 className="font-bold text-xl md:text-2xl">Ratings</h1>
       <div className="border rounded-lg p-3 shadow-md">
         {/* Give rating or edit rating */}

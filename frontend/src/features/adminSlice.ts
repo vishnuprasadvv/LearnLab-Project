@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getInstructorsAPI } from "@/api/adminApi";
 
 interface User {
-  id: string;
+  _id: string;
   firstName: string;
   email: string;
   role: string;
@@ -55,7 +55,7 @@ const adminSlice = createSlice({
     adminLoginSuccess(
       state,
       action: PayloadAction<{
-        user: { id: string; email: string; role: string , firstName:string , lastName: string, phone: string};
+        user: { _id: string; email: string; role: string , firstName:string , lastName: string, phone: string};
         adminToken?: string
       }>
     ) {

@@ -13,6 +13,8 @@ interface ICourseDetailsWishlist {
       name:string
     },
     level? : string;
+    averageRating: number;
+    ratingsCount: number
   }
   export interface IPopulatedWishlist {
       courseId: ICourseDetailsWishlist; 

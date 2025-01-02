@@ -14,6 +14,15 @@ export const adminLogout = async() => {
   return response
 } 
 
+export const validateAdminAuth = async( ) => {
+  try {
+  const response = await adminInterceptorApi.post(`${API_URL}/auth/verify-admin-token`,{ withCredentials: true })
+  return response.data;
+  } catch (error) {
+      throw error
+  }
+}
+
 
 // Function to get all users
 export const getUsers = async (search:string, page:number, limit:number): Promise<User[]> => {
@@ -226,4 +235,31 @@ export const getPurchasesApi = async () => {
       throw error?.response?.data || error; // Propagate error to caller
     }
   
+}
+
+//dashboard
+
+export const getDashboardDataApi = async() => {
+  try {
+    const response = await adminInterceptorApi.get(`${API_URL}/admin/dashboard`, { withCredentials: true });
+    return response.data;
+} catch (error: any) {
+    throw error?.response?.data || error; 
+  }
+}
+export const getBestSellingCoursesApi = async(limit: number) => {
+  try {
+    const response = await adminInterceptorApi.get(`${API_URL}/admin/best-courses`, { params:{limit}, withCredentials: true });
+    return response.data;
+} catch (error: any) {
+    throw error?.response?.data || error; 
+  }
+}
+export const getTopInstructorsApi = async(limit: number) => {
+  try {
+    const response = await adminInterceptorApi.get(`${API_URL}/admin/top-instructors`, { params:{limit}, withCredentials: true });
+    return response.data;
+} catch (error: any) {
+    throw error?.response?.data || error; 
+  }
 }

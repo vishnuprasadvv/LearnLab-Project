@@ -8,7 +8,7 @@ export class WishlistRepository implements IWishlistRepository {
     const wishlist = await Wishlist.findOne({ userId }).populate({
       path: 'items.courseId', // Populate the courseId field
       model: 'Courses',      // Reference the Courses model
-      select: 'title description price instructor imageUrl category level ', // Select specific fields
+      select: 'title description price instructor imageUrl category level averageRating ratingsCount', // Select specific fields
       populate: [
         {
           path: 'instructor',
@@ -45,6 +45,8 @@ export class WishlistRepository implements IWishlistRepository {
           name: item.courseId.category?.name
         },
         level: item.courseId.level,
+        averageRating : item.courseId.averageRating,
+        ratingsCount: item.courseId.ratingsCount,
       },
       addedAt: new Date(item.addedAt), // Ensure Date type
     })),

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { startLoading, setError, clearError } from '../../features/adminSlice';
-import { login } from '../../features/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,9 +55,9 @@ const AdminLogin = () => {
         navigate(result.user.role ==='admin'? '/admin/dashboard': '/unauthorized')
         toast.success('Login success')
       } catch (err:any) {
-        dispatch(setError(err?.message || 'Login failed.'));
+        dispatch(setError(err.response.data.message || 'Login failed.'));
         console.error('Login failed:', err);
-        toast.error(err.message || 'Login failed')
+        toast.error(err.response.data.message || 'Login failed')
       }
     }
     
