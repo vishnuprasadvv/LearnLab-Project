@@ -6,3 +6,9 @@ export interface RegisterInstructorFormValues {
     password: string;
     // resume: File | null;
 }
+
+export interface IInstructorDashboardMetrics {
+    totalStudents: number;
+    totalCourses: number;
+    totalEarnings: number;
+  }

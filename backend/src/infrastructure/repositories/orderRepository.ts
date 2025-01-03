@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IOrderRepository } from "../../application/repositories/IOrderRepository";
 import { IOrder, OrderModel } from "../../domain/models/Orders";
 
@@ -100,5 +101,34 @@ export class OrderRepository implements IOrderRepository{
         }));
     }
     
+    async getEarningsByInstructor(instructorId: string) : Promise<any[]> {
+        const earnings = await OrderModel.aggregate([
+            {
+                $lookup : {
+                    from: 'courses',
+                    localField: 'courses.courseId',
+                    foreignField: '_id',
+                    as: 'courseDetails',
+                }
+            },
+            {
+                $unwind: '$courseDetails',
+            },
+            {
+                $match: {
+                    'courseDetails.instructor' : new mongoose.Types.ObjectId(instructorId),
+                    paymentStatus: 'completed'
+                }
+            },
+            {
+                $project:{
+                    totalAmount : 1,
+                    paymentDate : 1,
+                    _id: 0
+                }
+            },
+        ])
 
+        return earnings;
+    }
 }

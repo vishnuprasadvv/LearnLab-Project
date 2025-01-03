@@ -49,8 +49,8 @@ export class CourseRepositoryClass implements ICourseRepository{
         )
    }
 
-   async getAllCourses(userId: string) : Promise<ICourses[] | null>{
-        return await Courses.find({instructor: userId ,isDeleted: false}).populate([
+   async getAllCourses(instructorId: string) : Promise<ICourses[] | null>{
+        return await Courses.find({instructor: instructorId ,isDeleted: false}).populate([
             { path: 'instructor', select: '-password -phone -profileImagePublicId' },
             {path: 'category', select: 'name _id'}
         ])
@@ -238,5 +238,7 @@ async incrementEnrolledCount(courseId: string, incrementBy = 1): Promise<void> {
       .limit(limit)
       .exec()
   }
+
+  
 
 }

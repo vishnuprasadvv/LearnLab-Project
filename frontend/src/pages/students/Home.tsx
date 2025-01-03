@@ -1,6 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
 import { useNavigate } from 'react-router-dom'
-import bannertwo from '../../assets/whychooselearnlab.svg'
 import HeroSection from '../../components/common/Hero/HeroSection'
 import Courses from './Courses';
 
@@ -29,9 +28,6 @@ function Home() {
         <div className='flex w-full'>
 
         
-        </div>
-        <div>
-          <img src={bannertwo} alt="" />
         </div>
         <div>
           <Courses/>

@@ -119,5 +119,21 @@ export const getInstructorPurchsesApi = async () => {
   } catch (error: any) {
       throw error?.response?.data || error; // Propagate error to caller
     }
-  
+}
+export const getDashboardMetricsApi = async () => {
+  try {
+      const response = await api.get(`${API_URL}/instructor/dashboard-metrics`, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    }
+}
+
+export const getDashboardEarningsApi = async () => {
+  try {
+      const response = await api.get(`${API_URL}/instructor/dashboard-earnings`, { withCredentials: true });
+      return response.data;
+  } catch (error: any) {
+      throw error?.response?.data || error; // Propagate error to caller
+    }
 }

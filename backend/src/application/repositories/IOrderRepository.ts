@@ -13,4 +13,7 @@ export interface IOrderRepository {
     countAll(): Promise<number>;
     calculateTotalRevenue(): Promise<number>;
     getRevenueByMonth(): Promise<{ date: string; revenue: number ,orderCount : number}[]>;
+
+    //instructor dashboard
+    getEarningsByInstructor(instructorId: string) : Promise<any[]> 
 }

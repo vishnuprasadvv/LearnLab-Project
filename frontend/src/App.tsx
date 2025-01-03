@@ -27,7 +27,7 @@ import ProfileCourses from "./pages/students/profile/ProfileCourses";
 import ProfileEdit from "./components/user/profile/ProfileEdit";
 import ProfileChangePassword from "./components/user/profile/ProfileChangePassword";
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
-import InstructorDashboardComponent from "./pages/instructor/Dashboard";
+import InstructorDashboardComponent from "./pages/instructor/dashboard/Dashboard";
 import InstructorCourses from "./pages/instructor/InstructorCourses";
 import Messages from "./components/instructor/Messages";
 import Notifications from "./components/instructor/Notifications";

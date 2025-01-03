@@ -25,7 +25,7 @@ export interface ICourses extends Document{
     description?:string,
     imageUrl ?: string,
     imagePublicId ?: string,
-    price?: number,
+    price: number,
     isPublished? : boolean,
     category ?: string,
     level?: string,

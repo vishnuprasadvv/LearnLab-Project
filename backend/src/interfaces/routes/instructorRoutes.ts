@@ -3,6 +3,7 @@ import { addLectureController, createCourseController, deleteCourseController, e
 import { upload, uploadVideo } from "../../infrastructure/middlewares/multer";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
 import { getPurchasesController } from "../controllers/instructor/purchases/purchasesController";
+import { getInstructorDashboardMetricsController, getInstructorEarningsController } from "../controllers/instructor/dashboard/dashboard";
 
 
 const instructorRouter = Router();
@@ -17,5 +18,10 @@ instructorRouter.patch('/courses/:id/edit', upload.single('courseImage'),isAuthe
 instructorRouter.patch('/courses/:courseId/edit/lecture', uploadVideo.any(),isAuthenticated, authorizeRole(['instructor']), editLectureController)
 instructorRouter.patch('/courses/:courseId/publish',isAuthenticated, authorizeRole(['instructor']), publishCourseController)
 instructorRouter.get('/purchases',isAuthenticated, authorizeRole(['instructor']), getPurchasesController)
+
+//instructor dashboard
+instructorRouter.use(isAuthenticated, authorizeRole(['instructor']),)
+    .get('/dashboard-metrics', getInstructorDashboardMetricsController)
+    .get('/dashboard-earnings', getInstructorEarningsController)
 
 export default instructorRouter
