@@ -25,7 +25,7 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
 
         const payload = googleUserResponse.data; // This contains the user data
         
-        console.log(googleUserResponse.data)
+        console.log('google user reponse data',googleUserResponse.data)
       if (!payload) {
         return res.status(400).json({ message: "Invalid token" });
       }
@@ -38,7 +38,7 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
         email: payload.email!,
         firstName: payload.given_name!,
         lastName: payload.family_name!,
-        //picture: payload.picture!,
+        profileImageUrl: payload.picture!,
         isVerified: true
       });
     }
@@ -48,7 +48,7 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
         id: user._id,
         role:user.role
       })
-      const refreshToken = generateRefreshToken({id: user.googleId})
+      const refreshToken = generateRefreshToken({id: user._id})
 
       res.cookie('accessToken', accessToken, accessTokenOptions)
       res.cookie('refreshToken', refreshToken, accessTokenOptions)
@@ -56,11 +56,11 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
       res.status(200).json({
         token: accessToken,
         user: {
-          id: user.id,
+          _id: user._id,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          //picture: user.picture,
+          profileImageUrl : user.profileImageUrl,
           role: user.role
         },
       });

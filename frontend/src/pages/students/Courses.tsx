@@ -41,7 +41,7 @@ const isLoading = false;
             ? Array.from({ length: 8 }).map((_, index) => (
                 <CourseSkeleton key={index} />
               ))
-            : displayedCourses.map((course, index) => <Course {...course}/>)}
+            : displayedCourses.map((course, index) => <Course key={index} {...course}/>)}
         </div>
       </div>
     </div>

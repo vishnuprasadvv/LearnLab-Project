@@ -16,7 +16,7 @@ const ProfileCourses = () => {
   const itemsPerPage = COURSES_PER_PAGE;
   const [limitedOrders, setLimitedOrders] = useState<IOrder[] | []>([]);
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     const fetchMyCourses = async () => {
       try {
         const response = await fetchMyCoursesApi();
@@ -28,8 +28,8 @@ const ProfileCourses = () => {
       } catch (error: any) {
         console.error("fetching course error", error);
         toast.error(error.message || "Fetching course failed");
-      }finally{
-        setIsLoading(false)
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -49,7 +49,7 @@ const ProfileCourses = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid gap-6 md:grid-cols-1">
-        <Card className="w-full">
+        <Card className="w-full min-h-[80vh]">
           <CardHeader className="text-center">
             <div className="text-xl">My Learning</div>
           </CardHeader>
@@ -65,11 +65,16 @@ const ProfileCourses = () => {
                     ? Array.from({ length: 8 }).map((_, index) => (
                         <ProfileCoursesSkeleton key={index} />
                       ))
-                    : limitedOrders.map((order) => (
-                        <div className="hover:bg-blue-50 p-1 rounded-md bg-slate-50 shadow-md">
-                          <h3 className="font-semibold">{order.orderId || 'OrderID'}</h3>
-                          {order.courses.map((course) => (
-                            <UserProfileCourses {...course} />
+                    : limitedOrders.map((order, index) => (
+                        <div
+                          className="hover:bg-blue-50 p-1 rounded-md bg-slate-50 shadow-md"
+                          key={index}
+                        >
+                          <h3 className="font-semibold">
+                            {order.orderId || "OrderID"}
+                          </h3>
+                          {order.courses.map((course, index) => (
+                            <UserProfileCourses {...course} key={index} />
                           ))}
                           <div className="flex flex-col">
                             <div>
@@ -88,7 +93,9 @@ const ProfileCourses = () => {
                             </div>
                             <div>
                               <span>Total amount : </span>
-                              <span className="font-medium">₹ {order.totalAmount}</span>
+                              <span className="font-medium">
+                                ₹ {order.totalAmount}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -96,13 +103,15 @@ const ProfileCourses = () => {
                 </div>
               )}
             </div>
-            <div className="pt-5 mt-auto">
-              <PaginationComponent
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={(page) => setCurrentPage(page)}
-              />
-            </div>
+            {totalPages > 0 && (
+              <div className="pt-5 mt-auto bg-blue-200">
+                <PaginationComponent
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={(page) => setCurrentPage(page)}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
         // localStorage.setItem("token", response.token);
   
           // Dispatch user data to Redux
-          dispatch(authSuccess({user:{_id: response.user.id, email : response.user.email, role : response.user.role, firstName : response.user.firstName , lastName: response.user.lastName, phone: response.user.phone}}));
+          dispatch(authSuccess({user:{_id: response.user._id, email : response.user.email, role : response.user.role, firstName : response.user.firstName , lastName: response.user.lastName, phone: response.user.phone, profileImageUrl: response.user.profileImageUrl}}));
           navigate('/')
         } catch (error: any) {
           console.error('Login failed:', error);
