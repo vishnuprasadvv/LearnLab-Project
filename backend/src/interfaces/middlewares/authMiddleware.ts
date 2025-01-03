@@ -8,7 +8,7 @@ export const isAuthenticated = async(req: Request, res: Response, next: NextFunc
     const refreshToken = req.cookies?.refreshToken;
     //console.log('isAuthMiddleware',accessToken)
     if(!accessToken && !refreshToken){
-        res.status(401).json({message: 'accessToken and refreshToken not found'})
+        res.status(401).json({message: 'AccessToken and refreshToken not found'})
         console.log('accessToken and refreshToken not found')
         return;
     }

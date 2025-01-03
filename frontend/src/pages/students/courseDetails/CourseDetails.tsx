@@ -138,6 +138,11 @@ const CourseDetails = () => {
   };
 
   const handleAddToWishlist = async () => {
+    if(!user || !user._id){
+      toast.error("Please login")
+      navigate('/login')
+      return;
+    }
     try {
       const response = await addToWishlistApi(id);
       console.log("adding wishlist", response);
@@ -150,6 +155,11 @@ const CourseDetails = () => {
     }
   };
   const handleRemoveFromWishlist = async () => {
+    if(!user || !user._id){
+      toast.error("Please login")
+      navigate('/login')
+      return;
+    }
     try {
       const response = await removeFromWishlistApi(id);
       console.log("removing from wishlist", response);
