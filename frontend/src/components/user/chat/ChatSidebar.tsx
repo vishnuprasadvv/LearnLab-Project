@@ -88,7 +88,7 @@ const ChatSidebar: React.FC = () => {
       socket.off('messagesRead')
     }
     
-  }, [selectedChat]);
+  }, [selectedChat, setChats]);
 
   useEffect(() => {
     const fetchUsers = async () => {

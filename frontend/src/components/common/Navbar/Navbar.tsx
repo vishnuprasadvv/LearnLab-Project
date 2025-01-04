@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Logo from "../../../assets/LearnLab-Main-LOGO.svg";
 import { Button } from "@/components/ui/button";
 import { CiMenuBurger } from "react-icons/ci";
@@ -11,7 +11,6 @@ import { LuHeart } from "react-icons/lu";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { getWishlistCourseIds } from "@/api/student";
 import { setWishlistIds } from "@/features/wishlistSlice";
-import { Badge } from "lucide-react";
 
 const Navbar = () => {
   
@@ -19,6 +18,7 @@ const Navbar = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const wishlistCourseIds = useAppSelector((state) => state.wishlist.courseIds) || [];
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   useEffect(() => {
     const getWishlistCount = async() => {
       try {
@@ -84,7 +84,7 @@ const Navbar = () => {
     <div className="">
       <div className="shadow-md w-full fixed top-0 left-0 z-20">
         <div className="md:flex items-center justify-between bg-blue-50 py-4 md:px-10 px-7 h-[70px] max-h-[70px]">
-          <div className="flex items-center ">
+          <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
             <img src={Logo} alt="Logo" className="h-auto w-32" />
           </div>
           <div

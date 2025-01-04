@@ -32,6 +32,7 @@ function Home() {
         <div>
           <Courses/>
         </div>
+        
     </div>
   )
 }

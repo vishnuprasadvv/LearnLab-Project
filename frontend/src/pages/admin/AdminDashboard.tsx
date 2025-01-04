@@ -134,7 +134,7 @@ const AdminPage = () => {
         <AlertDialog>
           <AlertDialogTrigger
             className=" bg-red-500 mt-5  flex gap-3 items-center justify-center text-white
-        sm:justify-start hover:bg-red-300 rounded-md p-2 py-5 w-full"
+        md:justify-start hover:bg-red-300 rounded-md p-2 py-5 w-full"
           >
             <IoLogOutOutline className="text-2xl" />
             <span className="sm:hidden md:block">Logout</span>

@@ -57,6 +57,7 @@ import AdminPurchases from "./pages/admin/purchases/AdminPurchases";
 import InstructorPurchases from "./pages/instructor/purchases/InstructorPurchases";
 import ChatMain from "./pages/students/chat/ChatMain";
 import Wishlist from "./pages/students/wishlist/Wishlist";
+import Footer from "./components/common/Footer/Footer";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -72,6 +73,7 @@ function App() {
       <>
         {!isAdminRoute && <Navbar />}
         {children}
+        { !isAdminRoute && <Footer />}
       </>
     );
   };
