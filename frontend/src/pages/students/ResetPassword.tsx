@@ -1,12 +1,14 @@
 import { useAppDispatch } from '@/app/hooks';
+import PasswordFieldTwo from '@/components/common/PasswordField/PasswordFieldtwo';
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input';
-import { resetPasswordThunk, setError, startLoading } from '@/features/authSlice';
+import { resetPasswordThunk, sendOtp, setError, startLoading } from '@/features/authSlice';
+import { formikPasswordValidation } from '@/utils/formikPasswordValidator';
 import { useFormik } from 'formik';
 import React, { useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 import { IoArrowBack } from 'react-icons/io5';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup'
 
 function ResetPassword() {
@@ -52,9 +54,7 @@ function ResetPassword() {
 
     },
     validationSchema: Yup.object({
-      newPassword: Yup.string()
-        .min(5, 'Password must be atleast 5 characters')
-        .required('Password is required'),
+      newPassword: formikPasswordValidation(),
       confirmNewPassword: Yup.string()
         .oneOf([Yup.ref('newPassword')], 'Password miss match')
         .required('Confirm password is required'),
@@ -83,11 +83,29 @@ function ResetPassword() {
 
   })
 
+  const handleResendOtp = async() => {
+    try {
+      const response = dispatch(sendOtp({email})).unwrap();
+      await toast.promise(response, {
+        loading: 'Sening OTP...',
+        success:(data) => {
+          return data.message || 'OTP sent successfully'},
+          error: (err) => {
+            return err?.message || 'Email verification failed'
+          }
+        })
+        console.log('resend otp front end',await response)
+    } catch (error:any) {
+      toast.error(error?.error || 'Error sending OTP')
+      console.log(error)
+    }
+}
+
   return (
     <form onSubmit={formik.handleSubmit} className='md:w-1/3 lg:w-1/4  sm:w-1/2 items-center mx-auto  border rounded-md p-8 mt-10 '>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Reset Password</h1>
       <p className='text-center'>Please enter the 4-digit OTP sent to your email.</p>
-      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }} className="pt-5 pb-10">
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }} className="pt-5">
         {otp.map((value, index) => (
           <input
             key={index}
@@ -107,38 +125,18 @@ function ResetPassword() {
             }}
           />
         ))}
-
-
       </div>
 
-      <div className='pb-3 pt-5 flex flex-col gap-2 text-start' >
-        <label htmlFor='newPassword'>New Password:</label>
-        <Input type="password" id='newPassword' name='newPassword' value={formik.values.newPassword} onChange={formik.handleChange} className='w-full '
-          style={{
-            width: '100%',
-            padding: '8px',
-            marginBottom: '5px',
-            border: formik.touched.newPassword && formik.errors.newPassword ? '1px solid red' : '1px solid #ccc',
-          }} />
+       <div className='flex justify-center pt-5'>
+              <Button variant="link" className='hover:text-blue-600'  onClick={handleResendOtp} >Resend OTP</Button>
+            </div>
 
-        {formik.touched.newPassword && formik.errors.newPassword ? (
-          <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.newPassword}</div>
-        ) : null}
+      <div className='pb-3 pt-5 flex flex-col gap-2 text-start' >
+          <PasswordFieldTwo label='New Password' onBlur={formik.handleBlur} name='newPassword' id='newPassword' value={formik.values.newPassword} onChange={formik.handleChange} error={formik.errors.newPassword} touched={formik.touched.newPassword}/>
       </div>
 
       <div className='pb-3  flex flex-col gap-2 text-start' >
-        <label htmlFor='confirmNewPassword'>Re-enter Password:</label>
-        <Input type="password" id='confirmNewPassword' name='confirmNewPassword' value={formik.values.confirmNewPassword} onChange={formik.handleChange} className='w-full '
-          style={{
-            width: '100%',
-            padding: '8px',
-            marginBottom: '5px',
-            border: formik.touched.confirmNewPassword && formik.errors.confirmNewPassword ? '1px solid red' : '1px solid #ccc',
-          }} />
-
-        {formik.touched.confirmNewPassword && formik.errors.confirmNewPassword ? (
-          <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.confirmNewPassword}</div>
-        ) : null}
+          <PasswordFieldTwo onBlur={formik.handleBlur} label='Re-enter Password' name='confirmNewPassword' id='confirmNewPassword' value={formik.values.confirmNewPassword} onChange={formik.handleChange} error={formik.errors.confirmNewPassword} touched={formik.touched.confirmNewPassword}/>
       </div>
 
       <div className='flex justify-center pt-5'>

@@ -11,9 +11,8 @@ import { useFormik} from 'formik';
 import * as Yup from 'yup';
 import { EyeClosed, EyeIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import toast, {Toaster} from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
-import { error } from 'console';
 import { formikPasswordValidation } from '@/utils/formikPasswordValidator';
 
 const Signup = () => {
