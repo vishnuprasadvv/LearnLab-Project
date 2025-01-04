@@ -160,7 +160,7 @@ const CourseRatingComponent: React.FC<{
       <h1 className="font-bold text-xl md:text-2xl">Ratings</h1>
       <div className="border rounded-lg p-3 shadow-md">
         {/* Give rating or edit rating */}
-        {purchased && (
+        {purchased && user?._id !== course.instructor._id && (
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
               <img

@@ -21,6 +21,7 @@ export interface ILectureDocument extends Document{
 
 export interface ICourses {
     instructor:{
+        _id: string;
         firstName?: string, 
         lastName?: string,
         profileImageUrl?: string,
