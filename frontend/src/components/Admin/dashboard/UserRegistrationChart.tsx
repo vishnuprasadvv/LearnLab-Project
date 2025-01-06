@@ -1,7 +1,10 @@
 import { getJoinedUsersDataApi } from '@/api/adminApi';
 import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS , Tooltip, BarElement } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
+ChartJS.register(zoomPlugin, Tooltip, BarElement)
 type TTimeline = 'daily' | 'weekly' | 'monthly' | 'yearly';
 type TData = {
     count: number,
@@ -45,7 +48,19 @@ const UserRegistrationChart:React.FC = () => {
 
     const options = {
         responsive: true,
+        maintainAspectRatio:true,
         plugins: {
+          zoom: {
+            zoom: {
+              wheel: { enabled: true }, // Enable zooming with the mouse wheel
+              pinch: { enabled: true }, // Enable zooming with touch gestures
+              mode: 'x' as const, // Zoom on x-axis
+            },
+            pan: {
+              enabled: true,
+              mode: 'x' as const, // Pan on x-axis
+            },
+          },
           title: {
             display: true,
             text: `Joined users count (${timeFrame})`,
@@ -73,6 +88,7 @@ const UserRegistrationChart:React.FC = () => {
           y: {
             beginAtZero: true,
             ticks: {
+              maxTicksLimit: 10,
               callback: (value: string | number) => {
                 if (typeof value === "number") {
                   return `${value}`;
