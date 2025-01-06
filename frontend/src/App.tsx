@@ -32,7 +32,7 @@ import InstructorCourses from "./pages/instructor/InstructorCourses";
 import Messages from "./components/instructor/Messages";
 import Notifications from "./components/instructor/Notifications";
 import Navbar from "./components/common/Navbar/Navbar";
-import AdminDashboardComponent from "./components/Admin/Dashboard";
+import AdminDashboardComponent from "./pages/admin/dashboard/Dashboard";
 import UserManagement from "./components/Admin/UserManagement";
 import AddUser from "./components/Admin/AddUser";
 import EditUser from "./components/Admin/EditUser";
@@ -69,11 +69,12 @@ function App() {
   const Layout = ({ children }: { children: React.ReactNode }) => {
     const location = useLocation();
     const isAdminRoute = location.pathname.startsWith("/admin");
+    const isInstructorRoute = location.pathname.startsWith("/instructor")
     return (
       <>
         {!isAdminRoute && <Navbar />}
         {children}
-        { !isAdminRoute && <Footer />}
+        { !isAdminRoute &&  !isInstructorRoute && <Footer />}
       </>
     );
   };

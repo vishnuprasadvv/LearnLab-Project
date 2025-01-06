@@ -13,5 +13,5 @@ export interface IDashboardStatistics{
     totalOrders: number;
     totalRevenue: number;
     revenueByMonth: { date: string; revenue: number, orderCount : number}[];
-    userRegistrations: { date: string; count: number }[];
+    
 }

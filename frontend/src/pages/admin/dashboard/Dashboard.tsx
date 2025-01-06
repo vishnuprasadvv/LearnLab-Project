@@ -1,9 +1,10 @@
 import { getDashboardDataApi } from "@/api/adminApi";
 import { IDashboardStatistics } from "@/types/adminDashboard";
 import React, { useEffect, useState } from "react";
-import SalesGraph from "./dashboard/SalesChart";
-import TopSellingCourses from "./dashboard/TopSellingCourses";
-import TopInstructors from "./dashboard/TopInstructors";
+import SalesGraph from "../../../components/Admin/dashboard/SalesChart";
+import TopSellingCourses from "../../../components/Admin/dashboard/TopSellingCourses";
+import TopInstructors from "../../../components/Admin/dashboard/TopInstructors";
+import UserRegistrationChart from "@/components/Admin/dashboard/UserRegistrationChart";
 
 const Dashboard = () => {
   const [data, setData] = useState<IDashboardStatistics | null>(null);
@@ -112,25 +113,11 @@ const Dashboard = () => {
                 <SalesGraph revenueByMonth={data?.revenueByMonth} />
               )}
           </div>
-
-          {/* <!-- Revenue Breakdown --> */}
           <div className="bg-white shadow-sm rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              Revenue Breakdown
-            </h2>
-            <ul className="space-y-3">
-              {data?.revenueByMonth.map((rev, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between text-sm text-gray-700"
-                >
-                  <span>{rev.date}</span>
-                  <span>{rev.orderCount}</span>
-                  <span>₹{rev.revenue}</span>
-                </li>
-              ))}
-            </ul>
+         <UserRegistrationChart />
           </div>
+
+         
 
           <div className="bg-white shadow-sm rounded-lg p-6">
               <TopSellingCourses />

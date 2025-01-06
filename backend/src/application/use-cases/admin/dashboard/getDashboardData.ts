@@ -28,9 +28,7 @@ export class GetDashboardDataUseCase {
         const totalRevenue = await this.orderRepository.calculateTotalRevenue();
         const revenueByMonth = await this.orderRepository.getRevenueByMonth();
 
-        //fetch user registration over time 
-        const userRegistrations = await this.userRepository.getRegistrationsOverTime();
-
+      
         return {
             totalUsers,
             activeUsers,
@@ -42,7 +40,6 @@ export class GetDashboardDataUseCase {
             totalOrders,
             totalRevenue,
             revenueByMonth,
-            userRegistrations
         }
     }
 }

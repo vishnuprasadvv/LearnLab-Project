@@ -5,6 +5,7 @@ import { CourseRepositoryClass } from "../../../../infrastructure/repositories/c
 import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";
 import { GetBestSellingCourses } from "../../../../application/use-cases/admin/dashboard/getBestSellingCourses";
 import { GetBestInstructorUseCase } from "../../../../application/use-cases/admin/dashboard/getBestInstructor";
+import { GetUserRegistrationAnalyticsUseCase } from "../../../../application/use-cases/admin/dashboard/getUserRegistrationAnalytics";
 
 const userRepository = new UserRepositoryImpl();
 const courseRepository = new CourseRepositoryClass();
@@ -38,6 +39,18 @@ export const getTopInstructorsController = async (req: Request, res: Response, n
       const bestInstructors = await useCase.execute(limit)
       console.log(bestInstructors)
       res.status(200).json({success: true, data:bestInstructors });
+    } catch (error) {
+     next(error)
+    }
+  };
+
+export const getUserRegistrationAnalyticsController = async (req: Request, res: Response, next: NextFunction) => {
+   
+    try {
+      const {timeFrame = ''} = req.query;
+      const useCase = new GetUserRegistrationAnalyticsUseCase(userRepository)
+        const data = await useCase.execute(timeFrame.toString())
+        res.status(200).json({data: data, success:true, message: 'Fetching user registration analytics success'})
     } catch (error) {
      next(error)
     }

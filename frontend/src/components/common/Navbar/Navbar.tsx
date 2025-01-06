@@ -31,7 +31,9 @@ const Navbar = () => {
         console.error('getting wishlist course ids error', error)
       }
     }
-    getWishlistCount()
+    if(isAuthenticated){
+      getWishlistCount()
+    }
   }, [dispatch])
 
   let Links = [

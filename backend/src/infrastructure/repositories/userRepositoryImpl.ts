@@ -38,15 +38,39 @@ export class UserRepositoryImpl implements IUserRepository {
         })
         return roleCounts;
     }
-    async getRegistrationsOverTime(): Promise<{ date: string; count: number; }[]> {
+    async getRegistrationsOverTime(timeFrame: 'daily' | 'weekly' | 'monthly' | 'yearly'): Promise<{ date: string; count: number; }[]> {
+        const groupStage = {
+            daily: {
+                $dateToString: { format : "%Y-%m-%d", date: "$createdAt"},
+            },
+            weekly: {
+                $dateToString: { format : "%Y-%U", date: "$createdAt"},
+            },
+            monthly: {
+                $dateToString: { format : "%Y-%m", date: "$createdAt"},
+            },
+            yearly: {
+                $dateToString: { format : "%Y", date: "$createdAt"},
+            },
+        }
         const results = await User.aggregate([
-            {$group : { _id: {$dateToString: {format: '%Y-%m-%d', date:"$createdAt"}}, count: {$sum:1}}},
+            {$group : { 
+                _id: groupStage[timeFrame] ,
+                 count: {$sum:1}}},
             { $sort : { _id: 1 }},
         ])
-        return results.map(result => ({
-            date: result._id,
-            count: result.count
-        }))
+        return results.map(result => {
+            let formattedDate = result._id;
+
+            if(timeFrame === 'weekly') {
+                const [year, week] = formattedDate.split('-');
+                formattedDate = `Week ${parseInt(week)}, ${year}`;
+            }
+            return {
+                date: formattedDate,
+                count: result.count
+            }
+        })
     }
 
     async getTopInstructors(limit:number = 10):Promise<IUser[]>{

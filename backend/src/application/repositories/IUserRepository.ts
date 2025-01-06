@@ -8,6 +8,6 @@ export interface IUserRepository{
     countAll() :Promise<number>;
     countByStatus(status:string):Promise<number>
     countByRole():Promise<{student: number, instructor:number, admin: number}>
-    getRegistrationsOverTime():Promise<{date: string, count: number}[]>
+    getRegistrationsOverTime(timeFrame: string):Promise<{date: string, count: number}[]>
     getTopInstructors(limit:number):Promise<IUser[]>
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   Title,
@@ -34,91 +34,58 @@ interface ISalesData {
   revenue: number;
   orderCount: number;
 }
+
 const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
   const [timeFrame, setTimeFrame] = useState("monthly");
   const [filteredData, setFilteredData] = useState<ISalesData[]>([]);
-  const salesData = revenueByMonth;
+  const salesData:ISalesData[] = revenueByMonth;
 
-  const filterData = (frame: string, data: ISalesData[] = salesData) => {
-    const groupedData: ISalesData[] = [];
-    const today = new Date();
-
-    // Create a copy of the data to avoid modifying the original array
-    const dataCopy = JSON.parse(JSON.stringify(data));
-
-    if (frame === "daily") {
-      dataCopy.forEach((item: any) => {
-        const itemDate = new Date(item.date);
-        if (
-          itemDate.getDate() === today.getDate() &&
-          itemDate.getMonth() === today.getMonth() &&
-          itemDate.getFullYear() === today.getFullYear()
-        ) {
-          groupedData.push(item);
-        }
-      });
-    } else if (frame === "weekly") {
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); // Start of current week (Sunday)
-
-      dataCopy.forEach((item: any) => {
-        const itemDate = new Date(item.date);
-        if (itemDate >= startOfWeek && itemDate <= today) {
-          groupedData.push(item);
-        }
-      });
-
-      // Adjust the date format for the weekly range
-      groupedData.forEach((item) => {
-        const itemDate = new Date(item.date);
-        const startOfWeek = new Date(itemDate);
-        startOfWeek.setDate(itemDate.getDate() - itemDate.getDay());
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6); // End of the week (Saturday)
-        item.date = `${startOfWeek.toLocaleDateString()} to ${endOfWeek.toLocaleDateString()}`;
-      });
-    } else if (frame === "monthly") {
-      const currentMonth = today.getMonth();
-      const currentYear = today.getFullYear();
-
-      dataCopy.forEach((item: any) => {
-        const itemDate = new Date(item.date);
-        if (
-          itemDate.getMonth() === currentMonth &&
-          itemDate.getFullYear() === currentYear
-        ) {
-          groupedData.push(item);
-        }
-      });
-
-      // Adjust the date format for the month
-      groupedData.forEach((item) => {
-        const itemDate = new Date(item.date);
-        item.date = itemDate.toLocaleString("default", {
-          month: "long",
-          year: "numeric",
-        });
-      });
-    } else if (frame === "yearly") {
-      const currentYear = today.getFullYear();
-
-      dataCopy.forEach((item: any) => {
-        const itemDate = new Date(item.date);
-        if (itemDate.getFullYear() === currentYear) {
-          groupedData.push(item);
-        }
-      });
-
-      // Adjust the date format for the year
-      groupedData.forEach((item) => {
-        const itemDate = new Date(item.date);
-        item.date = itemDate.getFullYear().toString();
-      });
-    }
-
-    // Set the filtered data
-    setFilteredData(groupedData);
+  const groupByDate = (
+    data: ISalesData[],
+    key: (date: string) => string
+  ): Record<string, ISalesData> => {
+    return data.reduce((acc: Record<string, ISalesData>, curr: ISalesData) => {
+      const dateKey = key(curr.date);
+      if (!acc[dateKey]) {
+        acc[dateKey] = { date: dateKey, revenue: 0, orderCount: 0 };
+      }
+      acc[dateKey].revenue += curr.revenue;
+      acc[dateKey].orderCount += curr.orderCount;
+      return acc;
+    }, {});
   };
+
+  const filterWeekly = (data: ISalesData[]): Record<string, ISalesData> => {
+    return groupByDate(data, (date) => {
+      const d = new Date(date);
+      d.setDate(d.getDate() - d.getDay()); // Start of the week (Sunday)
+      return d.toISOString().split("T")[0];
+    });
+  };
+
+  const filterMonthly = (data: ISalesData[]): Record<string, ISalesData> => {
+    return groupByDate(data, (date) => {
+      const d = new Date(date);
+      return `${d.getFullYear()}-${d.getMonth() + 1}`; // Year and month
+    });
+  };
+
+  const filterYearly = (data: ISalesData[]): Record<string, ISalesData> => {
+    return groupByDate(data, (date) => {
+      const d = new Date(date);
+      return `${d.getFullYear()}`; // Year
+    });
+  };
+
+  useEffect(() => {
+    let result: ISalesData[] = [];
+    if (timeFrame === "daily") result = salesData;
+    else if (timeFrame === "weekly") result = Object.values(filterWeekly(salesData));
+    else if (timeFrame === "monthly") result = Object.values(filterMonthly(salesData));
+    else if (timeFrame === "yearly") result = Object.values(filterYearly(salesData));
+
+    setFilteredData(result);
+  }, [timeFrame, salesData]);
   // Prepare the data for Chart.js
   const chartData = {
     labels: filteredData.map((item: any) => item.date), // Labels are the months
@@ -178,9 +145,7 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
     },
   };
 
-  useEffect(() => {
-    filterData(timeFrame);
-  }, [timeFrame]);
+
 
   useEffect(() => {
     console.log("Filtered Data:", filteredData);

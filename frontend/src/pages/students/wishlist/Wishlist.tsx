@@ -100,13 +100,18 @@ const paginatedData = (data:IPopulatedWishlist[], page: number) => {
           )}
         </div>
       </div>
-      <div  className="py-5 mt-auto">
-        <PaginationComponent
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
-      </div>
+      {
+        totalPages > 0 && (
+          <div  className="py-5 mt-auto">
+          <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        </div>
+        )
+      }
+     
     </div>
   );
 };

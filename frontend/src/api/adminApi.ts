@@ -263,3 +263,11 @@ export const getTopInstructorsApi = async(limit: number) => {
     throw error?.response?.data || error; 
   }
 }
+export const getJoinedUsersDataApi = async(timeFrame: string) => {
+  try {
+    const response = await adminInterceptorApi.get(`${API_URL}/admin/user-registration-analytics`, {params:{timeFrame}, withCredentials: true });
+    return response.data;
+} catch (error: any) {
+    throw error?.response?.data || error; 
+  }
+}

@@ -67,7 +67,6 @@ const SalesChartInstructor: React.FC = () => {
             default:
                 throw new Error('Invalid filter type');
         }
-
         if (!result[key]) {
             result[key] = 0;
         }
