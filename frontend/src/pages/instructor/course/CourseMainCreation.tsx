@@ -242,6 +242,9 @@ const CourseMainCreation = () => {
                   </FormItem>
                 )}
               />
+               <div>
+        <h3 className="text-red-500 font-semibold">10% fee will be charged.</h3>
+      </div>
             </div>
 
             <div className="space-y-6 ">

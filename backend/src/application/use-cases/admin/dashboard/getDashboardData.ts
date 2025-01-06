@@ -26,7 +26,8 @@ export class GetDashboardDataUseCase {
         //fetch orders data 
         const totalOrders = await this.orderRepository.countAll();
         const totalRevenue = await this.orderRepository.calculateTotalRevenue();
-        const revenueByMonth = await this.orderRepository.getRevenueByMonth();
+        const adminRevenue = await this.orderRepository.calculateAdminRevenue();
+        const dailyRevenue = await this.orderRepository.getTotalRevenueByDay();
 
       
         return {
@@ -39,7 +40,8 @@ export class GetDashboardDataUseCase {
             unpublishedCourses,
             totalOrders,
             totalRevenue,
-            revenueByMonth,
+            adminRevenue : parseFloat(adminRevenue.toFixed(2)),
+            dailyRevenue,
         }
     }
 }

@@ -21,7 +21,6 @@ const InstructorDashboard = () => {
       name: "Purchase Management",
       icon: <ShoppingCart />,
     },
-    { path: "messages", name: "Messages", icon: <RiMessage2Line /> },
     {
       path: "notifications",
       name: "Notifications",

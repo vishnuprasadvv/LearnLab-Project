@@ -16,7 +16,12 @@ export class GetInstructorDashboardMetricsUseCase {
             throw new CustomError("No courses found", 404) 
         }
         const totalStudents = courses.reduce((sum, course) => sum + (course.enrolledCount || 0), 0);
-        const totalEarnings = courses.reduce((sum, course) => sum + course.price * (course.enrolledCount || 0), 0);
+        const totalEarnings = courses.reduce((sum, course) => {
+            const price = course.price || 0;
+            const enrolledCount = course.enrolledCount || 0;
+            const earnings = parseFloat((price * 0.9 * enrolledCount).toFixed(2)); // Format each calculation
+            return sum + earnings;
+          }, 0);
         const totalCourses = courses.length;
 
         return{
@@ -25,4 +30,4 @@ export class GetInstructorDashboardMetricsUseCase {
             totalCourses
         }
     }
-}
+} 

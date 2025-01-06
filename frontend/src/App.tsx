@@ -29,7 +29,6 @@ import ProfileChangePassword from "./components/user/profile/ProfileChangePasswo
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
 import InstructorDashboardComponent from "./pages/instructor/dashboard/Dashboard";
 import InstructorCourses from "./pages/instructor/InstructorCourses";
-import Messages from "./components/instructor/Messages";
 import Notifications from "./components/instructor/Notifications";
 import Navbar from "./components/common/Navbar/Navbar";
 import AdminDashboardComponent from "./pages/admin/dashboard/Dashboard";
@@ -137,7 +136,6 @@ function App() {
                   element={<InstructorDashboardComponent />}
                 />
                 <Route path="courses" element={<InstructorCourses />} />
-                <Route path="messages" element={<Messages />} />
                 <Route path="notifications" element={<Notifications />} />
 
                 <Route path="courses/create" element={<CourseMainCreation />} />

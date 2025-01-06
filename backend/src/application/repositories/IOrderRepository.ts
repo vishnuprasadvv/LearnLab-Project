@@ -12,7 +12,10 @@ export interface IOrderRepository {
     //admin dashboard
     countAll(): Promise<number>;
     calculateTotalRevenue(): Promise<number>;
-    getRevenueByMonth(): Promise<{ date: string; revenue: number ,orderCount : number}[]>;
+    calculateAdminRevenue() : Promise<number> ;
+    calculateInstructorRevenue() : Promise<number>;
+    getTotalRevenueByDay(): Promise<{ date: string; revenue: number ,orderCount : number}[]>;
+    getAdminTotalRevenueByDay(timeFrame: string): Promise<{ date: string; revenue: number ,orderCount : number}[]>;
 
     //instructor dashboard
     getEarningsByInstructor(instructorId: string) : Promise<any[]> 

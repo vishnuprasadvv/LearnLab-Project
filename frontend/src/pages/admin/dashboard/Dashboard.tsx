@@ -5,6 +5,7 @@ import SalesGraph from "../../../components/Admin/dashboard/SalesChart";
 import TopSellingCourses from "../../../components/Admin/dashboard/TopSellingCourses";
 import TopInstructors from "../../../components/Admin/dashboard/TopInstructors";
 import UserRegistrationChart from "@/components/Admin/dashboard/UserRegistrationChart";
+import CompanySalesChart from "@/components/Admin/dashboard/CompanySalesChart";
 
 const Dashboard = () => {
   const [data, setData] = useState<IDashboardStatistics | null>(null);
@@ -75,19 +76,19 @@ const Dashboard = () => {
               <div className="bg-sky-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-sky-600">Active Users</p>
                 <h3 className="text-2xl font-bold text-sky-800">
-                  {data?.activeUsers}
+                  {data?.activeUsers}/{data?.totalUsers}
                 </h3>
               </div>
               <div className="bg-red-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-red-600">Inactive Users</p>
                 <h3 className="text-2xl font-bold text-red-800">
-                  {data?.inactiveUsers}
+                  {data?.inactiveUsers}/{data?.totalUsers}
                 </h3>
               </div>
               <div className="bg-emerald-100 p-4 rounded-lg text-center">
-                <p className="text-sm text-emerald-600">Total Users</p>
+                <p className="text-sm text-emerald-600">Company Revenue</p>
                 <h3 className="text-2xl font-bold text-emerald-800">
-                  {data?.totalUsers}
+                  ₹{data?.adminRevenue}
                 </h3>
               </div>
             </div>
@@ -104,20 +105,21 @@ const Dashboard = () => {
     </div> */}
         </div>
 
+<div className="bg-white shadow-sm rounded-lg p-6 mt-6">
+  <CompanySalesChart />
+</div>
         {/* <!-- Graph and Revenue Section --> */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           {/* <!-- Graph Section --> */}
   
           <div className="bg-white shadow-sm rounded-lg p-6">
           {data?.publishedCourses && (
-                <SalesGraph revenueByMonth={data?.revenueByMonth} />
+                <SalesGraph revenueByMonth={data?.dailyRevenue} />
               )}
           </div>
           <div className="bg-white shadow-sm rounded-lg p-6">
          <UserRegistrationChart />
           </div>
-
-         
 
           <div className="bg-white shadow-sm rounded-lg p-6">
               <TopSellingCourses />

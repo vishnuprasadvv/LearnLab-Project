@@ -12,6 +12,7 @@ export interface IDashboardStatistics{
     unpublishedCourses: number;
     totalOrders: number;
     totalRevenue: number;
-    revenueByMonth: { date: string; revenue: number, orderCount : number }[];
+    adminRevenue: number;
+    dailyRevenue: { date: string; revenue: number, orderCount : number }[];
     userRegistrations: { date: string; count: number }[];
 }

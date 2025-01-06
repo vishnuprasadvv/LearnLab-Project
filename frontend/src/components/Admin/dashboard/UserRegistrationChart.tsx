@@ -34,7 +34,7 @@ const UserRegistrationChart:React.FC = () => {
     labels: filteredData.map((item: any) => item.date), // Labels are the months
     datasets: [
       {
-        label: "Revenue",
+        label: "Users count",
         data: filteredData.map((item: any) => item.count), // Revenue data for each month
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",

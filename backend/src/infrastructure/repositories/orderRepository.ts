@@ -75,7 +75,21 @@ export class OrderRepository implements IOrderRepository{
         return result[0].total || 0;
     }
 
-    async getRevenueByMonth(): Promise<{ date: string, revenue: number, orderCount : number}[]> {
+    async calculateAdminRevenue() : Promise<number> {
+        const result = await OrderModel.aggregate([
+            {$group: {_id: null, total: { $sum: { $multiply: ['$totalAmount', 0.1]}}}} //  10 % of total amount
+        ])
+        return result[0].total || 0;
+    }
+
+    async calculateInstructorRevenue() : Promise<number> {
+        const result = await OrderModel.aggregate([
+            {$group: {_id: null, total: { $sum: { $multiply: ['$totalAmount', 0.9]}}}} //  90 % of total amount
+        ])
+        return result[0].total || 0;
+    }
+
+    async getTotalRevenueByDay(): Promise<{ date: string, revenue: number, orderCount : number}[]> {
         const result =  await OrderModel.aggregate([
             {
                 $addFields: {
@@ -84,13 +98,54 @@ export class OrderRepository implements IOrderRepository{
             },
             {
                 $group: {
-                    _id: { $dateToString: { format: '%Y-%m-%d', date: "$createdAtDate" } }, // Group by year and month
+                    _id: { $dateToString: { format: '%Y-%m-%d', date: "$createdAtDate" } },
                     orderCount: { $sum: 1 }, // Count the orders
                     revenue: { $sum: "$totalAmount" }, // Sum the revenue
                 }
             },
             {
-                $sort: { _id: 1 } // Sort by month in ascending order
+                $sort: { _id: 1 } 
+            },
+        ]);
+
+        return result.map(item => ({
+            date: item._id, // Rename _id to month
+            revenue: item.revenue, // Total revenue for the month
+            orderCount: item.orderCount, // Order count for the month
+        }));
+    }
+
+    async getAdminTotalRevenueByDay(timeFrame: 'daily' | 'weekly' | 'monthly' | 'yearly'): Promise<{ date: string, revenue: number, orderCount : number}[]> {
+        const groupStage = {
+            daily: {
+                $dateToString: { format : "%Y-%m-%d", date: "$createdAt"},
+            },
+            weekly: {
+                $dateToString: { format : "%Y-%U", date: "$createdAt"},
+            },
+            monthly: {
+                $dateToString: { format : "%Y-%m", date: "$createdAt"},
+            },
+            yearly: {
+                $dateToString: { format : "%Y", date: "$createdAt"},
+            },
+        }
+       
+        const result =  await OrderModel.aggregate([
+            {
+                $addFields: {
+                    createdAtDate: { $toDate: "$createdAt" }, // Convert createdAt to Date
+                }
+            },
+            {
+                $group: {
+                    _id: groupStage[timeFrame],
+                    orderCount: { $sum: 1 }, // Count the orders
+                    revenue: { $sum:  { $multiply: ['$totalAmount', 0.1]} }, // Sum the revenue
+                }
+            },
+            {
+                $sort: { _id: 1 } 
             },
         ]);
 
@@ -122,7 +177,7 @@ export class OrderRepository implements IOrderRepository{
             },
             {
                 $project:{
-                    totalAmount : 1,
+                    totalAmount :{ $multiply: ['$totalAmount', 0.9] },
                     paymentDate : 1,
                     _id: 0
                 }

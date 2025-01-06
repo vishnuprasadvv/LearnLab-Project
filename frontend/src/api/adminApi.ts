@@ -271,3 +271,11 @@ export const getJoinedUsersDataApi = async(timeFrame: string) => {
     throw error?.response?.data || error; 
   }
 }
+export const getCompanyProfitDataApi = async(timeFrame: string) => {
+  try {
+    const response = await adminInterceptorApi.get(`${API_URL}/admin/company-profit`, {params:{timeFrame}, withCredentials: true });
+    return response.data;
+} catch (error: any) {
+    throw error?.response?.data || error; 
+  }
+}
