@@ -56,6 +56,8 @@ import InstructorPurchases from "./pages/instructor/purchases/InstructorPurchase
 import ChatMain from "./pages/students/chat/ChatMain";
 import Wishlist from "./pages/students/wishlist/Wishlist";
 import Footer from "./components/common/Footer/Footer";
+import AboutUs from "./pages/students/AboutUs";
+import ContactUs from "./pages/students/ContactUs";
 
 const GOOGLE_CLIENT_ID = config.google.CLIENT_ID;
 
@@ -92,17 +94,23 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/about" element={<AboutUs/>} />
+            <Route path="/contact-us" element={<ContactUs/>} />
             <Route
               path="/courses/course-details/:id"
               element={<CourseDetails />}
             />
+            
+
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+
             <Route
               path="/courses/course-details/:id/lectures"
               element={<LectureView />}
             />
 
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
+
               {/* Profile */}
               <Route path="/profile" element={<ProfileSidebar />}>
                 <Route index element={<ProfileDashboard />} />

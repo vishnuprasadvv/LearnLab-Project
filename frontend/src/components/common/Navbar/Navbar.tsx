@@ -52,7 +52,7 @@ const Navbar = () => {
       name: "About",
     },
     {
-      path: "/contact",
+      path: "/contact-us",
       name: "Contact us",
     },
   ];
