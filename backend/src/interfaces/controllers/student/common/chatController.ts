@@ -72,7 +72,7 @@ export const getChatUsersController = async(req: Request, res: Response, next: N
     try {
         const user = req.user
         if(!user) throw new CustomError('User not found', 404)
-        const users = await getAllChatUsersUseCase.execute(user.id)
+        const users = await getAllChatUsersUseCase.execute(user.id, user.role)
         if(!users) throw new CustomError('Users not found', 404)
             res.status(200).json({success: true, message:'fetching users success', data:users})
     } catch (error) {

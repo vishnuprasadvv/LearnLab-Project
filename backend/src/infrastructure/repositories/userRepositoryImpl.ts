@@ -19,6 +19,10 @@ export class UserRepositoryImpl implements IUserRepository {
         return User.find()
     }
 
+    async getAllInstructorsListForUser(userId: string): Promise<IUser[]> {
+        return User.find({_id:{$ne: userId}  ,isVerified: true, status : 'active', role:{$eq:'instructor'}}).select('-password -googleId -profileImagePublicId')
+    }
+
     async countAll(): Promise<number> {
         return User.countDocuments();
     }
@@ -29,6 +33,7 @@ export class UserRepositoryImpl implements IUserRepository {
 
     async countByRole(): Promise<{ student: number; instructor: number; admin: number; }> {
         const roles:{_id:string, count:number}[] = await User.aggregate([
+            {$match: { isVerified: true, status: 'active'}},
             {$group: {_id: "$role", count:{ $sum: 1}}}
         ])
         const roleCounts = {student: 0, instructor:0, admin: 0};

@@ -5,8 +5,13 @@ export class GetAllChatUsersUseCase {
     constructor(private userRepository : UserRepositoryImpl){
 
     }
-    async execute(userId:string):Promise<IUser[] | null>{
-        const users = this.userRepository.getAllUsersExcluded(userId);
+    async execute(userId:string, role: string):Promise<IUser[] | null>{
+        let users = null;
+        if(role === 'instructor'){
+            users = this.userRepository.getAllUsersExcluded(userId);
+        }else if(role === 'student'){
+            users = this.userRepository.getAllInstructorsListForUser(userId)
+        }
         if(!users) return null;
         return users;
     }
