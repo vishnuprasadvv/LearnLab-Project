@@ -3,8 +3,11 @@ import { useAppSelector } from '@/app/hooks';
 import { Input } from '@/components/ui/input';
 import socket from '@/utils/socket';
 import { Image, Send, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import toast from 'react-hot-toast';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
+import { MdOutlineEmojiEmotions } from 'react-icons/md';
 
 const MessageInput = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -15,6 +18,8 @@ const MessageInput = () => {
     const currentUser = useAppSelector((state)=> state.auth.user)
     const [isLoading, setIsLoading] = useState(false)
 
+    //emoji picker
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 
     const handleSendMessage = async(e:React.FormEvent) => {
         e.preventDefault();
@@ -71,8 +76,25 @@ const MessageInput = () => {
         if (fileInputRef.current) fileInputRef.current.value = "";
       };
 
+      const handleEmojiSelect = (emoji: any) => {
+        setText((prevText) => prevText + emoji.native);
+        setShowEmojiPicker(false)
+      }
+
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full bg-transparent">
+
+      {/* Emoji Picker */}
+      {showEmojiPicker && (
+          <div className="bg-transparent z-10 absolute top-56">
+            <Picker
+            onEmojiSelect={
+                handleEmojiSelect
+              } data={data} />
+          </div>
+        )}
+
+
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -93,8 +115,21 @@ const MessageInput = () => {
         </div>
       )}
 
+         
+
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+       
+       <div className='flex flex-col w-full'>
+         
+      
         <div className="flex-1 flex gap-2 items-center">
+        <button type='button'
+          onClick={() => setShowEmojiPicker((prev) => !prev)}
+          className="emoji-button"
+        >
+         <MdOutlineEmojiEmotions size={25} className={ !showEmojiPicker ? 'text-zinc-400': 'text-zinc-800'}/>
+        </button>
+         
           <Input
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
@@ -118,7 +153,7 @@ const MessageInput = () => {
           >
             <Image size={25} />
           </button>
-        </div>
+          
         <button 
           type="submit"
           className="btn btn-sm btn-circle"
@@ -126,6 +161,9 @@ const MessageInput = () => {
         >
           <Send size={22} className={`${isLoading || !text.trim() && !imageFile && 'text-gray-400'}`}/>
         </button>
+        </div>
+      
+         </div>
       </form>
     </div>
   )

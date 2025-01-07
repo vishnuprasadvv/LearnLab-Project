@@ -126,8 +126,6 @@ const CompanySalesChart:React.FC = () => {
              </select>
            </div>
    
-           {/* <Line data={chartData} options={options} /> */}
-   
            <Bar data={chartData} options={options} />
          </div>
          </div>
