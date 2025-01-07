@@ -29,7 +29,6 @@ const SalesChartInstructor: React.FC = () => {
         try {
             const response = await getDashboardEarningsApi();
             setEarningData(response.data)
-            console.log(response)
             setFilteredEarnings(filterEarnings(response.data, filter));
         } catch (error) {
             console.error('Error fetching earnings data', error)
@@ -86,7 +85,7 @@ const SalesChartInstructor: React.FC = () => {
     setFilteredEarnings(filterEarnings(earningData, selectedFilter)); // Apply filter immediately
   };
 
-  const totalEarnings = filteredEarnings.data.reduce((acc, amount) => acc + amount, 0);
+  const totalEarnings = parseFloat(filteredEarnings.data.reduce((acc, amount) => acc + amount, 0).toFixed(2))
 
   const chartData = {
     labels: filteredEarnings.labels, // X-axis labels (dates or periods)
@@ -109,7 +108,7 @@ const SalesChartInstructor: React.FC = () => {
   return (
         <div className="w-full max-w-4xl mx-auto p-4">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">
-        Total Earnings: {totalEarnings || ''}
+        Total Earnings: ₹{totalEarnings || ''}
       </h2>
     <div className="h-80 rounded-lg items-center justify-center border p-1">
 

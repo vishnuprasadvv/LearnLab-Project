@@ -8,34 +8,11 @@ import SalesChartInstructor from "./SalesChart";
 
 const Dashboard = () => {
   const [data, setData] = useState<IInstructorDashboardMetrics| null>(null)
-  const chartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    datasets: [
-      {
-        label: "Earnings",
-        data: [500, 800, 650, 900, 1200, 1100, 1500],
-        borderColor: "#4A90E2",
-        backgroundColor: "rgba(74, 144, 226, 0.2)",
-        tension: 0.3,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: "top",
-      },
-    },
-  };
 
   useEffect(() => {
     const getData = async () => {
       try { 
         const response = await getDashboardMetricsApi()
-        console.log(response)
         setData(response.data)
       } catch (error) {
         console.error("fetching dashboard data error", error);

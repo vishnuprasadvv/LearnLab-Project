@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import zoomPlugin from 'chartjs-plugin-zoom';
-
+import zoomPlugin from "chartjs-plugin-zoom";
 
 import {
   Chart as ChartJS,
@@ -42,7 +41,7 @@ interface ISalesData {
 const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
   const [timeFrame, setTimeFrame] = useState("monthly");
   const [filteredData, setFilteredData] = useState<ISalesData[]>([]);
-  const salesData:ISalesData[] = revenueByMonth;
+  const salesData: ISalesData[] = revenueByMonth;
 
   const groupByDate = (
     data: ISalesData[],
@@ -84,9 +83,12 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
   useEffect(() => {
     let result: ISalesData[] = [];
     if (timeFrame === "daily") result = salesData;
-    else if (timeFrame === "weekly") result = Object.values(filterWeekly(salesData));
-    else if (timeFrame === "monthly") result = Object.values(filterMonthly(salesData));
-    else if (timeFrame === "yearly") result = Object.values(filterYearly(salesData));
+    else if (timeFrame === "weekly")
+      result = Object.values(filterWeekly(salesData));
+    else if (timeFrame === "monthly")
+      result = Object.values(filterMonthly(salesData));
+    else if (timeFrame === "yearly")
+      result = Object.values(filterYearly(salesData));
 
     setFilteredData(result);
   }, [timeFrame, salesData]);
@@ -108,17 +110,17 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio:true,
+    maintainAspectRatio: true,
     plugins: {
       zoom: {
         zoom: {
           wheel: { enabled: true }, // Enable zooming with the mouse wheel
           pinch: { enabled: true }, // Enable zooming with touch gestures
-          mode: 'x' as const, // Zoom on x-axis
+          mode: "x" as const, // Zoom on x-axis
         },
         pan: {
           enabled: true,
-          mode: 'x' as const, // Pan on x-axis
+          mode: "x" as const, // Pan on x-axis
         },
       },
       title: {
@@ -162,20 +164,17 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
     },
   };
 
-
-
   useEffect(() => {
     console.log("Filtered Data:", filteredData);
     console.log("revenue Data:", revenueByMonth);
   }, [filteredData]);
 
   return (
-        <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full max-w-4xl mx-auto p-4">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">
         Sales Revenue Analytics
       </h2>
-    <div className="h-72 rounded-lg items-center justify-center border p-1">
-
+      <div className="h-72 rounded-lg items-center justify-center border p-1">
         {/* Dropdown to select the time frame */}
         <div className="mb-4 place-self-end ">
           <label htmlFor="timeFrame" className="mr-2 font-medium text-xs">
@@ -201,7 +200,7 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
 
         <Bar data={chartData} options={options} />
       </div>
-      </div>
+    </div>
   );
 };
 

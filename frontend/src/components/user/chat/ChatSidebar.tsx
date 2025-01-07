@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ChatSidebarSkeleton from "./ChatSidebarSkeleton";
-import { CircleCheck, PlusCircle, Users } from "lucide-react";
-import { createChatApi, getChatUsersApi, getUserChatsApi } from "@/api/chatApi";
+import { CircleCheck, MoreVertical, PlusCircle, Users } from "lucide-react";
+import { createChatApi, deleteChatUserApi, getChatUsersApi, getUserChatsApi } from "@/api/chatApi";
 import { User } from "@/types/userTypes";
 import { IChat } from "@/types/chat";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import socket from "@/utils/socket";
 import profileimg from '../../../assets/chat/private-chat-avatar-612x612.jpg'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 
 const ChatSidebar: React.FC = () => {
@@ -130,6 +131,21 @@ const ChatSidebar: React.FC = () => {
     dispatch(setSelectedChat(chat));
   },[])
 
+  //handle delete chat
+  const handleDeleteChat = async(chatId: string) => {
+    if(!chatId){
+      return;
+    }
+    try {
+      await deleteChatUserApi(chatId)
+      toast.success('Chat deleted successfully')
+      setChats((prev) => prev.filter((chat) => chat._id !== chatId))
+    } catch (error:any) {
+      toast.error('Error while deleting chat')
+      console.error('Error deleting chat', error)
+    }
+  }
+
   if (isLoading) return <ChatSidebarSkeleton />;
 
   return (
@@ -203,6 +219,23 @@ const ChatSidebar: React.FC = () => {
                     <div className="ml-auto text-xs bg-blue-400 text-white aspect-square w-5 relative flex items-center justify-center rounded-full"><span className="absolute">{chat.unReadCount}</span></div>
                   )
                     }
+
+                    <div><DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreVertical />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem className="text-red-500 hover:text-red-500"
+            onClick={() => handleDeleteChat(chat._id!)}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu></div>
                 
               </button>
             );

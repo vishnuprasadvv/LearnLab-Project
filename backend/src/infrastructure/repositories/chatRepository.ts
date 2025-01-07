@@ -2,19 +2,15 @@ import mongoose from "mongoose";
 import { Chat, IChat } from "../../domain/models/Chat";
 
 export class ChatRepository {
-    async getChatByParticipants(participants: string[]) {
+    async getChatByParticipants(participants: string[]) : Promise<IChat | null>{
         return await Chat.findOne({
             participants: {$all: participants},
             chatType:'private'
         }).populate('participants', 'firstName lastName profileImageUrl role')
     }
 
-    // async getAllChatsByUser(userId: string){
-    //     return await Chat.find({
-    //         participants:{$in:userId},
-    //     }).sort({lastMessageSentAt: -1}).populate('participants', 'firstName lastName profileImageUrl role')
-    // }
-    async getAllChatsByUser(userId: string){
+   
+    async getAllChatsByUser(userId: string):Promise<IChat[] | []>{
         const userIdObject = new mongoose.Types.ObjectId(userId)
         return await Chat.aggregate([
             {
@@ -64,7 +60,7 @@ export class ChatRepository {
             
         ])
     }
-    async save (chatData: any){
+    async save (chatData: any):Promise<any>{
         return await Chat.create(chatData)
     }
     async createChat (chat:IChat):Promise<IChat>{
@@ -79,5 +75,16 @@ export class ChatRepository {
 
     async updateLastSentMessageAt(chatId: string):Promise<void>{
         await Chat.findByIdAndUpdate(chatId, {lastMessageSentAt: new Date()}, {new:true})
+    }
+    
+    async deleteChatUser(chatId: string): Promise<boolean> {
+       const result =  await Chat.findByIdAndDelete(chatId)
+       if(result) {
+        console.log(`Chat with ID ${chatId} deleted successfully.`)
+        return true;
+       }else{
+        console.log(`Failed to delete chat with ID ${chatId}`)
+        return false;
+       }
     }
 }

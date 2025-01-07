@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createChatController, getChatHistoryController, getChatMessagesController, getChatsController, getChatUsersController, markMessageAsReadController, sendMessageController } from "../controllers/student/common/chatController";
+import { createChatController, deleteChatController, getChatHistoryController, getChatMessagesController, getChatsController, getChatUsersController, markMessageAsReadController, sendMessageController } from "../controllers/student/common/chatController";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
 import { upload } from "../../infrastructure/middlewares/multer";
 
@@ -10,6 +10,7 @@ chatRouter.get('/chat/:chatId',isAuthenticated,authorizeRole(['student', 'instru
 
 chatRouter.post('/messages/send',isAuthenticated,authorizeRole(['student', 'instructor']),upload.single('messageImage'), sendMessageController)
 chatRouter.post('/create', isAuthenticated,authorizeRole(['student', 'instructor']), createChatController)
+chatRouter.delete('/delete/:chatId', isAuthenticated,authorizeRole(['student', 'instructor']), deleteChatController)
 
 chatRouter.get('/users', isAuthenticated,authorizeRole(['student', 'instructor']), getChatUsersController)
 chatRouter.get('/chats', isAuthenticated,authorizeRole(['student', 'instructor']),getChatsController)

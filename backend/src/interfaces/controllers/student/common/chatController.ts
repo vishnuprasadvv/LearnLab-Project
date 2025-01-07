@@ -13,6 +13,7 @@ import { IMessages } from "../../../../domain/models/Messages";
 import { uploadChatImage } from "../../../../infrastructure/cloud/cloudinary";
 import { MarkAsReadUseCase } from "../../../../application/use-cases/chat/markAsRead";
 import { io } from "../../../../main/server";
+import { DeleteChatUserUseCase } from "../../../../application/use-cases/student/deleteChat";
 
 const messageRepository = new MessageRepository();
 const chatRepository = new ChatRepository()
@@ -144,4 +145,17 @@ try {
 } catch (error) {
     next(error)
 }
+}
+
+
+export const deleteChatController = async( req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {chatId} = req.params;
+        if(!chatId) throw new CustomError('Chat ID is required', 400);
+        const useCase = new DeleteChatUserUseCase(chatRepository);
+        await useCase.execute(chatId);
+        res.status(200).json({ success: true, message: 'Chat is deleted successfully'})
+    } catch (error) {
+        next(error)
+    }
 }

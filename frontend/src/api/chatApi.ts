@@ -18,6 +18,11 @@ export const createChatApi = async (data:{participants:string[], chatType: strin
     const response = await api.post(`${API_URL}/chat/create`,{...data}, { withCredentials: true});
     return response.data;
 }
+//delete chat
+export const deleteChatUserApi = async (chatId: string ) => {
+    const response = await api.delete(`${API_URL}/chat/delete/${chatId}`, { withCredentials: true});
+    return response.data;
+}
 
 export const getChatMessages = async (chatId:string ) => {
     const response = await api.get(`${API_URL}/chat/messages/${chatId}`, { withCredentials: true});
