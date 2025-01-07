@@ -2,8 +2,6 @@ import { useAppSelector } from "@/app/hooks";
 import { LiaBookReaderSolid } from "react-icons/lia";
 import { RxDashboard } from "react-icons/rx";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { RiMessage2Line } from "react-icons/ri";
-import { IoMdNotificationsOutline } from "react-icons/io";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { RiArrowGoBackLine } from "react-icons/ri";
 import { useState } from "react";
@@ -20,11 +18,6 @@ const InstructorDashboard = () => {
       path: "purchases",
       name: "Purchase Management",
       icon: <ShoppingCart />,
-    },
-    {
-      path: "notifications",
-      name: "Notifications",
-      icon: <IoMdNotificationsOutline />,
     },
   ];
 

@@ -106,7 +106,7 @@ const CompanySalesChart:React.FC = () => {
          <h2 className="text-lg font-semibold text-gray-800 mb-4">
            Sales Revenue Analytics
          </h2>
-       <div className="h-72 rounded-lg items-center justify-center border p-1">
+       <div className=" rounded-lg items-center justify-center border p-1">
    
            {/* Dropdown to select the time frame */}
            <div className="mb-4 place-self-end ">

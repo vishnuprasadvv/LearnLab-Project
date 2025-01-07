@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ChatSidebarSkeleton from "./ChatSidebarSkeleton";
 import { CircleCheck, MoreVertical, PlusCircle, Users } from "lucide-react";
-import { createChatApi, deleteChatUserApi, getChatUsersApi, getUserChatsApi } from "@/api/chatApi";
+import {
+  createChatApi,
+  deleteChatUserApi,
+  getChatUsersApi,
+  getUserChatsApi,
+} from "@/api/chatApi";
 import { User } from "@/types/userTypes";
 import { IChat } from "@/types/chat";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -9,9 +14,25 @@ import { setSelectedChat } from "@/features/chatSlice";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import socket from "@/utils/socket";
-import profileimg from '../../../assets/chat/private-chat-avatar-612x612.jpg'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
+import profileimg from "../../../assets/chat/private-chat-avatar-612x612.jpg";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const ChatSidebar: React.FC = () => {
   const onlineUsers: string[] =
@@ -24,10 +45,10 @@ const ChatSidebar: React.FC = () => {
   const [showPopup, setShowPopup] = useState<boolean>(false); // Popup state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const dispatch = useAppDispatch();
-  const selectedChat = useAppSelector((state) => state.chat.selectedChat)
+  const selectedChat = useAppSelector((state) => state.chat.selectedChat);
 
   useEffect(() => {
-    console.log('chatsidebar')
+    console.log("chatsidebar");
     const fetchChats = async () => {
       try {
         const response = await getUserChatsApi();
@@ -40,55 +61,54 @@ const ChatSidebar: React.FC = () => {
     fetchChats();
 
     //initiailize socket for chat order rearrange when new message came
- 
-    const handleNewMessage = (message:any) => {
+
+    const handleNewMessage = (message: any) => {
       console.log("New message received:", message);
 
       setChats((prevChats) => {
-        return prevChats.map((chat) => {
-          // If the message belongs to the current chat
-          if (chat._id === message.chatId) {
-            if (selectedChat?._id === message.chatId) {
-              // If the chat is selected, no need to increment unread count
-              return chat;
+        return prevChats
+          .map((chat) => {
+            // If the message belongs to the current chat
+            if (chat._id === message.chatId) {
+              if (selectedChat?._id === message.chatId) {
+                // If the chat is selected, no need to increment unread count
+                return chat;
+              }
+              // Increment unread count
+              return { ...chat, unReadCount: (chat.unReadCount || 0) + 1 };
             }
-            // Increment unread count
-            return { ...chat, unReadCount: (chat.unReadCount || 0) + 1 };
-          }
-          // If not the target chat, return as is
-          return chat;
-        }).sort((a, b) => {
-          // Always keep the most recently active chat at the top
-          if (a._id === message.chatId) return -1;
-          if (b._id === message.chatId) return 1;
-          return 0;
-        });
+            // If not the target chat, return as is
+            return chat;
+          })
+          .sort((a, b) => {
+            // Always keep the most recently active chat at the top
+            if (a._id === message.chatId) return -1;
+            if (b._id === message.chatId) return 1;
+            return 0;
+          });
       });
     };
-  
+
     socket.on("newMessage", handleNewMessage);
 
-    socket.on('messagesRead', (data) =>{
+    socket.on("messagesRead", (data) => {
       setChats((prevChat) => {
-        console.log('set unread count', data)
-       const updatedChat =  prevChat.map((p) => {
-          if(data.chatId === selectedChat?._id) {
-            console.log('set unreadcoutnzero')
-            return {...p, unReadCount : 0}
+        console.log("set unread count", data);
+        const updatedChat = prevChat.map((p) => {
+          if (data.chatId === selectedChat?._id) {
+            console.log("set unreadcoutnzero");
+            return { ...p, unReadCount: 0 };
           }
-          return p
-        })
-        return [ ...updatedChat]
-      })
-    })
-    
-    
+          return p;
+        });
+        return [...updatedChat];
+      });
+    });
 
     return () => {
-      socket.off('newMessage')
-      socket.off('messagesRead')
-    }
-    
+      socket.off("newMessage");
+      socket.off("messagesRead");
+    };
   }, [selectedChat, setChats]);
 
   useEffect(() => {
@@ -103,8 +123,6 @@ const ChatSidebar: React.FC = () => {
     };
     fetchUsers();
   }, []);
-
- 
 
   const handleCreateChat = async () => {
     if (!selectedUser) return;
@@ -129,22 +147,22 @@ const ChatSidebar: React.FC = () => {
 
   const handleSelectChat = useCallback((chat: IChat) => {
     dispatch(setSelectedChat(chat));
-  },[])
+  }, []);
 
   //handle delete chat
-  const handleDeleteChat = async(chatId: string) => {
-    if(!chatId){
+  const handleDeleteChat = async (chatId: string) => {
+    if (!chatId) {
       return;
     }
     try {
-      await deleteChatUserApi(chatId)
-      toast.success('Chat deleted successfully')
-      setChats((prev) => prev.filter((chat) => chat._id !== chatId))
-    } catch (error:any) {
-      toast.error('Error while deleting chat')
-      console.error('Error deleting chat', error)
+      await deleteChatUserApi(chatId);
+      toast.success("Chat deleted successfully");
+      setChats((prev) => prev.filter((chat) => chat._id !== chatId));
+    } catch (error: any) {
+      toast.error("Error while deleting chat");
+      console.error("Error deleting chat", error);
     }
-  }
+  };
 
   if (isLoading) return <ChatSidebarSkeleton />;
 
@@ -172,7 +190,7 @@ const ChatSidebar: React.FC = () => {
             );
             return (
               <button
-              disabled ={ selectedChat?._id === chat._id}
+                disabled={selectedChat?._id === chat._id}
                 key={chat._id}
                 onClick={() => handleSelectChat(chat)}
                 className={`w-full md:border border-b-slate-50 hover:bg-slate-200 p-3 flex items-center gap-3 hover:bg-base-300 transition-colors
@@ -184,9 +202,7 @@ const ChatSidebar: React.FC = () => {
               >
                 <div className="relative mx-auto md:mx-0">
                   <img
-                    src={
-                      oppositeUser.profileImageUrl || profileimg 
-                    }
+                    src={oppositeUser.profileImageUrl || profileimg}
                     alt="profile pic"
                     className="size-10 object-cover rounded-full"
                   />
@@ -211,32 +227,69 @@ const ChatSidebar: React.FC = () => {
                     {oppositeUser.firstName + " " + oppositeUser.lastName}
                   </div>
                   <div className="text-xs text-zinc-400">
-                  {onlineUsers.length > 0 &&
-                    onlineUsers.includes(oppositeUser._id) ? 'online' : 'offline' }
-                    </div>
+                    {onlineUsers.length > 0 &&
+                    onlineUsers.includes(oppositeUser._id)
+                      ? "online"
+                      : "offline"}
+                  </div>
                 </div>
-                  {(chat.unReadCount ?? 0) > 0 &&  (
-                    <div className="ml-auto text-xs bg-blue-400 text-white aspect-square w-5 relative flex items-center justify-center rounded-full"><span className="absolute">{chat.unReadCount}</span></div>
-                  )
-                    }
 
-                    <div><DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem className="text-red-500 hover:text-red-500"
-            onClick={() => handleDeleteChat(chat._id!)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu></div>
+
+                <div className="flex flex-col md:flex-row ml-auto items-center">
+                  
+                {(chat.unReadCount ?? 0) > 0 && (
+                  <div className="text-xs bg-blue-400 text-white aspect-square w-5 h-5 relative flex items-center justify-center rounded-full">
+                    <span className="absolute">{chat.unReadCount}</span>
+                  </div>
+                )}
+                {/* Options */}
+                <div className="">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-4 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        className="text-red-500"
+                        onClick={(e) => e.preventDefault()}
+                      >
+                        <AlertDialog>
+                          <AlertDialogTrigger className="w-full text-start">
+                            Delete
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you absolutely sure?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This chat will be
+                                deleted.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="rounded-full">
+                                No
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-blue-600 rounded-full"
+                                onClick={() => handleDeleteChat(chat._id!)}
+                              >
+                                Yes
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
                 
+                </div>
               </button>
             );
           })}

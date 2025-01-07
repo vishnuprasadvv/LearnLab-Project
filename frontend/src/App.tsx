@@ -29,7 +29,6 @@ import ProfileChangePassword from "./components/user/profile/ProfileChangePasswo
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
 import InstructorDashboardComponent from "./pages/instructor/dashboard/Dashboard";
 import InstructorCourses from "./pages/instructor/InstructorCourses";
-import Notifications from "./components/instructor/Notifications";
 import Navbar from "./components/common/Navbar/Navbar";
 import AdminDashboardComponent from "./pages/admin/dashboard/Dashboard";
 import UserManagement from "./components/Admin/UserManagement";
@@ -136,8 +135,6 @@ function App() {
                   element={<InstructorDashboardComponent />}
                 />
                 <Route path="courses" element={<InstructorCourses />} />
-                <Route path="notifications" element={<Notifications />} />
-
                 <Route path="courses/create" element={<CourseMainCreation />} />
                 <Route
                   path="courses/create/:courseId/lecture"

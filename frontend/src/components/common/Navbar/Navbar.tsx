@@ -10,7 +10,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { LuHeart } from "react-icons/lu";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { getWishlistCourseIds } from "@/api/student";
-import { setWishlistIds } from "@/features/wishlistSlice";
+import { clearWishlist, setWishlistIds } from "@/features/wishlistSlice";
 
 const Navbar = () => {
   
@@ -33,6 +33,8 @@ const Navbar = () => {
     }
     if(isAuthenticated){
       getWishlistCount()
+    }else{
+      dispatch(clearWishlist())
     }
   }, [dispatch])
 

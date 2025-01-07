@@ -1,4 +1,4 @@
-import { getAllCoursesUserApi } from "@/api/student";
+import { getAllCoursesUserApi, getTopRatedCoursesApi } from "@/api/student";
 import Course from "@/components/common/Course/Course";
 import CourseSkeleton from "@/components/common/courseSkeleton/CourseSkeleton";
 import { ICourses } from "@/types/course";
@@ -14,7 +14,7 @@ const isLoading = false;
     useEffect(() => {
       const getAllCourses = async () => {
         try {
-          const response = await getAllCoursesUserApi();
+          const response = await getTopRatedCoursesApi(limit);
           console.log(response);
           setCourses(response.data)
           setDisplyedCourses(response.data.slice(0, limit))

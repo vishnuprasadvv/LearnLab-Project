@@ -20,10 +20,13 @@ const wishlistSlice = createSlice({
         },
         removeIdFromWishlist(state, action:PayloadAction<{courseId: string}>){
             state.courseIds = state.courseIds.filter(item => item !== action.payload.courseId)
+        },
+        clearWishlist(state){
+            state.courseIds = []
         }
     }
 })
 
 
-export const {addIdToWishlist, removeIdFromWishlist,setWishlistIds} = wishlistSlice.actions;
+export const {addIdToWishlist, removeIdFromWishlist,setWishlistIds, clearWishlist} = wishlistSlice.actions;
 export default wishlistSlice.reducer;

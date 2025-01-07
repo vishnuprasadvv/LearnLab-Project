@@ -82,6 +82,7 @@ const Login = () => {
 
 
   return (
+    <div className=' min-h-[90vh]'>
     <div className='md:w-1/3 lg:w-1/4 sm:w-1/2 items-center mx-auto pt-10 border rounded-md p-6 mt-10 '>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Login</h1>
       <form onSubmit={formik.handleSubmit}>
@@ -145,6 +146,8 @@ const Login = () => {
         <span>Don't have an account?  </span>
         <Link to={'/signup'} className='pl-2 font-bold text-blue-600'><span >Sign Up</span></Link>
       </div>
+
+    </div>
 
     </div>
   );

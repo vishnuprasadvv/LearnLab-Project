@@ -102,6 +102,7 @@ function ResetPassword() {
 }
 
   return (
+    <div className=' min-h-[90vh]'>
     <form onSubmit={formik.handleSubmit} className='md:w-1/3 lg:w-1/4  sm:w-1/2 items-center mx-auto  border rounded-md p-8 mt-10 '>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Reset Password</h1>
       <p className='text-center'>Please enter the 4-digit OTP sent to your email.</p>
@@ -150,6 +151,7 @@ function ResetPassword() {
       </div>
 
     </form>
+    </div>
   )
 }
 

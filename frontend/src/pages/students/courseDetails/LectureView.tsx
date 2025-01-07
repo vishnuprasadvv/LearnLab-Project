@@ -21,6 +21,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { getVideoUrl } from "@/utils/getVideoUrl";
+import { Progress } from "@/components/ui/progress";
 
 interface ProgressVideo {
   videoId: string;
@@ -199,10 +200,10 @@ const LectureView: React.FC = () => {
     : "";
 
   return (
-    <div className="flex flex-col sm:flex-row h-[90vh] max-w-7xl place-self-center w-full">
+    <div className="flex flex-col sm:flex-row min-h-[90vh] max-w-7xl place-self-center w-full mb-10">
       <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full order-2 sm:order-1">
         <div className="flex flex-col w-full">
-          <div className="flex justify-between items-center bg-blue-500 w-full text-white gap-2 p-2 h-14 max-h-14">
+          <div className="flex justify-between items-center bg-blue-500 w-full text-white gap-2 p-2 h-16 max-h-16">
             <div className="flex items-center gap-2">
               <div
                 className="hover:bg-slate-50 hover:bg-opacity-50 rounded-full p-2 transition-all duration-300"
@@ -218,6 +219,7 @@ const LectureView: React.FC = () => {
                   <span>Your progress : </span>
                   {progress?.progressPercentage?.toFixed(2) || 0} %
                 </h2>
+                <Progress className="bg-white" value={ progress?.progressPercentage ? parseFloat(progress.progressPercentage.toFixed(2)) : 0} />
               </div>
             </div>
             {progress?.progressPercentage == 100 ? (

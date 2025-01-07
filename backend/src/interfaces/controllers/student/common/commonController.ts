@@ -8,6 +8,7 @@ import { GetCourseByIdStudentUseCase } from "../../../../application/use-cases/s
 import { GetAllFilteredCoursesUseCase } from "../../../../application/use-cases/student/getFilteredCourse";
 import { OrderRepository } from "../../../../infrastructure/repositories/orderRepository";
 import { WishlistRepository } from "../../../../infrastructure/repositories/wishlistRepository";
+import { GetTopRatedCoursesLimitedUseCase } from "../../../../application/use-cases/student/getTopRatedCourses";
 
 const courseRepository = new CourseRepositoryClass()
 const categoryRepository = new CategoryRespository()
@@ -80,6 +81,18 @@ export const getCourseController = async(req: Request, res: Response, next: Next
             throw new CustomError('Course not found', 400)
         }
         res.status(200).json({message: 'Course fetched successfully', success : true, data: result?.course, purchaseStatus: result?.purchased, wishlisted: result?.wishlisted})
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getTopRatedCoursesController = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {limit = 8} = req.query;
+        const useCase = new GetTopRatedCoursesLimitedUseCase(courseRepository);
+        const topRatedCourses = await useCase.execute(Number(limit))
+        res.status(200).json({ success: true, data: topRatedCourses, message:`Fetching top rated courses of limit ${limit} success`})
+        
     } catch (error) {
         next(error)
     }

@@ -63,7 +63,7 @@ const ProfileSidebar = () => {
       <div className="flex flex-col gap-2 border p-3 bg-gray-50 bg-opacity-50 w-1/4 h-screen">
       {user?.role === 'instructor' && (<NavLink
           to={"/instructor/dashboard"}
-          className="flex gap-3 items-center justify-center sm:justify-start mb-2 hover:bg-gray-200 text-white font-bold  bg-green-400 rounded-md p-2 py-5 w-full"
+          className="flex gap-3 items-center justify-center sm:justify-start mb-2 text-white font-bold  bg-blue-600 hover:bg-blue-500 rounded-md p-2 py-5 w-full"
         >
           <RxDashboard className="text-2xl" />
           <span className="hidden sm:block">INSTRUCTOR PANEL</span>

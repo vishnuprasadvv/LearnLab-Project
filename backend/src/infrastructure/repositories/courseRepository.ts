@@ -229,7 +229,7 @@ async incrementEnrolledCount(courseId: string, incrementBy = 1): Promise<void> {
   }
 
   async countPublished(): Promise<number> {
-    return await Courses.countDocuments({isPublished:true})
+    return await Courses.countDocuments({isPublished:true, isDeleted: false})
   }
 
   async getBestSellingCourses(limit: number = 10):Promise<ICourses[]> {
@@ -239,6 +239,11 @@ async incrementEnrolledCount(courseId: string, incrementBy = 1): Promise<void> {
       .exec()
   }
 
+  async getTopRatedCoursesUser(limit:number): Promise<ICourses[]>{
+    return await Courses.find({isDeleted: false, isPublished : true},{'lectures.videos': 0})
+      .sort({averageRating : -1})
+      .limit(limit).populate('instructor','firstName lastName profileImageUrl ')
+  }
   
 
 }

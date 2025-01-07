@@ -23,7 +23,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   deleteCourseAdminApi,
   getAllCoursesAdminApi,
@@ -118,9 +117,6 @@ const AdminCourseManagement = () => {
     }
   }, [searchQuery]);
 
-  const handleEditButton = (courseId: string) => {
-    navigate(`/admin/courses/${courseId}/edit`);
-  };
   const handleOpenCourse = (courseId: string) => {
     navigate(`/admin/courses/${courseId}/overview`);
   };
@@ -170,13 +166,6 @@ const AdminCourseManagement = () => {
           {" "}
           Courses
         </h2>
-        <div className="w-max ml-auto mb-2">
-          <Link to={"create"} className=" ml-auto">
-            <Button className="bg-blue-600 rounded-full hover:bg-blue-700">
-              Create course
-            </Button>
-          </Link>
-        </div>
 
         {/* Search bar */}
         <div className="flex lg:flex-row flex-col justify-between gap-2 max-w-full">
@@ -232,7 +221,7 @@ const AdminCourseManagement = () => {
                 >
                   <td
                     scope="row"
-                    className=" lg:px-6 px-1 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className=" lg:px-6 px-1 py-4 font-medium text-gray-900 dark:text-white"
                   >
                     {item.title}
                   </td>
@@ -258,14 +247,6 @@ const AdminCourseManagement = () => {
                         <SlOptionsVertical />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditButton(item._id);
-                          }}
-                        >
-                          Edit
-                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();

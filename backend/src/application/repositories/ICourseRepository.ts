@@ -59,6 +59,7 @@ export interface ICourseRepository{
     getCourseByIdUser(id: string) : Promise<ICourses | null>
     getCourseByIdsUser(ids: string[]) : Promise<ICourses[] | null>
     getAllCoursesUsers () : Promise<ICourses[] | null >
+    getTopRatedCoursesUser(limit:number): Promise<ICourses[]>
     getAllFilteredCoursesUsers (filter:any, sort:any, pagination:any) : Promise<PaginatedResultCourses > 
 
     //admin

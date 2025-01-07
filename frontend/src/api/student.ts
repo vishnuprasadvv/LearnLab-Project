@@ -23,6 +23,11 @@ export const getAllCoursesUserApi = async () => {
     return response.data;
 }
 
+export const getTopRatedCoursesApi = async (limit: number) => {
+    const response = await api.get(`${API_URL}/student/home/top-rated-courses`, {params: { limit: limit}});
+    return response.data;
+}
+
 export const getAllCategoriesApi = async () => {
     try {
     const response = await api.get(`${API_URL}/student/categories`, {withCredentials: true});

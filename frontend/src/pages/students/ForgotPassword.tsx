@@ -64,6 +64,7 @@ function ForgotPassword() {
     
   })
   return (
+    <div className=' min-h-[90vh]'>
     <form onSubmit={formik.handleSubmit} className='md:w-1/3 lg:w-1/4  sm:w-1/2 items-center mx-auto pt-10 border rounded-md p-6 mt-10 '>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Forgot Password ?</h1>
       <h3 className='text-gray-500 text-sm text-center'>No worries, we'll send you reset instructions.</h3>
@@ -92,6 +93,7 @@ function ForgotPassword() {
       </div>
 
     </form>
+    </div>
   );
   
 }
