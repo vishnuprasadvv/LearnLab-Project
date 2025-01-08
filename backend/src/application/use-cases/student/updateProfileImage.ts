@@ -1,6 +1,5 @@
 
 import { deleteFromCloudinary, uploadToCloudinary } from "../../../infrastructure/cloud/cloudinary";
-import { updateUserProfileImage } from "../../../infrastructure/repositories/userRepository";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import { IUserRepository } from "../../repositories/IUserRepository";
 
@@ -8,26 +7,35 @@ interface UpdateProfileImageParams {
     userId: string, 
     fileBuffer : Buffer
 }
-export const updateProfileImage = async ({userId, fileBuffer}: UpdateProfileImageParams, userRepository: IUserRepository) => {
-    if(!fileBuffer) throw new CustomError('No file provided', 400)
 
-       const user = await userRepository.findById(userId);
-       if(!user) {
-        throw new CustomError('User not found', 400);
-       }
+export class UpdateProfileImageUseCase {
+    constructor(private userRepository: IUserRepository) {}
+    async execute({userId, fileBuffer}: UpdateProfileImageParams){
 
-       //delete old profile image from cloudinary
-       if(user.profileImagePublicId){
-        await deleteFromCloudinary(user.profileImagePublicId)
-       }
+        if(!fileBuffer) throw new CustomError('No file provided', 400)
 
-       const uploadedImage = await uploadToCloudinary(fileBuffer);
-       console.log('upload image ', uploadedImage) //
-       //update user profile with new image 
-       user.profileImageUrl = uploadedImage.secure_url;
-       user.profileImagePublicId = uploadedImage.public_id;
+            const user = await this.userRepository.findById(userId);
+            if(!user) {
+             throw new CustomError('User not found', 400);
+            }
+     
+            //delete old profile image from cloudinary
+            if(user.profileImagePublicId){
+             await deleteFromCloudinary(user.profileImagePublicId)
+            }
+     
+            const uploadedImage = await uploadToCloudinary(fileBuffer);
+            console.log('upload image ', uploadedImage) 
+            //update user profile with new image 
+            user.profileImageUrl = uploadedImage.secure_url;
+            user.profileImagePublicId = uploadedImage.public_id;
+     
+            console.log(user)
+            const updatedUser = await this.userRepository.update(user)
 
-       console.log(user)
-
-       return user.save()
+            if(!updatedUser) {
+                throw new CustomError('Failed to update profile image', 400)
+            }
+            return updatedUser;
+    }
 }

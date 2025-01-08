@@ -12,6 +12,38 @@ export class UserRepositoryImpl implements IUserRepository {
         return User.findById(userId)
     }
 
+    async approveUserSignupVerification(email: string):Promise<boolean>{
+        const updatedUser = await User.updateOne({email}, {isVerified: true})
+         // Check if the user was found and updated
+    if (updatedUser.matchedCount > 0 && updatedUser.modifiedCount > 0) {
+        return true;
+    }
+    return false; 
+    }
+
+    async findEmailAlreadyExists (email: string, userid: string) : Promise<boolean> {
+        const findUser = await User.findOne({ email: email, _id: {$ne: userid}})
+        return findUser ? true : false;
+    }
+
+    async updatePassword(userId: string, newPassword: string):Promise<IUser | null> {
+        try {
+            const updatedUser = await User.findByIdAndUpdate(userId, 
+                { password: newPassword},
+                {new : true, runValidators: true}
+            ).select('-password');
+
+            return updatedUser;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async update(user: Partial<IUser>):Promise<IUser | null> {
+        const {_id, ...rest} = user
+        const updated = await User.findByIdAndUpdate(_id, {...rest}, {new: true, runValidators: true}).select('-password')
+        return updated;
+    }
     async save(user:IUser): Promise<IUser> {
         return user.save();
     }

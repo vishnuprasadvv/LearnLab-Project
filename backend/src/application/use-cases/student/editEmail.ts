@@ -1,33 +1,40 @@
-import User from "../../../domain/models/User"
-import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare"
-import { verifyOtpCode } from "../user/verifyOtp"
-  
+import { verifyOtp } from "../../../infrastructure/services/otpService";
+import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
+import { IUserRepository } from "../../repositories/IUserRepository";
 
-export const editProfileEmail = async({userId,email,otp}:{userId:string, email: string, otp: string}) =>{
+interface IEditEmail {
+  userId: string;
+  email: string;
+  otp: string;
+}
+
+export class EditProfileEmailUseCase {
+  constructor(private userRepository: IUserRepository) {}
+  async execute({ userId, email, otp }: IEditEmail) {
     try {
-        const userExist:any = await User.findById(userId).select('-password')
-        if(!userExist){
-            throw new CustomError('User not found, Unauthorized',400)
-        }
+      const userExist = await this.userRepository.findById(userId);
+      if (!userExist) {
+        throw new CustomError("User not found, Unauthorized", 400);
+      }
 
-        const findEmailAlreadyExistsOrNot = await User.findOne({email: email , _id:{$ne:userId} })
+      const findEmailAlreadyExistsOrNot =
+        await this.userRepository.findEmailAlreadyExists(email, userId);
 
-        if(findEmailAlreadyExistsOrNot){
-            throw new CustomError('Given email already exists.',400)
-        }
+      if (findEmailAlreadyExistsOrNot) {
+        throw new CustomError("Given email already exists.", 400);
+      }
 
-        const verifyOtp = await verifyOtpCode(email, otp)
+      const verifiedOtp = await verifyOtp(email, otp);
 
-        if(!verifyOtp){
-            throw new CustomError('Email OTP verification failed', 400)
-        }
+      if (!verifiedOtp) {
+        throw new CustomError("Email OTP verification failed", 400);
+      }
 
-        userExist.email= email;
-        userExist.save();
-
-        return userExist;
-           
+      userExist.email = email;
+      const updatedUser = await this.userRepository.update(userExist);
+      return updatedUser;
     } catch (error) {
-        throw error
+      throw error;
     }
+  }
 }
