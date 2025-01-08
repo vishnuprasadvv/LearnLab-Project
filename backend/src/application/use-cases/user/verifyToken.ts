@@ -1,12 +1,20 @@
 import User from "../../../domain/models/User"
+import { UserRepositoryImpl } from "../../../infrastructure/repositories/userRepositoryImpl"
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare"
 import { verifyAccessToken, verifyRefreshToken } from "../../../utils/jwtHelper"
+
+
+const userRepository = new UserRepositoryImpl()
 
 export const verifyAccessTokenUseCase = async(token : string) => {
 
     try {
         const verifyTokenResponse = verifyAccessToken(token)
-        const findUser = await User.findById(verifyTokenResponse?.id).select('-password')
+        if(!verifyTokenResponse?.id) {
+            console.error('verify token not found')
+            return;
+        }
+        const findUser = await userRepository.findById(verifyTokenResponse.id)
         if(!findUser){
             throw new CustomError('User not found', 400)
         }

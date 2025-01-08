@@ -2,16 +2,21 @@ import Instructor, { InstructorDocument } from "../../../domain/models/Instructo
 import User from "../../../domain/models/User";
 import { comparePassword } from "../../../infrastructure/services/hashService";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
+import { IInstructorRegisterRepository } from "../../repositories/IInstructorRegisterRepository";
+import { IUserRepository } from "../../repositories/IUserRepository";
 
 interface formDataInterface extends InstructorDocument{
     password: string
 }
 
-export const instructorRegister = async(userId : string, formData: formDataInterface) => {
-    console.log(userId)
+export class InstructorRegisterUseCase {
+    constructor(private userRepository: IUserRepository,
+        private instructorReqRepo : IInstructorRegisterRepository
+    ){}
+
+    async execute(userId : string, formData: formDataInterface){
         const {qualifications, experience, expertise, comment, password} = formData;
-        const user:any = await User.findById(userId)
-        //console.log(user)
+        const user:any = await this.userRepository.findByIdWithPassword(userId)
         if(!user){
             throw new CustomError('User not found', 400)
         }
@@ -24,11 +29,12 @@ export const instructorRegister = async(userId : string, formData: formDataInter
             throw new CustomError('You are already an instructor', 400)
         }
         //check user already applied for instructor
-        const findExistInstructorRequest = await Instructor.findOne({instructorId: userId , status: 'pending'}).populate('instructorId')
+        const findExistInstructorRequest = await this.instructorReqRepo.findPendingRequest(userId)
         if(findExistInstructorRequest){
             throw new CustomError('You are already applied for instructor', 400)
         }
-        const instructorDoc = new Instructor({qualifications, experience,expertise, instructorId: userId, comment})
-        return await instructorDoc.save()
-    
+        const instructorDoc = await this.instructorReqRepo.create({qualifications, experience,expertise, instructorId: userId, comment})
+        return instructorDoc;
+    }
 }
+

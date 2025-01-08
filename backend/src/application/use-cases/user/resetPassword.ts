@@ -3,10 +3,12 @@ import { sendEmail } from "../../../infrastructure/services/emailService";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import User from "../../../domain/models/User";
 import { hashPassword } from "../../../infrastructure/services/hashService";
+import { UserRepositoryImpl } from "../../../infrastructure/repositories/userRepositoryImpl";
 
+const userRepo = new UserRepositoryImpl()
 export const sendResetOtp = async(email: string) => {
 
-    const userExist = await User.findOne({email})
+    const userExist = await userRepo.getUserByEmail(email)
     if(!userExist) throw new CustomError('User not found, create account', 400)
 
    const otp = await generateOtp(email)
@@ -39,7 +41,7 @@ export const verifyResendOtp = async (email: string, otp : string) => {
 
 export const resetPassword = async(email : string , password: string ) => {
     
-    const user = await User.findOne({email})
+    const user = await userRepo.getUserByEmail(email)
     if(!user) {
         throw new CustomError('User not found', 400)
     }

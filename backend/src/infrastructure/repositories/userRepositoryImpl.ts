@@ -1,4 +1,4 @@
-import { format } from "path";
+
 import { IUserRepository } from "../../application/repositories/IUserRepository";
 import User, {IUser} from "../../domain/models/User";
 import Courses from "../../domain/models/Courses";
@@ -8,10 +8,25 @@ export class UserRepositoryImpl implements IUserRepository {
         return User.findById(userId).select('-password')
     }
 
-    async save(user: IUser): Promise<IUser> {
+    async findByIdWithPassword(userId: string): Promise<IUser | null> {
+        return User.findById(userId)
+    }
+
+    async save(user:IUser): Promise<IUser> {
         return user.save();
     }
 
+    //signup 
+    async createUser(user:Partial<IUser>) : Promise<IUser> {
+        const newUser = new User(user);
+        return await newUser.save(); 
+        
+    }
+
+    //login
+    async getUserByEmail(email: string): Promise<IUser | null> {
+        return User.findOne({email})
+    }
     async getAllUsersExcluded(userId:string): Promise<IUser[]> {
         return User.find({_id:{$ne: userId}  ,isVerified: true, status : 'active', role:{$ne:'admin'}}).select('-password -googleId -profileImagePublicId')
     }

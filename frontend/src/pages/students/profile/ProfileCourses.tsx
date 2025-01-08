@@ -104,7 +104,7 @@ const ProfileCourses = () => {
               )}
             </div>
             {totalPages > 0 && (
-              <div className="pt-5 mt-auto bg-blue-200">
+              <div className="pt-5 mt-auto">
                 <PaginationComponent
                   totalPages={totalPages}
                   currentPage={currentPage}

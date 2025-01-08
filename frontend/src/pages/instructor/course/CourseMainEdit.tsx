@@ -25,18 +25,18 @@ import { getAllCategoriesAtOnce } from "@/api/adminApi";
 import { Category } from "@/types/categories";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ICourses } from "@/types/course";
-import _ from 'lodash'
+import _ from "lodash";
 
 const CourseMainEdit = () => {
   const [categories, setCategories] = useState<Category[] | null>([]);
   const [loading, setLoading] = useState(false);
-  const [course, setCourse] = useState<ICourses | null>(null)
-  const {courseId} = useParams()
-  const navigate = useNavigate()
-  const [initialFormData, setInitialFormData] = useState({})
+  const [course, setCourse] = useState<ICourses | null>(null);
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+  const [initialFormData, setInitialFormData] = useState({});
 
   //fetch current course data
-  const getCourse = async() => {
+  const getCourse = async () => {
     if (!courseId) {
       throw new Error("Course id not found");
     }
@@ -44,26 +44,24 @@ const CourseMainEdit = () => {
       setLoading(true);
       const response = await getCourseById(courseId);
       setCourse(response.data);
-      console.log(response.data)
-      const resultdata = response.data
-      methods.setValue('title', resultdata.title)
-      methods.setValue('description', resultdata.description)
-      methods.setValue('category', resultdata.category?.name)
-      methods.setValue('price', resultdata.price.toString())
-      methods.setValue('duration', resultdata.duration.toString())
-      methods.setValue('level', resultdata.level)
-      methods.setValue('image', resultdata.imageUrl || null)
-      
-      setInitialFormData(methods.getValues())
+      console.log(response.data);
+      const resultdata = response.data;
+      methods.setValue("title", resultdata.title);
+      methods.setValue("description", resultdata.description);
+      methods.setValue("category", resultdata.category?.name);
+      methods.setValue("price", resultdata.price.toString());
+      methods.setValue("duration", resultdata.duration.toString());
+      methods.setValue("level", resultdata.level);
+      methods.setValue("image", resultdata.imageUrl || null);
+
+      setInitialFormData(methods.getValues());
     } catch (error: any) {
-      toast.error(
-        error.message || "failed to fetch course"
-      );
-      navigate('/instructor/courses')
+      toast.error(error.message || "failed to fetch course");
+      navigate("/instructor/courses");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     const getCategories = async () => {
@@ -74,7 +72,7 @@ const CourseMainEdit = () => {
         console.error("error fetching categories", error);
       }
     };
-    getCourse()
+    getCourse();
     getCategories();
   }, []);
 
@@ -86,12 +84,14 @@ const CourseMainEdit = () => {
     category: z.string().min(1, "Category is required"),
     price: z
       .string()
-      .transform((value) => (value === '' ? NaN : parseFloat(value)))
-    .refine((value) => !isNaN(value), { message: 'Price must be a number' })
-    .refine((value) => value > 0, { message: 'Price must be a positive value' })
-    .refine((value) => !value.toString().startsWith('0'), {
-      message: 'Price cannot start with zero',
-    }),
+      .transform((value) => (value === "" ? NaN : parseFloat(value)))
+      .refine((value) => !isNaN(value), { message: "Price must be a number" })
+      .refine((value) => value > 0, {
+        message: "Price must be a positive value",
+      })
+      .refine((value) => !value.toString().startsWith("0"), {
+        message: "Price cannot start with zero",
+      }),
 
     duration: z
       .string()
@@ -106,29 +106,29 @@ const CourseMainEdit = () => {
       required_error: "Level is required",
     }),
     image: z
-    .union([
-      z.instanceof(File), // If a new image is uploaded
-      z.string(), // If the existing image URL is used
-    ])
-    .refine(
-      (value) => {
-        if (typeof value === "string") return value !== ""; // Existing image must have a URL
-        if (value instanceof File) return value.size > 0; // Uploaded image must be valid
-        return false;
-      },
-      { message: "An image is required." }
-    )
-    .refine(
-      (value) =>
-        typeof value === "string" ||
-        (value instanceof File &&
-          value.size <= 5 * 1024 * 1024 &&
-          ["image/jpeg", "image/png", "image/gif"].includes(value.type)),
-      {
-        message:
-          "Image must be in JPEG, PNG, or GIF format and less than 5MB.",
-      }
-    ),
+      .union([
+        z.instanceof(File), // If a new image is uploaded
+        z.string(), // If the existing image URL is used
+      ])
+      .refine(
+        (value) => {
+          if (typeof value === "string") return value !== ""; // Existing image must have a URL
+          if (value instanceof File) return value.size > 0; // Uploaded image must be valid
+          return false;
+        },
+        { message: "An image is required." }
+      )
+      .refine(
+        (value) =>
+          typeof value === "string" ||
+          (value instanceof File &&
+            value.size <= 5 * 1024 * 1024 &&
+            ["image/jpeg", "image/png", "image/gif"].includes(value.type)),
+        {
+          message:
+            "Image must be in JPEG, PNG, or GIF format and less than 5MB.",
+        }
+      ),
   });
 
   const methods = useForm({
@@ -137,8 +137,8 @@ const CourseMainEdit = () => {
       title: "",
       description: "",
       category: "",
-      price: '',
-      duration: '',
+      price: "",
+      duration: "",
       level: "beginner",
       image: null as File | null,
     },
@@ -151,21 +151,30 @@ const CourseMainEdit = () => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      if(!courseId){
-        console.error('course id not found')
-        return 
-      }
-      const isUnchanged =  _.isEqual({...data, duration: data.duration.toString(), price: data.price.toString()}, initialFormData)
-      if(isUnchanged){
-        console.log('value not changed')
-      }
-      if(isUnchanged){
-        toast('No Changes detected',{icon:'⚠️'})
+      if (!courseId) {
+        console.error("course id not found");
         return;
       }
-      const selectedCategoryData = categories?.find((item)=> item.name === data.category)
-      if(!selectedCategoryData){
-        throw new Error('Selected category not found')
+      const isUnchanged = _.isEqual(
+        {
+          ...data,
+          duration: data.duration.toString(),
+          price: data.price.toString(),
+        },
+        initialFormData
+      );
+      if (isUnchanged) {
+        console.log("value not changed");
+      }
+      if (isUnchanged) {
+        toast("No Changes detected", { icon: "⚠️" });
+        return;
+      }
+      const selectedCategoryData = categories?.find(
+        (item) => item.name === data.category
+      );
+      if (!selectedCategoryData) {
+        throw new Error("Selected category not found");
       }
       const formData = new FormData();
       formData.append("title", data.title);
@@ -180,17 +189,17 @@ const CourseMainEdit = () => {
       }
 
       const response = editCourseApi(formData, courseId);
-      await toast.promise(response,{
-        loading: 'Course is editing, Please wait...',
+      await toast.promise(response, {
+        loading: "Course is editing, Please wait...",
         success: (data: any) => {
-          setCourse(data.data)
-          getCourse()
-          return data.message || 'Course edited successfully'
-        } ,
-        error: (err)=> {
-          return err.message || 'Course edit failed'
-        }
-      })
+          setCourse(data.data);
+          getCourse();
+          return data.message || "Course edited successfully";
+        },
+        error: (err) => {
+          return err.message || "Course edit failed";
+        },
+      });
     } catch (error: any) {
       toast.error(error.message);
       console.error("Edit course error", error);
@@ -201,19 +210,18 @@ const CourseMainEdit = () => {
 
   // Watch image file
   const watchImage =
-  watch("image") instanceof Blob && watch("image")?.type.startsWith("image/")
-    ? watch("image")
-    : null;
+    watch("image") instanceof Blob && watch("image")?.type.startsWith("image/")
+      ? watch("image")
+      : null;
   useEffect(() => {
     if (watchImage) {
       const objectUrl = URL.createObjectURL(watchImage);
-  
+
       return () => {
         URL.revokeObjectURL(objectUrl);
       };
     }
   }, [watchImage]);
-
 
   return (
     <div className="p-6 w-full">
@@ -226,11 +234,11 @@ const CourseMainEdit = () => {
             <h2 className="text-xl font-semibold">Edit your course</h2>
           </div>
         </div>
-          <div>
-            <Link to={'lecture'}>
+        <div>
+          <Link to={"lecture"}>
             <Button>Go to lectures</Button>
-            </Link>
-          </div>
+          </Link>
+        </div>
       </div>
 
       <FormProvider {...methods}>
@@ -287,8 +295,15 @@ const CourseMainEdit = () => {
                       Course category
                     </div>
                     <FormControl className="w-full">
-                      {categories &&  <Combobox options={categories.map((item) => ({label: item.name , value: item.name}))}
-                      {...field} />}
+                      {categories && (
+                        <Combobox
+                          options={categories.map((item) => ({
+                            label: item.name,
+                            value: item.name,
+                          }))}
+                          {...field}
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -316,6 +331,11 @@ const CourseMainEdit = () => {
                   </FormItem>
                 )}
               />
+              <div>
+                <h3 className="text-red-500 font-semibold">
+                  10% fee will be charged.
+                </h3>
+              </div>
             </div>
 
             <div className="space-y-6 ">
@@ -329,12 +349,12 @@ const CourseMainEdit = () => {
                         Course image
                       </div>
                       <FormControl className="w-full">
-                      {course?.imageUrl && !watchImage && (
-                        <div className="flex items-center justify-center bg-slate-200 rounded-md">
-                          <img src={course?.imageUrl} alt="course_image" />
-                        </div>
-                      )}
-                        
+                        {course?.imageUrl && !watchImage && (
+                          <div className="flex items-center justify-center bg-slate-200 rounded-md">
+                            <img src={course?.imageUrl} alt="course_image" />
+                          </div>
+                        )}
+
                         <div className="grid w-full max-w-sm items-center gap-1.5">
                           <Label htmlFor="image">Image</Label>
                           <Input
@@ -432,14 +452,16 @@ const CourseMainEdit = () => {
             </div>
           </div>
           <div className="flex justify-end gap-2 pt-5 ">
-            <Button disabled={loading}
+            <Button
+              disabled={loading}
               className="border border-slate-200 bg-white text-blue-600 rounded-full  hover:bg-slate-100"
               type="button"
               onClick={() => navigate(-1)}
             >
               Cancel
             </Button>
-            <Button disabled={loading}
+            <Button
+              disabled={loading}
               className="bg-blue-600 rounded-full  hover:bg-blue-700"
               type="submit"
             >

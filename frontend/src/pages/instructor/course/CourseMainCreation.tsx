@@ -30,7 +30,7 @@ const CourseMainCreation = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [categories, setCategories] = useState<Category[] | null>([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCategories = async () => {
@@ -53,12 +53,14 @@ const CourseMainCreation = () => {
     category: z.string().min(1, "Category is required"),
     price: z
       .string()
-      .transform((value) => (value === '' ? NaN : parseFloat(value)))
-    .refine((value) => !isNaN(value), { message: 'Price must be a number' })
-    .refine((value) => value > 0, { message: 'Price must be a positive value' })
-    .refine((value) => !value.toString().startsWith('0'), {
-      message: 'Price cannot start with zero',
-    }),
+      .transform((value) => (value === "" ? NaN : parseFloat(value)))
+      .refine((value) => !isNaN(value), { message: "Price must be a number" })
+      .refine((value) => value > 0, {
+        message: "Price must be a positive value",
+      })
+      .refine((value) => !value.toString().startsWith("0"), {
+        message: "Price cannot start with zero",
+      }),
 
     duration: z
       .string()
@@ -90,8 +92,8 @@ const CourseMainCreation = () => {
       title: "",
       description: "",
       category: "",
-      price: '',
-      duration: '',
+      price: "",
+      duration: "",
       level: "beginner",
       image: null as File | null,
     },
@@ -106,9 +108,11 @@ const CourseMainCreation = () => {
     setLoading(true);
 
     try {
-      const selectedCategoryData = categories?.find((item)=> item.name === data.category)
-      if(!selectedCategoryData){
-        throw new Error('Selected category not found')
+      const selectedCategoryData = categories?.find(
+        (item) => item.name === data.category
+      );
+      if (!selectedCategoryData) {
+        throw new Error("Selected category not found");
       }
       const formData = new FormData();
       formData.append("title", data.title);
@@ -123,18 +127,18 @@ const CourseMainCreation = () => {
       }
 
       const response = createCourseApi(formData);
-      await toast.promise(response,{
-        loading: 'Course is creating, Please wait...',
+      await toast.promise(response, {
+        loading: "Course is creating, Please wait...",
         success: (data: any) => {
-          navigate(`/instructor/courses/create/${data.data._id}/lecture`)
-          sessionStorage.setItem('courseTitle', data.data.title)
-          console.log(data)
-          return data.message || 'Course created successfully'
-        } ,
-        error: (err)=> {
-          return err.message || 'Course creation failed'
-        }
-      })
+          navigate(`/instructor/courses/create/${data.data._id}/lecture`);
+          sessionStorage.setItem("courseTitle", data.data.title);
+          console.log(data);
+          return data.message || "Course created successfully";
+        },
+        error: (err) => {
+          return err.message || "Course creation failed";
+        },
+      });
     } catch (error: any) {
       toast.error(error.message);
       console.error("create course error", error);
@@ -213,8 +217,15 @@ const CourseMainCreation = () => {
                       Course category
                     </div>
                     <FormControl className="w-full">
-                      {categories &&  <Combobox options={categories?.map((item) => ({label: item.name , value: item.name}))}
-                      {...field} />}
+                      {categories && (
+                        <Combobox
+                          options={categories?.map((item) => ({
+                            label: item.name,
+                            value: item.name,
+                          }))}
+                          {...field}
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -242,9 +253,11 @@ const CourseMainCreation = () => {
                   </FormItem>
                 )}
               />
-               <div>
-        <h3 className="text-red-500 font-semibold">10% fee will be charged.</h3>
-      </div>
+              <div>
+                <h3 className="text-red-500 font-semibold">
+                  10% fee will be charged.
+                </h3>
+              </div>
             </div>
 
             <div className="space-y-6 ">
@@ -258,7 +271,6 @@ const CourseMainCreation = () => {
                         Course image
                       </div>
                       <FormControl className="w-full">
-                       
                         <div className="grid w-full max-w-sm items-center gap-1.5">
                           <Label htmlFor="image">Image</Label>
                           <Input
@@ -273,7 +285,6 @@ const CourseMainCreation = () => {
                             }}
                           />
                         </div>
-                        
                       </FormControl>
 
                       {watchImage && (
@@ -357,14 +368,16 @@ const CourseMainCreation = () => {
             </div>
           </div>
           <div className="flex justify-end gap-2 pt-5 ">
-            <Button disabled={loading}
+            <Button
+              disabled={loading}
               className="border border-slate-200 bg-white text-blue-600 rounded-full  hover:bg-slate-100"
               type="button"
               onClick={() => navigate(-1)}
             >
               Cancel
             </Button>
-            <Button disabled={loading}
+            <Button
+              disabled={loading}
               className="bg-blue-600 rounded-full  hover:bg-blue-700"
               type="submit"
             >

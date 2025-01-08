@@ -33,7 +33,7 @@ function RegisterInstructor() {
         try {
             const response = await dispatch(registerInstructorThunk({data: values, userId: user._id})).unwrap();
             toast.success(response?.message)
-            navigate('/home')
+            navigate('/')
         } catch (error: any) {
             console.error(error?.message )
             toast.error(error?.message || 'Something went wrong!')

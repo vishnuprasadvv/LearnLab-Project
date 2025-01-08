@@ -210,7 +210,6 @@ const LectureEdit: React.FC = () => {
           }
         }
       );
-      console.log(response);
       toast.dismiss(); //clear the loading toast
       navigate(`/instructor/courses/${courseId}/overview`);
       toast.success(response.message || "Course edited successfully!");

@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { OAuth2Client ,} from "google-auth-library";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwtHelper";
 import User from "../../domain/models/User";
 import axios from "axios";
 import { accessTokenOptions } from "../../infrastructure/config/jwt";
+import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
 
 // const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
 // const client = new OAuth2Client(GOOGLE_CLIENT_ID)
 
+const userRepo = new UserRepositoryImpl()
 
 export const googleLogin = async (req: Request, res: Response , next: NextFunction): Promise<any | void> => {
     console.log('googlelogin')
@@ -30,7 +31,7 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
         return res.status(400).json({ message: "Invalid token" });
       }
          // Check if user exists in the database
-    let user = await User.findOne({ email: payload.email });
+    let user = await userRepo.getUserByEmail(payload.email)
     if (!user) {
       // Create a new user
       user = await User.create({

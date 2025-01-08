@@ -13,6 +13,8 @@ export interface IUser extends Document {
     phone: string,
     googleId : string,
     _id: string,
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const UserSchema : Schema = new Schema({

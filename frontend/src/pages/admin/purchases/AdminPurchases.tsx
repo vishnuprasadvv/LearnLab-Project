@@ -14,7 +14,6 @@ const AdminPurchases = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalCourses, setTotalCourses] = useState("");
     const itemsPerPage = ITEMS_PER_PAGE;
-    const orders =[12,2,3,4,4]
     const [purchases, setPurchases] = useState<IOrder[] | []>([])
     useEffect(() => {
       const fetchOrders = async() => {
@@ -22,6 +21,7 @@ const AdminPurchases = () => {
             const response = await getPurchasesApi()
             console.log(response)
             setPurchases(response.data)
+            setTotalCourses(response.data.length || 0)
         } catch (error) {
           console.error('order fetching error', error)
         }
@@ -39,7 +39,7 @@ const AdminPurchases = () => {
 
         {/* Search bar */}
         <div className="flex lg:flex-row flex-col justify-between gap-2 max-w-full">
-          <div className=" relative lg:w-1/2 w-full flex">
+          {/* <div className=" relative lg:w-1/2 w-full flex">
             <IoSearchOutline className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 place-content-center justify-center text-lg" />
             <Input
               type="text"
@@ -49,7 +49,7 @@ const AdminPurchases = () => {
               className="pl-10 border w-full border-blue-100 place-self-center
               rounded-full h-10 shadow-md shadow-blue-100"
             />
-          </div>
+          </div> */}
           <div className="flex">
             {/* <CourseFilter onFilterChange={handleFilterChange} /> */}
           </div>

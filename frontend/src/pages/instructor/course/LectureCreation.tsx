@@ -98,7 +98,6 @@ const LectureCreation: React.FC = () => {
       toast.error("An upload is already in progress.");
       return;
     }
-    console.log(data);
     setIsUploading(true);
     try {
       if (!courseId) {
@@ -159,7 +158,6 @@ const LectureCreation: React.FC = () => {
           }
         }
       );
-      console.log(response);
       toast.dismiss(); //clear the loading toast
       navigate(`/instructor/courses/${courseId}/overview`);
       toast.success(

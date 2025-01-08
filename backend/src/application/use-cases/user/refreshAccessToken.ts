@@ -1,12 +1,13 @@
 import { verifyRefreshToken } from "../../../utils/jwtHelper";
-import User from "../../../domain/models/User";
 import { generateAccessToken } from "../../../utils/jwtHelper";
+import { UserRepositoryImpl } from "../../../infrastructure/repositories/userRepositoryImpl";
 
+const userRepository = new UserRepositoryImpl();
 export const refreshAccessToken = async(token : string) => {
     const refreshToken  = verifyRefreshToken(token);
     if(!refreshToken) throw new Error('Invalid or expired refresh token')
-            console.log(refreshToken.id)
-        const user : any = await User.findById(refreshToken.id)
+            console.log('refreshtoken id', refreshToken.id)
+        const user : any = await userRepository.findById(refreshToken.id)
         console.log(user)
 
         if(!user) throw new Error('User not found')

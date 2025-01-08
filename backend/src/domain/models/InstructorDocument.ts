@@ -1,7 +1,7 @@
 import mongoose, {Schema, Document, mongo} from "mongoose";
 
 export interface InstructorDocument extends Document{
-    instructorId: mongoose.Schema.Types.ObjectId;
+    instructorId: mongoose.Types.ObjectId | string;
     qualifications : string[];
     experience: number;
     expertise: string[];
