@@ -7,6 +7,7 @@ export interface IUserRepository{
     findEmailAlreadyExists (email: string, userid: string) : Promise<boolean> 
     update(user: Partial<IUser>):Promise<IUser | null>
     approveUserSignupVerification(email: string):Promise<boolean>
+    deleteUser(userId: string):Promise<boolean>
     //login
     getUserByEmail(email: string): Promise<IUser | null>
 
@@ -22,4 +23,8 @@ export interface IUserRepository{
     countByRole():Promise<{student: number, instructor:number, admin: number}>
     getRegistrationsOverTime(timeFrame: string):Promise<{date: string, count: number}[]>
     getTopInstructors(limit:number):Promise<IUser[]>
+
+    //admin
+    getAllUsersAdminWithFilter ( search: string, page: number, limit: number): Promise<{users: IUser[]; total: number}> 
+    updateUserStatusAdmin(userId:string, status: string):Promise<IUser | null>
 }

@@ -32,7 +32,7 @@ import InstructorCourses from "./pages/instructor/InstructorCourses";
 import Navbar from "./components/common/Navbar/Navbar";
 import AdminDashboardComponent from "./pages/admin/dashboard/Dashboard";
 import UserManagement from "./components/Admin/UserManagement";
-import AddUser from "./components/Admin/AddUser";
+import AddUser from "./pages/admin/userManagement/AddUser";
 import EditUser from "./components/Admin/EditUser";
 import InstructorApplication from "./components/Admin/InstructorApplication";
 import InstructorManagement from "./components/Admin/InstructorManagement";

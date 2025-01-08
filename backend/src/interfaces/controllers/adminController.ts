@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { createUser, deleteUser, getAllUsers, getEditUser, postEditUser, toggleUser } from "../../application/use-cases/admin/userManagement";
+import { CreateUserUseCaseAdmin, DeleteUserUseCaseAdmin, EditUserUseCaseAdmin, GetAllUsersUseCaseAdminWithFilter, ToggleUserStatusUseCase } from "../../application/use-cases/admin/userManagement";
+import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
+
+const userRepository = new UserRepositoryImpl()
 
 export const getAllUsersController = async (req: Request, res: Response) => {
         const {search, page = '1', limit = '10' } = req.query;
@@ -10,31 +13,33 @@ export const getAllUsersController = async (req: Request, res: Response) => {
         // Parse page and limit to numbers
         const pageNum = parseInt(page as string, 10);
         const limitNum = parseInt(limit as string, 10);
-        const {users, total} = await getAllUsers(searchQuery, pageNum, limitNum)
+        const useCase = new GetAllUsersUseCaseAdminWithFilter(userRepository)
+        const {users, total} = await useCase.execute({search:searchQuery, page:pageNum, limit:limitNum})
         res.status(200).json({users, total})
     } catch (error) {
         console.log('getuser error', error)
         res.status(400).json({ message: 'Error fetching data' })
     }
-
 }
 
 export const deleteUserController = async (req: Request, res: Response) => {
     const { userId } = req.params;
     try {
-        const deletedUser = await deleteUser(userId)
+        const useCase = new DeleteUserUseCaseAdmin(userRepository)
+        const deletedUser = await useCase.execute(userId)
         res.status(200).json({ success: true, deletedUser })
     } catch (error) {
         res.status(400).json({ message: 'Error deleting user data' })
     }
 }
+
 export const createUserController = async (req: Request, res: Response, next : NextFunction) => {
     const { firstName, lastName, email, phone, password, role, userStatus } = req.body;
     try {
-        const user = await createUser(firstName, lastName, email, phone, password, role,userStatus)
+        const useCase = new CreateUserUseCaseAdmin(userRepository)
+        const user = await useCase.execute(firstName, lastName, email, phone, password, role,userStatus)
         res.status(200).json({ success: true, message: 'User created successfully' })
     } catch (error) {
-        // res.status(400).json({success:false,  message: error })
         next(error)
     }
 }
@@ -43,7 +48,7 @@ export const getEditUserController = async (req: Request, res: Response, next : 
     const {id} = req.params
     
     try {
-        const user = await getEditUser(id)
+        const user = await userRepository.findById(id)
         res.status(200).json({ success: true, user })
     } catch (error) {
         next(error)
@@ -54,10 +59,10 @@ export const postEditUserController = async (req: Request, res: Response, next :
     const {id} = req.params;
     const { firstName, lastName, email, phone, password, role, userStatus } = req.body;
     try {
-        const user = await postEditUser(id, firstName, lastName, email, phone, role, userStatus)
+        const useCase = new EditUserUseCaseAdmin(userRepository)
+        const user = await useCase.execute(id, firstName, lastName, email, phone, role, userStatus)
         res.status(200).json({ success: true, message: 'User edited successfully' })
     } catch (error) {
-        // res.status(400).json({success:false,  message: error })
         next(error)
     }
 }
@@ -66,7 +71,8 @@ export const toggleStatusController = async (req: Request, res: Response, next: 
     const {id} = req.params;
     const {status} = req.body;
     try {
-        const user = await toggleUser(id, status)
+        const useCase = new ToggleUserStatusUseCase(userRepository)
+        const user = await useCase.execute(id, status)
         res.status(200).json({success: true, message: 'User status updated', user})
     } catch (error) {
         next(error)

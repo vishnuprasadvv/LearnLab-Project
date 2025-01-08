@@ -1,121 +1,121 @@
 import User from "../../../domain/models/User";
 import { CustomError } from "../../../interfaces/middlewares/errorMiddleWare";
 import bcrypt from 'bcryptjs'
-import { preprocessQuery } from "../../../utils/preProcessQuery";
+import { IUserRepository } from "../../repositories/IUserRepository";
+import { hashPassword } from "../../../infrastructure/services/hashService";
 
 
-export const getAllUsers = async (search : string, page: number | string, limit: number | string) =>{
-    
-    //set query for fetching search data
-    const searchQuery = preprocessQuery(search)
-    const query ={
-        $and: [
-          { role: { $ne: 'admin' } }, // Exclude users with role 'admin'
-          ...(search
-            ? [
-                {
-                  $or: [
-                    { firstName: { $regex: new RegExp(searchQuery, 'i') } },
-                    { lastName: { $regex: new RegExp(searchQuery, 'i') } },
-                    {
-                      $expr: {
-                        $regexMatch: {
-                          input: { $concat: ['$firstName', '$lastName'] }, // Combine firstName and lastName
-                          regex: searchQuery,
-                          options: 'i',
-                        },
-                      },
-                    },
-                  ],
-                },
-              ]
-            : []),
-        ],
-      };
-
-    const skip = (Number(page) - 1) * Number(limit);
-
-    const users = await User.find(query).sort({createdAt: -1}).skip(skip).limit(Number(limit))
-    const total = await User.countDocuments(query)
-    if(!users) throw new CustomError('failed to get users list', 400)
-    return {users, total}
+interface GetAllUsersParams {
+  search: string;
+  page: number;
+  limit: number;
 }
 
-export const deleteUser = async (userid: string) => {
-    const deletedUser = await User.findByIdAndDelete(userid)
-    return deleteUser
-}
+export class GetAllUsersUseCaseAdminWithFilter {
+  constructor(private userRepository: IUserRepository) {}
 
-export const toggleUser = async (userid: string, status:string) => {
-    if(!['active', 'inactive'].includes(status)){
-        throw new CustomError('Invalid status', 400)
-    }
-
+  async execute ({search, page, limit } : GetAllUsersParams) {
     try {
-        const user = await User.findByIdAndUpdate(userid, {status}, {new : true})
-        if(!user){
-            throw new CustomError('User not found', 400)
-        }
-        return user
+      const {users, total} = await this.userRepository.getAllUsersAdminWithFilter(search, page, limit);
+
+      if(!users) {
+        throw new CustomError('Failed to get users list', 400)
+      }
+      return { users, total}
     } catch (error) {
-        return error
-    } 
+      throw error
+    }
+  }
 }
 
-export const createUser = async (firstName: string, lastName : string, email: string, phone : string, password: string, role: string, userStatus: string) => {
+
+export class DeleteUserUseCaseAdmin{
+  constructor(private userRepository: IUserRepository){}
+  async execute(userId: string) {
+    const deleteStatus = await this.userRepository.deleteUser(userId)
+    if(!deleteStatus) {
+      throw new CustomError('Error removing user', 400)
+    }
+    return deleteStatus;
+  }
+}
+
+
+export class ToggleUserStatusUseCase{
+  constructor(private userRepository:IUserRepository){}
+  async execute(userid: string, status:string){
+    if(!['active', 'inactive'].includes(status)){
+      throw new CustomError('Invalid status', 400)
+  }
+  try {
+    const user = await this.userRepository.updateUserStatusAdmin(userid, status)
+    if(!user){
+        throw new CustomError('User not found', 400)
+    }
+    return user
+} catch (error) {
+    return error
+} 
+  }
+}
+
+export class CreateUserUseCaseAdmin {
+  constructor(private userRepository: IUserRepository){}
+
+  async execute(firstName: string, lastName : string, email: string, phone : string, password: string, role: string, userStatus: string){
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if(!emailRegex.test(email)){
         throw new CustomError('Enter a valid email', 400)
     }
-    //check user already exists or not 
-    const userExist = await  User.findOne({email})
+
+    const userExist = await this.userRepository.getUserByEmail(email)
     if(userExist){
         throw new CustomError('User already exists', 400)
     }
     if(!password){
         throw new CustomError('password required', 400)
     }
-    const hashedPassword = await bcrypt.hash(password,10)
-    const user = new User ({firstName, lastName, email, role, password: hashedPassword, phone, status : userStatus })
-    
-    return user.save();
-}
-
-export const getEditUser = async (userId:string) => {
-    const user = await User.findById(userId);
-    if(!user){
-        throw new CustomError('User not found', 404)
-    }
-
-    return user
-}
-
-
-export const postEditUser = async (id: string,firstName: string, lastName : string, email: string, phone : string, role: string, userStatus: string) => {
-     // Validate required fields
-  if (!id || !firstName || !lastName || !email || !phone || !role || !userStatus) {
-    throw new CustomError('All fields are required', 400);
+    const hashedPassword = await hashPassword(password)
+    const registeredUser = await this.userRepository.createUser({firstName, lastName, email, role, password: hashedPassword, phone, status : userStatus })
+     return registeredUser;
   }
-    const user = await User.findById(id)
-    if(!user){
-        throw new CustomError('User not found with this email, create user', 400 )
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(!emailRegex.test(email)){
-        throw new CustomError('Enter a valid email', 400)
-    }
-    
-   
-    user.firstName = firstName;
-  user.lastName = lastName;
-  user.email = email;
-  user.phone = phone;
-  user.role = role;
-  user.status = userStatus;
-    
-    await user.save();
-    return user
 }
+
+export class EditUserUseCaseAdmin{
+  constructor(private userRepository: IUserRepository){}
+
+  async execute(id: string,firstName: string, lastName : string, email: string, phone : string, role: string, userStatus: string){
+    if (!id || !firstName || !lastName || !email || !phone || !role || !userStatus) {
+      throw new CustomError('All fields are required', 400);
+    }
+      const user = await this.userRepository.findById(id)
+      if(!user){
+          throw new CustomError('User not found, create user', 400 )
+      }
+
+      const checkEmailAlreadyExists = await this.userRepository.findEmailAlreadyExists(email, id)
+
+      if(checkEmailAlreadyExists){
+        throw new CustomError('Email is already in use', 400)
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+      if(!emailRegex.test(email)){
+          throw new CustomError('Enter a valid email', 400)
+      }
+      
+     
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.phone = phone;
+    user.role = role;
+    user.status = userStatus;
+      
+      const updatedUser = await this.userRepository.update(user)
+      return updatedUser;
+  }
+}
+

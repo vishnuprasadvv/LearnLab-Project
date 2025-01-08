@@ -2,6 +2,7 @@
 import { IUserRepository } from "../../application/repositories/IUserRepository";
 import User, {IUser} from "../../domain/models/User";
 import Courses from "../../domain/models/Courses";
+import { preprocessQuery } from "../../utils/preProcessQuery";
 
 export class UserRepositoryImpl implements IUserRepository {
     async findById(userId: string): Promise<IUser | null> {
@@ -152,5 +153,54 @@ export class UserRepositoryImpl implements IUserRepository {
                 }
             }
         ]).exec();
+    }
+
+    //admin 
+    async getAllUsersAdminWithFilter ( search: string, page: number, limit: number): Promise<{users: IUser[]; total: number}> {
+        const searchQuery = preprocessQuery(search)
+        const query = {
+            $and: [
+                { role: { $ne: "admin" } },
+                ...(search
+                  ? [
+                      {
+                        $or: [
+                          { firstName: { $regex: new RegExp(searchQuery, "i") } },
+                          { lastName: { $regex: new RegExp(searchQuery, "i") } },
+                          {
+                            $expr: {
+                              $regexMatch: {
+                                input: { $concat: ["$firstName", "$lastName"] },
+                                regex: searchQuery,
+                                options: "i",
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    ]
+                  : []),
+              ],
+        }
+
+        const skip = (Number(page) -1) * Number(limit);
+
+        const users = await User.find(query)
+            .sort({createdAt: -1})
+            .skip(skip)
+            .limit(Number(limit));
+        const total = await User.countDocuments(query);
+
+        return { users, total }
+    }
+
+    async deleteUser(userId: string):Promise<boolean> {
+        const result = await User.findByIdAndDelete(userId);
+        return result ? true : false;
+    }
+
+    async updateUserStatusAdmin(userId:string, status: string):Promise<IUser | null>{
+        const updated = await User.findByIdAndUpdate(userId, {status}, { new : true})
+       return updated ;
     }
 }
