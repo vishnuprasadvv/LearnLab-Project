@@ -203,4 +203,9 @@ export class UserRepositoryImpl implements IUserRepository {
         const updated = await User.findByIdAndUpdate(userId, {status}, { new : true})
        return updated ;
     }
+
+    async updateUserRoleAdmin(userId:string, role: string):Promise<IUser | null>{
+        const updated = await User.findByIdAndUpdate(userId, {role}, { new : true})
+       return updated ;
+    }
 }

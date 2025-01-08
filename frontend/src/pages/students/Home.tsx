@@ -2,13 +2,14 @@ import { useAppSelector } from "@/app/hooks";
 import { useNavigate } from "react-router-dom";
 import HeroSection from "../../components/common/Hero/HeroSection";
 import Courses from "./Courses";
+import FeaturesSection from "./FeatureSection";
 
 function Home() {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
 
   return (
-    <div>
+    <div >
       {user && user.role === "student" && (
         <div className="bg-blue-200 p-3">
           <span>Want to become an instructor ? </span>
@@ -24,7 +25,9 @@ function Home() {
       <div className="w-full">
         <HeroSection />
       </div>
-      <div className="flex w-full"></div>
+      <div className="flex w-full">
+      <FeaturesSection />
+      </div>
       <div>
         <Courses />
       </div>

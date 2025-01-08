@@ -1,4 +1,5 @@
-import { preprocessQuery } from "../../../utils/test";
+
+import { preprocessQuery } from "../../../utils/preProcessQuery";
 import { ICourseRepository } from "../../repositories/ICourseRepository";
 
 interface CourseParams {

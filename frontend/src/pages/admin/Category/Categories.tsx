@@ -1,8 +1,8 @@
 import { getAllCategories } from "@/api/adminApi";
 import { useEffect, useState } from "react";
 import { MdBlock, MdEdit } from "react-icons/md";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 interface Category {

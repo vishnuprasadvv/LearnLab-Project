@@ -31,12 +31,12 @@ import InstructorDashboardComponent from "./pages/instructor/dashboard/Dashboard
 import InstructorCourses from "./pages/instructor/InstructorCourses";
 import Navbar from "./components/common/Navbar/Navbar";
 import AdminDashboardComponent from "./pages/admin/dashboard/Dashboard";
-import UserManagement from "./components/Admin/UserManagement";
+import UserManagement from "./pages/admin/userManagement/UserManagement";
 import AddUser from "./pages/admin/userManagement/AddUser";
-import EditUser from "./components/Admin/EditUser";
-import InstructorApplication from "./components/Admin/InstructorApplication";
-import InstructorManagement from "./components/Admin/InstructorManagement";
-import Categories from "./components/Admin/Categories";
+import EditUser from "./pages/admin/userManagement/EditUser";
+import InstructorApplication from "./pages/admin/instructorManagement/InstructorApplication";
+import InstructorManagement from "./pages/admin/instructorManagement/InstructorManagement";
+import Categories from "./pages/admin/Category/Categories";
 import CreateCategory from "./pages/admin/Category/CreateCategory";
 import EditCategory from "./pages/admin/Category/EditCategory";
 import CourseMainCreation from "./pages/instructor/course/CourseMainCreation";

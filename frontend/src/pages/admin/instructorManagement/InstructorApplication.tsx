@@ -1,4 +1,4 @@
-import { Button } from '../ui/button'
+import { Button } from '../../../components/ui/button'
 import { useNavigate, useParams } from 'react-router-dom'
 import { IoArrowBack } from 'react-icons/io5'
 import { useEffect, useState } from 'react'

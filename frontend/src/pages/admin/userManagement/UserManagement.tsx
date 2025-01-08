@@ -14,12 +14,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '../ui/alert-dialog'
-import { Button } from '../ui/button';
+} from '../../../components/ui/alert-dialog'
+import { Button } from '../../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { User } from '@/types/userTypes';
-import { Input } from '../ui/input';
+import { Input } from '../../../components/ui/input';
 
 
 const UserManagement = () => {

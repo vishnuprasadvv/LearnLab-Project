@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateUserUseCaseAdmin, DeleteUserUseCaseAdmin, EditUserUseCaseAdmin, GetAllUsersUseCaseAdminWithFilter, ToggleUserStatusUseCase } from "../../application/use-cases/admin/userManagement";
-import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
+import { CreateUserUseCaseAdmin, DeleteUserUseCaseAdmin, EditUserUseCaseAdmin, GetAllUsersUseCaseAdminWithFilter, ToggleUserStatusUseCase } from "../../../../application/use-cases/admin/userManagement";
+import { UserRepositoryImpl } from "../../../../infrastructure/repositories/userRepositoryImpl";
 
 const userRepository = new UserRepositoryImpl()
 

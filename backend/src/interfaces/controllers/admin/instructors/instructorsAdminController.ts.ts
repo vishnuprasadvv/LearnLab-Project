@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express"
 import { actionInstructorApplication, getInstructorApplication, getInstructors } from "../../../../application/use-cases/admin/instructorManagement"
 
 export const getInstructorsHandler = async (req: Request, res: Response, next: NextFunction) => {
-  
     try {
         const instructors = await getInstructors()
 

@@ -27,4 +27,5 @@ export interface IUserRepository{
     //admin
     getAllUsersAdminWithFilter ( search: string, page: number, limit: number): Promise<{users: IUser[]; total: number}> 
     updateUserStatusAdmin(userId:string, status: string):Promise<IUser | null>
+    updateUserRoleAdmin(userId:string, role: string):Promise<IUser | null>
 }

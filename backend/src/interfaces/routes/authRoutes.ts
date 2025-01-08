@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { signUp , loginHandler, sendOtpHandler, verifyOtpHandler, refreshTokenHandler, logoutHandler, validateUser, resetPasswordOtpSendHandler, resetPasswordHandler, googleLoginSuccess, googleLoginFailure, adminLogoutHandler, adminLoginHandler, getUserDataController, validateAdmin, } from "../controllers/authController";
 import passport from "passport";
 import { googleLogin } from "../controllers/googleAuthLibrary";
-import { registerInstuctorHandler } from "../controllers/instructorController";
+import { registerInstuctorHandler } from "../controllers/instructor/instructorController";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
 import { changePasswordHandler, editProfileEmailController, editProfileHandler } from "../controllers/studentController";
 
