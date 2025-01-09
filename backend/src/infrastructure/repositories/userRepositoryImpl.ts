@@ -2,7 +2,7 @@
 import { IUserRepository } from "../../application/repositories/IUserRepository";
 import User, {IUser} from "../../domain/models/User";
 import Courses from "../../domain/models/Courses";
-import { preprocessQuery } from "../../utils/preProcessQuery";
+import { preprocessQuery } from "../../utils/preprocessQuery";
 
 export class UserRepositoryImpl implements IUserRepository {
     async findById(userId: string): Promise<IUser | null> {
@@ -58,25 +58,25 @@ export class UserRepositoryImpl implements IUserRepository {
 
     //login
     async getUserByEmail(email: string): Promise<IUser | null> {
-        return User.findOne({email})
+        return await User.findOne({email})
     }
     async getAllUsersExcluded(userId:string): Promise<IUser[]> {
-        return User.find({_id:{$ne: userId}  ,isVerified: true, status : 'active', role:{$ne:'admin'}}).select('-password -googleId -profileImagePublicId')
+        return await User.find({_id:{$ne: userId}  ,isVerified: true, status : 'active', role:{$ne:'admin'}}).select('-password -googleId -profileImagePublicId')
     }
     async getAllUsers():Promise<IUser[]> {
-        return User.find()
+        return await User.find()
     }
 
     async getAllInstructorsListForUser(userId: string): Promise<IUser[]> {
-        return User.find({_id:{$ne: userId}  ,isVerified: true, status : 'active', role:{$eq:'instructor'}}).select('-password -googleId -profileImagePublicId')
+        return await User.find({_id:{$ne: userId}  ,isVerified: true, status : 'active', role:{$eq:'instructor'}}).select('-password -googleId -profileImagePublicId')
     }
 
     async countAll(): Promise<number> {
-        return User.countDocuments();
+        return await User.countDocuments();
     }
 
     async countByStatus(status: string): Promise<number> {
-        return User.countDocuments({status})
+        return await User.countDocuments({status})
     }
 
     async countByRole(): Promise<{ student: number; instructor: number; admin: number; }> {
@@ -190,7 +190,6 @@ export class UserRepositoryImpl implements IUserRepository {
             .skip(skip)
             .limit(Number(limit));
         const total = await User.countDocuments(query);
-
         return { users, total }
     }
 

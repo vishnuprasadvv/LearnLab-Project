@@ -64,7 +64,7 @@ export class OrderRepository implements IOrderRepository{
 
     //admin dashboard
     async countAll(): Promise<number> {
-        return OrderModel.countDocuments();
+        return await OrderModel.countDocuments();
     }
 
     async calculateTotalRevenue(): Promise<number> {
@@ -72,21 +72,21 @@ export class OrderRepository implements IOrderRepository{
             { $group: { _id: null , total: { $sum : '$totalAmount'}}}
         ])
 
-        return result[0].total || 0;
+        return result.length > 0 ? result[0].total : 0;
     }
 
     async calculateAdminRevenue() : Promise<number> {
         const result = await OrderModel.aggregate([
             {$group: {_id: null, total: { $sum: { $multiply: ['$totalAmount', 0.1]}}}} //  10 % of total amount
         ])
-        return result[0].total || 0;
+        return result.length > 0 ? result[0].total : 0;
     }
 
     async calculateInstructorRevenue() : Promise<number> {
         const result = await OrderModel.aggregate([
             {$group: {_id: null, total: { $sum: { $multiply: ['$totalAmount', 0.9]}}}} //  90 % of total amount
         ])
-        return result[0].total || 0;
+         return result.length > 0 ? result[0].total : 0;
     }
 
     async getTotalRevenueByDay(): Promise<{ date: string, revenue: number, orderCount : number}[]> {

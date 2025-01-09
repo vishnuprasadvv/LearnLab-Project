@@ -72,7 +72,7 @@ const InstructorApplication = () => {
   }
   return (
 
-    <div className='md:w-1/2 sm:w-1/2 items-center mx-auto border rounded-md p-6 mt-10 bg-blue-50 bg-opacity-50'>
+    <div className='sm:w-2/3 items-center mx-auto border rounded-md p-6 mt-10 bg-blue-50 bg-opacity-50'>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Application Request</h1>
       <div className='flex flex-col gap-3'>
         <div className='flex flex-col'>

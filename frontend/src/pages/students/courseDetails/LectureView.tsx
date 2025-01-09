@@ -302,24 +302,27 @@ const LectureView: React.FC = () => {
                     onOpenChange={() => toggleLecture(lecture._id)}
                   >
                     <CollapsibleTrigger
-                      className={`w-full flex gap-2 items-center justify-between border border-b-gray-300 dark:border-b-slate-700 h-12 px-2 cursor-pointer ${
+                      className={`w-full flex gap-2 items-center justify-between border border-b-gray-300 dark:border-b-slate-700 min-h-12 max-h-16 py-2 px-2 cursor-pointer ${
                         lecture._id === selectedVideo?.lectureId
                           ? "text-blue-600 bg-blue-100"
                           : "bg-slate-200 dark:bg-slate-700"
                       }`}
                     >
-                      <div className="flex gap-2 items-center">
+                      <div className=" gap-2 items-center flex">
+                        <div className="w-max">
                         {userCoursePurchaseStatus ? (
-                          <IoLogoYoutube />
+                          <IoLogoYoutube size={16} />
                         ) : lecture.isFree ? (
-                          <IoLogoYoutube />
+                          <IoLogoYoutube size={16} />
                         ) : (
                           <Lock size={16} />
                         )}
+                        </div>
+                        
 
-                        <h2 className="font-semibold">{lecture.title}</h2>
+                        <h2 className="font-medium max-w-52 text-start">{lecture.title}</h2>
                       </div>
-                      <ChevronDown
+                      <ChevronDown size={16}
                         className={`transition-transform duration-200 ${
                           openLecture === lecture._id
                             ? "rotate-180"

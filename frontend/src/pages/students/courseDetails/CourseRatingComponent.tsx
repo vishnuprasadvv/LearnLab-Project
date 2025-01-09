@@ -221,58 +221,70 @@ const CourseRatingComponent: React.FC<{
           </div>
         )}
 
-        {/* Display ratings section */}
-        <div className="flex  flex-col">
-          {courseRatings.sort((a,b) => {
-            if(a.userId._id === user?._id) return -1;
-            if(b.userId._id === user?._id) return 1;
-            return 0;
-          })
-          .map((rating, index) => (
-            <div key={index} className="flex flex-col mb-4 ">
-              <div className="flex justify-between px-2">
-                <div className="flex gap-3">
-                  <img
-                    className="rounded-full h-max"
-                    src={rating.userId.profileImageUrl || profileimg}
-                    alt="profilepic"
-                    width={50}
-                    height={50}
-                  />
-                  <div>
-                    <h3 className="pt-2 font-light text-xs">{`${rating.userId.firstName} ${rating.userId.lastName}`}</h3>
-                    <Rating
-                      size="small"
-                      value={rating.rating || 0}
-                      precision={0.5}
-                      readOnly
-                    />
-                  </div>
-                </div>
-                {user && user._id === rating.userId._id && (
-                  <div className="flex gap-2">
-                    <div
-                      className="flex items-center justify-center text-slate-800 dark:text-white hover:text-blue-500 duration-300 transition-colors"
-                    >
-                      <SquarePen size={20} onClick={() => handleEdit(rating)}/>
-                    </div>
-                    <div
-                      className="flex items-center justify-center text-slate-800 dark:text-white hover:text-red-500 duration-300 transition-colors"
-                    >
-                      <Trash2 size={20}  onClick={() => rating._id && handleDelete(rating._id)} />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <p className="ml-16">{rating.review || ""}</p>
-              <p className="text-xs text-gray-500 place-self-end">
-                {new Date(rating.updatedAt).toDateString()}{" "}
-                {new Date(rating.updatedAt).toLocaleTimeString()}
-              </p>
-              <Separator className="bg-slate-300 mt-2" />
+{/* Display ratings section */}
+{
+  courseRatings.length > 0 ? (
+
+    <div className="flex  flex-col">
+
+    {courseRatings.sort((a,b) => {
+      if(a.userId._id === user?._id) return -1;
+      if(b.userId._id === user?._id) return 1;
+      return 0;
+    })
+    .map((rating, index) => (
+      <div key={index} className="flex flex-col mb-4 ">
+        <div className="flex justify-between px-2">
+          <div className="flex gap-3">
+            <img
+              className="rounded-full h-max"
+              src={rating.userId.profileImageUrl || profileimg}
+              alt="profilepic"
+              width={50}
+              height={50}
+            />
+            <div>
+              <h3 className="pt-2 font-light text-xs">{`${rating.userId.firstName} ${rating.userId.lastName}`}</h3>
+              <Rating
+                size="small"
+                value={rating.rating || 0}
+                precision={0.5}
+                readOnly
+              />
             </div>
-          ))}
+          </div>
+          {user && user._id === rating.userId._id && (
+            <div className="flex gap-2">
+              <div
+                className="flex items-center justify-center text-slate-800 dark:text-white hover:text-blue-500 duration-300 transition-colors"
+              >
+                <SquarePen size={20} onClick={() => handleEdit(rating)}/>
+              </div>
+              <div
+                className="flex items-center justify-center text-slate-800 dark:text-white hover:text-red-500 duration-300 transition-colors"
+              >
+                <Trash2 size={20}  onClick={() => rating._id && handleDelete(rating._id)} />
+              </div>
+            </div>
+          )}
         </div>
+        <p className="ml-16">{rating.review || ""}</p>
+        <p className="text-xs text-gray-500 place-self-end">
+          {new Date(rating.updatedAt).toDateString()}{" "}
+          {new Date(rating.updatedAt).toLocaleTimeString()}
+        </p>
+        <Separator className="bg-slate-300 mt-2" />
+      </div>
+    ))}
+  </div>
+
+  ) : (
+    <div>
+      <h1 className="text-xl text-gray-500 dark:text-gray-400 text-center font-bold">No Ratings</h1>
+    </div>
+  )
+}
+        
       </div>
     </div>
   );

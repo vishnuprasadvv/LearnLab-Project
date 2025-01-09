@@ -21,7 +21,19 @@ const TopSellingCourses: React.FC = () => {
         getTopCourses()
       }, [])
 
+
+if(bestCourses.length == 0){
   return (
+    <div className="text-center">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        Best Selling Courses
+      </h2>
+      <h1 className="text-xl font-bold text-gray-500 dark:text-gray-400">No Data Found</h1>
+    </div>
+  )
+}
+  return (
+
     <div className="w-full max-w-4xl mx-auto p-4">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">
         Best Selling Courses

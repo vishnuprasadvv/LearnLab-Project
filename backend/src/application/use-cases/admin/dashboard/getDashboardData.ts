@@ -28,8 +28,6 @@ export class GetDashboardDataUseCase {
         const totalRevenue = await this.orderRepository.calculateTotalRevenue();
         const adminRevenue = await this.orderRepository.calculateAdminRevenue();
         const dailyRevenue = await this.orderRepository.getTotalRevenueByDay();
-
-      
         return {
             totalUsers,
             activeUsers,

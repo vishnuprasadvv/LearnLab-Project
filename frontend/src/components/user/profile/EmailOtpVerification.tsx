@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { authSuccess, sendOtp, updateEmailUserProfile } from "@/features/authSlice";
 import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 interface EmailVerificationProps {
     setPopUp: (value:boolean) => void
@@ -53,7 +52,6 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
 
       try {
         const response = await dispatch(updateEmailUserProfile({email : email ,otp:otpValue})).unwrap()
-        console.log('reapons form email otp',response)
         toast.success(response.message || 'Email verification success')
         if(response.user){
           dispatch(authSuccess({user: response.user}))
@@ -65,7 +63,6 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
         toast.error(error?.message || 'OTP verification failed')
         console.error('error',error)
       }
-
     } else {
       setMessage("Please enter a valid 4-digit OTP.");
       toast.error("Please enter a valid 4-digit OTP.");

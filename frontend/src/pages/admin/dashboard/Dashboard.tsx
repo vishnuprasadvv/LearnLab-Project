@@ -43,34 +43,34 @@ const Dashboard = () => {
               <div className="bg-blue-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-blue-600">Total Students</p>
                 <h3 className="text-2xl font-bold text-blue-800">
-                  {data?.usersByRole.student}
+                  {data?.usersByRole.student || 0}
                 </h3>
               </div>
               {/* <!-- Card 2 --> */}
               <div className="bg-green-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-green-600">Total Instructors</p>
                 <h3 className="text-2xl font-bold text-green-800">
-                  {data?.usersByRole.instructor}
+                  {data?.usersByRole.instructor ||0}
                 </h3>
               </div>
               {/* <!-- Card 3 --> */}
               <div className="bg-purple-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-purple-600">Courses Published</p>
                 <h3 className="text-2xl font-bold text-purple-800">
-                  {data?.publishedCourses}
+                  {data?.publishedCourses || 0}
                 </h3>
               </div>
               {/* <!-- Card 4 --> */}
               <div className="bg-yellow-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-yellow-600">Total Revenue</p>
                 <h3 className="text-2xl font-bold text-yellow-800">
-                  ₹{data?.totalRevenue}
+                  ₹{data?.totalRevenue ||0}
                 </h3>
               </div>
               <div className="bg-pink-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-pink-600">Total Orders</p>
                 <h3 className="text-2xl font-bold text-pink-800">
-                  {data?.totalOrders}
+                  {data?.totalOrders ||0 }
                 </h3>
               </div>
               <div className="bg-sky-100 p-4 rounded-lg text-center">
@@ -88,7 +88,7 @@ const Dashboard = () => {
               <div className="bg-emerald-100 p-4 rounded-lg text-center">
                 <p className="text-sm text-emerald-600">Company Revenue</p>
                 <h3 className="text-2xl font-bold text-emerald-800">
-                  ₹{data?.adminRevenue}
+                  ₹{data?.adminRevenue || 0 }
                 </h3>
               </div>
             </div>
@@ -112,11 +112,11 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           {/* <!-- Graph Section --> */}
   
-          <div className="bg-white shadow-sm rounded-lg p-6">
           {data?.publishedCourses && (
+          <div className="bg-white shadow-sm rounded-lg p-6">
                 <SalesGraph revenueByMonth={data?.dailyRevenue} />
-              )}
           </div>
+              )}
           <div className="bg-white shadow-sm rounded-lg p-6">
          <UserRegistrationChart />
           </div>
