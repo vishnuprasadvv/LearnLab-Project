@@ -5,8 +5,6 @@ import axios from "axios";
 import { accessTokenOptions } from "../../infrastructure/config/jwt";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
 
-// const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
-// const client = new OAuth2Client(GOOGLE_CLIENT_ID)
 
 const userRepo = new UserRepositoryImpl()
 
