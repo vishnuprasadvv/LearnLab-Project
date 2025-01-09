@@ -89,7 +89,7 @@ const Login = () => {
         <div className='pb-3 pt-5' >
           <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} 
           onBlur={formik.handleBlur} onChange={formik.handleChange} 
-          className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-slate-500'}`}
+          className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
             />
 
           {formik.touched.email && formik.errors.email ? (
@@ -101,7 +101,7 @@ const Login = () => {
           <div className='flex'>
             <Input type={isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='Password'
              value={formik.values.password} onBlur={formik.handleBlur} onChange={formik.handleChange}
-             className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-slate-500'}`}
+             className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
                />
             <button type='button' onClick={togglePasswordVisibility}
               style={{

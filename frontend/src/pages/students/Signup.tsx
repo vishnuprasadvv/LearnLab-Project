@@ -130,7 +130,7 @@ const Signup = () => {
                 value={formik.values.firstName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.firstName && formik.errors.firstName ? 'border-red-500' : 'border-slate-500'}`}
+                className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.firstName && formik.errors.firstName ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
               />
               {formik.touched.firstName && formik.errors.firstName && (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -147,7 +147,7 @@ const Signup = () => {
                 value={formik.values.lastName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.lastName && formik.errors.lastName ? 'border-red-500' : 'border-slate-500'}`}
+                className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.lastName && formik.errors.lastName ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
               />
               {formik.touched.lastName && formik.errors.lastName ? (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -165,7 +165,7 @@ const Signup = () => {
                 value={formik.values.email}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-slate-500'}`}
+                className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
               />
               {formik.touched.email && formik.errors.email ? (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -183,7 +183,7 @@ const Signup = () => {
                 value={formik.values.phone}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.phone && formik.errors.phone ? 'border-red-500' : 'border-slate-500'}`}
+                className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.phone && formik.errors.phone ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
               />
               {formik.touched.phone && formik.errors.phone ? (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -201,7 +201,7 @@ const Signup = () => {
                   value={formik.values.password}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-slate-500'}`}
+                  className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
                 />
                 <button
                   type="button"
@@ -238,7 +238,7 @@ const Signup = () => {
                   value={formik.values.confirmPassword}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-500' : 'border-slate-500'}`}
+                  className={`w-full dark:bg-slate-700 p-2 mb-1 border ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-500' : 'border-slate-300 dark:border-slate-600'}`}
                 />
 
                 <button
