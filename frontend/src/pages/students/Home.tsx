@@ -9,9 +9,9 @@ function Home() {
   const { user } = useAppSelector((state) => state.auth);
 
   return (
-    <div >
+    <div>
       {user && user.role === "student" && (
-        <div className="bg-blue-200 p-3">
+        <div className="bg-blue-200 dark:bg-blue-800 p-3">
           <span>Want to become an instructor ? </span>
           <button
             onClick={() => navigate("/instructor/register")}

@@ -81,7 +81,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
-        {/* <Navbar /> */}
+
         <Layout>
           <Toaster />
 

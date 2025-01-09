@@ -115,7 +115,7 @@ const Signup = () => {
 
   return (
     <div className=" min-h-[90vh]">
-      <div className="md:w-1/3 lg:w-1/4 sm:w-1/2 items-center mx-auto border rounded-md p-6 mt-10">
+      <div className="md:w-1/3 lg:w-1/4 sm:w-1/2 items-center mx-auto border rounded-md p-6 mt-10 dark:bg-slate-800">
         <h1 className="text-2xl font-bold text-blue-600 text-center p-4 ">
           Sign Up
         </h1>
@@ -130,16 +130,7 @@ const Signup = () => {
                 value={formik.values.firstName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className="w-full"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  marginBottom: "5px",
-                  border:
-                    formik.touched.firstName && formik.errors.firstName
-                      ? "1px solid red"
-                      : "1px solid #ccc",
-                }}
+                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.firstName && formik.errors.firstName ? 'border-red-500' : 'border-slate-500'}`}
               />
               {formik.touched.firstName && formik.errors.firstName && (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -156,16 +147,7 @@ const Signup = () => {
                 value={formik.values.lastName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className="w-full"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  marginBottom: "5px",
-                  border:
-                    formik.touched.lastName && formik.errors.lastName
-                      ? "1px solid red"
-                      : "1px solid #ccc",
-                }}
+                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.lastName && formik.errors.lastName ? 'border-red-500' : 'border-slate-500'}`}
               />
               {formik.touched.lastName && formik.errors.lastName ? (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -183,16 +165,7 @@ const Signup = () => {
                 value={formik.values.email}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className="w-full"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  marginBottom: "5px",
-                  border:
-                    formik.touched.email && formik.errors.email
-                      ? "1px solid red"
-                      : "1px solid #ccc",
-                }}
+                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-slate-500'}`}
               />
               {formik.touched.email && formik.errors.email ? (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -210,16 +183,7 @@ const Signup = () => {
                 value={formik.values.phone}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                className="w-full"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  marginBottom: "5px",
-                  border:
-                    formik.touched.phone && formik.errors.phone
-                      ? "1px solid red"
-                      : "1px solid #ccc",
-                }}
+                className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.phone && formik.errors.phone ? 'border-red-500' : 'border-slate-500'}`}
               />
               {formik.touched.phone && formik.errors.phone ? (
                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -237,16 +201,7 @@ const Signup = () => {
                   value={formik.values.password}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  className="w-full"
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    marginBottom: "5px",
-                    border:
-                      formik.touched.password && formik.errors.password
-                        ? "1px solid red"
-                        : "1px solid #ccc",
-                  }}
+                  className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-slate-500'}`}
                 />
                 <button
                   type="button"
@@ -283,17 +238,7 @@ const Signup = () => {
                   value={formik.values.confirmPassword}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  className="w-full"
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    marginBottom: "5px",
-                    border:
-                      formik.touched.confirmPassword &&
-                      formik.errors.confirmPassword
-                        ? "1px solid red"
-                        : "1px solid #ccc",
-                  }}
+                  className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-500' : 'border-slate-500'}`}
                 />
 
                 <button
@@ -326,7 +271,7 @@ const Signup = () => {
 
           <div className="flex justify-center pt-5">
             <Button
-              className="bg-blue-600 rounded-full w-full hover:bg-blue-700"
+              className="bg-blue-600 dark:text-white dark:bg-blue-700 dark:hover:bg-blue-600 rounded-full w-full hover:bg-blue-700"
               type="submit"
               disabled={loading}
             >

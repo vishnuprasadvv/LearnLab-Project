@@ -4,7 +4,7 @@ import passport from "passport";
 import { googleLogin } from "../controllers/googleAuthLibrary";
 import { registerInstuctorHandler } from "../controllers/instructor/instructorController";
 import { authorizeRole, isAuthenticated } from "../middlewares/authMiddleware";
-import { changePasswordHandler, editProfileEmailController, editProfileHandler } from "../controllers/studentController";
+import { changePasswordHandler, editProfileEmailController, editProfileHandler } from "../controllers/student/profile/profileController";
 
 
 

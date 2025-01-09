@@ -244,7 +244,7 @@ const LectureEdit: React.FC = () => {
         </div>
         <div className="mt-3 ml-5">
           <span className="italic">Course title : </span>
-          <span className="text-lg italic font-semibold text-slate-800">
+          <span className="text-lg italic font-semibold text-slate-800 dark:text-gray-100">
             {course?.title || "Course title"}
           </span>
         </div>
@@ -254,9 +254,9 @@ const LectureEdit: React.FC = () => {
             {lectureFields.map((lecture, lectureIndex) => (
               <div
                 key={lecture.id}
-                className="space-y-4 border rounded-lg p-5 bg-slate-100 text-slate-800 mt-2"
+                className="space-y-4 border rounded-lg p-5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-gray-100 mt-2"
               >
-                <h2 className="text-lg font-bold text-slate-800 italic">
+                <h2 className="text-lg font-bold text-slate-800 dark:text-gray-100 italic">
                   Lecture {lectureIndex + 1}
                 </h2>
                 <div className="sm:grid grid-cols-2 gap-3">
@@ -270,7 +270,7 @@ const LectureEdit: React.FC = () => {
                           <FormControl>
                             <Input
                               placeholder="Lecture Title"
-                              className="bg-white"
+                              className="bg-white dark:bg-slate-700"
                               {...field}
                             />
                           </FormControl>
@@ -290,7 +290,7 @@ const LectureEdit: React.FC = () => {
                             <Input
                               placeholder="Lecture order"
                               type="number"
-                              className="bg-white"
+                              className="bg-white dark:bg-slate-700"
                               {...field}
                               onChange={(e) =>
                                 field.onChange(Number(e.target.value))
@@ -312,7 +312,7 @@ const LectureEdit: React.FC = () => {
                         <FormLabel>Lecture description</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="bg-white"
+                            className="bg-white dark:bg-slate-700"
                             placeholder="e.g. 'This lecture includes'..."
                             {...field}
                           />
@@ -342,21 +342,21 @@ const LectureEdit: React.FC = () => {
                   />
                 </div>
 
-                <div className="bg-slate-300 p-3 rounded-xl my-3">
+                <div className="bg-slate-300 dark:bg-slate-700 p-3 rounded-xl my-3">
                   <Controller
                     name={`lectures.${lectureIndex}.videos`}
                     control={control}
                     defaultValue={[]}
                     render={({ field }) => (
                       <div>
-                        <h3 className="font-bold text-slate-600 pb-3 text-lg underline-offset-4 underline">
+                        <h3 className="font-bold text-slate-600 dark:text-gray-100 pb-3 text-lg underline-offset-4 underline">
                           Videos
                         </h3>
                         {field.value.map((video, videoIndex) => (
                           <div
                             key={videoIndex}
                             style={{ marginBottom: "1rem" }}
-                            className="p-3 space-y-3 bg-slate-200 rounded-xl"
+                            className="p-3 space-y-3 bg-slate-200 dark:bg-slate-600 rounded-xl"
                           >
                             <div>
                               <FormField
@@ -367,7 +367,7 @@ const LectureEdit: React.FC = () => {
                                     <FormLabel>Video Title</FormLabel>
                                     <FormControl>
                                       <Input
-                                        className="bg-white"
+                                        className="bg-white dark:bg-slate-700"
                                         placeholder="Video Title"
                                         {...titleField}
                                         value={video.title}
@@ -401,7 +401,7 @@ const LectureEdit: React.FC = () => {
                                       </FormLabel>
                                       <FormControl>
                                         <Input
-                                          className="bg-white"
+                                          className="bg-white dark:bg-slate-700"
                                           type="number"
                                           placeholder="Video Duration"
                                           {...durationField}
@@ -440,7 +440,7 @@ const LectureEdit: React.FC = () => {
                                       <FormControl>
                                         <Input
                                           type="number"
-                                          className="bg-white"
+                                          className="bg-white dark:bg-slate-700"
                                           placeholder="Video Order"
                                           {...orderField}
                                           value={video.order}
@@ -486,8 +486,8 @@ const LectureEdit: React.FC = () => {
                                         {/* Show existing video URL if available */}
                                         {video.file &&
                                         typeof video.file === "string" ? (
-                                          <div className="bg-gray-100 p-2 rounded-md">
-                                            <div className="text-sm text-gray-700">
+                                          <div className="bg-gray-100 dark:bg-slate-800  p-2 rounded-md">
+                                            <div className="text-sm text-gray-700 dark:text-gray-100">
                                               <h3 className="pb-1">
                                                 Current Video:
                                               </h3>
@@ -495,7 +495,7 @@ const LectureEdit: React.FC = () => {
                                                 <source src={video.file} />
                                               </video>
                                             </div>
-                                            <p className="text-xs text-gray-500 mt-2 uppercase">
+                                            <p className="text-xs text-gray-500 dark:text-gray-100 mt-2 uppercase">
                                               (Don't choose any video file to
                                               retain the current video)
                                             </p>
@@ -506,7 +506,7 @@ const LectureEdit: React.FC = () => {
                                         {videoPreviews[
                                           `${lectureIndex}-${videoIndex}`
                                         ] && (
-                                          <div className="bg-gray-100 p-2 rounded-md">
+                                          <div className="bg-gray-100 dark:bg-slate-800 p-2 rounded-md">
                                             <h2 className="pb-1">
                                               Newly chosen video:
                                             </h2>
@@ -532,7 +532,7 @@ const LectureEdit: React.FC = () => {
 
                                         {/* File input to upload a new video */}
                                         <Input
-                                          className="bg-white"
+                                          className="bg-white dark:bg-slate-700"
                                           type="file"
                                           accept="video/*"
                                           onChange={(e) => {
@@ -618,7 +618,7 @@ const LectureEdit: React.FC = () => {
 
                         <Button
                           size={"sm"}
-                          className="bg-blue-600 hover:bg-blue-500"
+                          className="bg-blue-600 hover:bg-blue-500 dark:text-white"
                           type="button"
                           onClick={() =>
                             field.onChange([
@@ -656,7 +656,7 @@ const LectureEdit: React.FC = () => {
               variant={"outline"}
               type="button"
               onClick={handleAddLecture}
-              className="mt-2"
+              className="mt-2 dark:border-blue-400"
             >
               <Plus />
               Add Lecture

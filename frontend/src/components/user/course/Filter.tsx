@@ -73,11 +73,11 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
 
   return (
     <div className="w-full sm:w-[20%]">
-      <div className="flex items-center justify-between">
-        <h1 className="font-semibold text-lg md:text-xl">Filter Options</h1>
+      <div className="flex flex-col items-center justify-between">
+        <h1 className="font-semibold text-lg md:text-xl mb-2">Filter Options</h1>
 
         <Select onValueChange={handleSortChange}>
-          <SelectTrigger>
+          <SelectTrigger className="dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 hover:bg-gray-50">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
@@ -97,7 +97,7 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
           </SelectContent>
         </Select>
       </div>
-      <Separator className="my-4" />
+      <Separator className="my-4 dark:bg-slate-700" />
       <div>
         <h1 className="font-semibold mb-2">Category</h1>
         {loading ? (
@@ -122,11 +122,11 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
           ))
         )}
       </div>
-      <Separator className="my-4" />
+      <Separator className="my-4 dark:bg-slate-700" />
       <div>
         <h1 className="font-semibold mb-2">Difficulty</h1>
         <Select onValueChange={handleLevelChange}>
-          <SelectTrigger>
+          <SelectTrigger className="dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 hover:bg-gray-50">
             <SelectValue placeholder="Select Level" /> 
           </SelectTrigger>
           <SelectContent>
@@ -139,11 +139,11 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
           </SelectContent>
         </Select>
       </div>
-      <Separator className="my-4" />
+      <Separator className="my-4 dark:bg-slate-700" />
       <div>
         <h1 className="font-semibold mb-2">Rating</h1>
         <Select onValueChange={(value) => handleRatingChange(Number(value))}>
-          <SelectTrigger>
+          <SelectTrigger className="dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 hover:bg-gray-50">
             <SelectValue placeholder="Select Rating" />
           </SelectTrigger>
           <SelectContent>

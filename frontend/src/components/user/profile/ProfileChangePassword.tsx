@@ -147,7 +147,7 @@ const ProfileChangePassword = () => {
                 </div>
                 <div className="flex justify-center gap-2 pt-5 ">
                   <AlertDialog>
-                    <AlertDialogTrigger className={`${!formik.isValid || !formik.dirty ? 'bg-blue-300' : 'bg-blue-500'}   text-white p-2 font-semibold rounded-lg py-2`} disabled={!formik.isValid || !formik.dirty}>
+                    <AlertDialogTrigger className={`${!formik.isValid || !formik.dirty ? 'bg-blue-300' : 'bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600'}   text-white p-2 font-semibold rounded-lg py-2`} disabled={!formik.isValid || !formik.dirty}>
                         Change Password
                     </AlertDialogTrigger>
                     <AlertDialogContent>

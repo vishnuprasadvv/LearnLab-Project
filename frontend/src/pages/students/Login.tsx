@@ -83,18 +83,14 @@ const Login = () => {
 
   return (
     <div className=' min-h-[90vh]'>
-    <div className='md:w-1/3 lg:w-1/4 sm:w-1/2 items-center mx-auto pt-10 border rounded-md p-6 mt-10 '>
+    <div className='md:w-1/3 lg:w-1/4 sm:w-1/2 items-center mx-auto pt-10 border rounded-md p-6 mt-10 dark:bg-slate-800'>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Login</h1>
       <form onSubmit={formik.handleSubmit}>
         <div className='pb-3 pt-5' >
           <Input type="email" id='email' name='email' placeholder='Email' value={formik.values.email} 
-          onBlur={formik.handleBlur} onChange={formik.handleChange} className='w-full'
-            style={{
-              width: '100%',
-              padding: '8px',
-              marginBottom: '5px',
-              border: formik.touched.email && formik.errors.email ? '1px solid red' : '1px solid #ccc',
-            }} />
+          onBlur={formik.handleBlur} onChange={formik.handleChange} 
+          className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.email && formik.errors.email ? 'border-red-500' : 'border-slate-500'}`}
+            />
 
           {formik.touched.email && formik.errors.email ? (
             <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.email}</div>
@@ -105,12 +101,8 @@ const Login = () => {
           <div className='flex'>
             <Input type={isPasswordVisible ? "text" : "password"} id='password' name='password' placeholder='Password'
              value={formik.values.password} onBlur={formik.handleBlur} onChange={formik.handleChange}
-              style={{
-                width: '100%',
-                padding: '8px',
-                marginBottom: '5px',
-                border: formik.touched.password && formik.errors.password ? '1px solid red' : '1px solid #ccc',
-              }} />
+             className={`w-full dark:bg-slate-800 p-2 mb-1 border ${formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-slate-500'}`}
+               />
             <button type='button' onClick={togglePasswordVisibility}
               style={{
                 position: 'relative',
@@ -132,7 +124,7 @@ const Login = () => {
           </Link>
         </div>
         <div className='flex justify-center pt-5'>
-          <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700' type="submit" disabled={loading}>Login</Button>
+          <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700 dark:text-white dark:bg-blue-700 dark:hover:bg-blue-600' type="submit" disabled={loading}>Login</Button>
         </div>
       </form>
 

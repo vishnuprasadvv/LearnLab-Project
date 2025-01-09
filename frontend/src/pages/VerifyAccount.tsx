@@ -88,7 +88,8 @@ const OTPVerification = () => {
   }
 
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}  className='sm:w-1/2 md:w-1/3 lg:w-1/4 items-center mx-auto pt-10 border rounded-md p-6 mt-10'>
+    <div className=' min-h-[90vh]'>
+    <div style={{ padding: "2rem", textAlign: "center" }}  className='sm:w-1/2 md:w-1/3 lg:w-1/4 items-center mx-auto pt-10 border rounded-md p-6 mt-10 dark:bg-slate-800'>
 
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Verify Your Account</h1>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }} className="pt-5">
@@ -101,24 +102,18 @@ const OTPVerification = () => {
             onKeyDown={(e) => handleKeyDown(index, e)}
             maxLength={1}
             ref={(el) => (inputRefs.current[index] = el)}
-            style={{
-              width: "50px",
-              height: "50px",
-              textAlign: "center",
-              fontSize: "1.5rem",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
+            className="dark:bg-slate-800 w-[50px] h-[50px] text-2xl text-center border rounded-md border-gray-300 dark:border-slate-600"
           />
         ))}
       </div>
      
       <div className='flex justify-center pt-5'>
-        <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700' onClick={handleVerify} >Verify</Button>
+        <Button className='dark:text-white dark:bg-blue-700 dark:hover:bg-blue-600 bg-blue-600 rounded-full w-full hover:bg-blue-700' onClick={handleVerify} >Verify</Button>
       </div>
       <div className='flex justify-center pt-5'>
         <Button variant="link"  onClick={handleResendOtp} >Resend OTP</Button>
       </div>
+    </div>
     </div>
   );
 };

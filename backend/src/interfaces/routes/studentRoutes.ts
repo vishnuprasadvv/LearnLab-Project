@@ -1,9 +1,8 @@
 import express, { Router } from "express";
 import { isAuthenticated, authorizeRole } from "../middlewares/authMiddleware";
-import { studentHome, updateProfileImageController } from "../controllers/studentController";
+import { studentHome, updateProfileImageController } from "../controllers/student/profile/profileController";
 import { upload } from "../../infrastructure/middlewares/multer";
 import { getAllCoursesController, getCategoriesController, getCourseController, getFilteredCourses, getTopRatedCoursesController } from "../controllers/student/common/commonController";
-import { handleWebhook } from "../controllers/student/order/stripeWebhookController";
 import { createOrderController } from "../controllers/student/order/orderController";
 import { getUserCoursesController } from "../controllers/student/profile/userCoursesController";
 import { completeVideoController, getUserProgressController, markAsCompletedController, markAsIncompletedController } from "../controllers/student/course/progressController";

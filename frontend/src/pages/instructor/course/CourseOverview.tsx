@@ -104,7 +104,7 @@ const CourseOverview = () => {
           <div className="space-x-2">
             {course && !course.isPublished ? (
               <AlertDialog>
-                <AlertDialogTrigger className="bg-blue-600 rounded-full hover:bg-blue-500 font-medium p-2 px-4 text-white"> 
+                <AlertDialogTrigger className="bg-blue-600 rounded-full hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 font-medium p-2 px-4 text-white"> 
                   Publish
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -161,7 +161,7 @@ const CourseOverview = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <div className="flex flex-row gap-5 text-slate-800 bg-slate-100 p-3 rounded-lg">
+          <div className="flex flex-row gap-5 text-slate-800 bg-slate-100 dark:text-gray-100 dark:bg-slate-800 p-3 rounded-lg">
             <div className="flex gap-2 flex-col sm:flex-row w-full">
               <div className="sm:w-2/3 xl:w-3/4 space-y-3">
                 <div className="flex justify-between items-center">
@@ -209,7 +209,7 @@ const CourseOverview = () => {
                 </div>
                 <div className="font-bold ">Price ₹{course?.price}</div>
                 <div className="space-x-1 place-self-end flex">
-                  <Button size="icon" onClick={() => handleEditCourse()}>
+                  <Button size="icon" onClick={() => handleEditCourse()} className="dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700">
                     <PiNotePencil />
                   </Button>
                   <AlertDialog>
@@ -258,14 +258,14 @@ const CourseOverview = () => {
               <h1 className="text-xl text-slate-800 font-bold">No Lectures available</h1>
             </div>
           ) : (
-            <div className="mt-4 text-slate-800">
+            <div className="mt-4 text-slate-800 dark:text-gray-100">
               <h2 className="font-bold text-xl mb-2">Course content</h2>
-              <div className="bg-slate-100 p-2 rounded-lg">
+              <div className="bg-slate-100 dark:text-gray-100 dark:bg-slate-800 p-2 rounded-lg">
                 <ol className=" space-y-2">
                   {course?.lectures
                     ?.sort((a, b) => a.order - b.order)
                     .map((lecture) => (
-                      <div className="bg-white p-2 pl-5 rounded-lg" key={lecture._id}>
+                      <div className="bg-white dark:bg-slate-700 p-2 pl-5 rounded-lg" key={lecture._id}>
                         <li className="list-decimal space-y-3">
                           <div className="flex justify-between">
                             <h4 className="font-semibold text-lg">
@@ -308,7 +308,7 @@ const CourseOverview = () => {
                               {lecture.videos.map((video, index) => (
                                 <div
                                   key={index}
-                                  className="flex flex-col w-max p-2 rounded-lg gap-1 bg-slate-100 justify-between"
+                                  className="flex flex-col w-max p-2 rounded-lg gap-1 bg-slate-100 dark:bg-slate-800 justify-between"
                                 >
                                   <div className="flex flex-col">
                                     <span className="">

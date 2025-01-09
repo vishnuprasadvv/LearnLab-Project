@@ -200,10 +200,10 @@ const LectureView: React.FC = () => {
     : "";
 
   return (
-    <div className="flex flex-col sm:flex-row min-h-[90vh] max-w-7xl place-self-center w-full mb-10">
-      <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full order-2 sm:order-1">
+    <div className="flex flex-col sm:flex-row min-h-[90vh] max-w-7xl place-self-center w-full ">
+      <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full order-2 sm:order-1 pb-10">
         <div className="flex flex-col w-full">
-          <div className="flex justify-between items-center bg-blue-500 w-full text-white gap-2 p-2 h-16 max-h-16">
+          <div className="flex justify-between items-center bg-blue-500 dark:bg-blue-700 w-full text-white gap-2 p-2 h-16 max-h-16">
             <div className="flex items-center gap-2">
               <div
                 className="hover:bg-slate-50 hover:bg-opacity-50 rounded-full p-2 transition-all duration-300"
@@ -224,14 +224,14 @@ const LectureView: React.FC = () => {
             </div>
             {progress?.progressPercentage == 100 ? (
               <Button
-                className="bg-white hover:bg-slate-100 hover:scale-105 transition-all duration-300 text-blue-500"
+                className="bg-white  dark:bg-slate-800 dark:hover:bg-slate-700 hover:bg-slate-100 hover:scale-105 transition-all duration-300 text-blue-500 dark:text-gray-100"
                 onClick={() => handleMarkAsIncompleted()}
               >
                 Mark as incomplete
               </Button>
             ) : (
               <Button
-                className="bg-white hover:bg-slate-100 hover:scale-105 transition-all duration-300 text-blue-500"
+                className="bg-white dark:bg-slate-800 dark:hover:bg-slate-700 hover:bg-slate-100 hover:scale-105 transition-all duration-300 text-blue-500 dark:text-gray-100"
                 onClick={() => handleMarkAsCompleted()}
               >
                 Mark as complete
@@ -277,7 +277,7 @@ const LectureView: React.FC = () => {
                 About lesson
               </h1>
               <div className="flex flex-col">
-                <h3 className="font-bold text-slate-800">
+                <h3 className="font-bold text-slate-800 dark:text-gray-300">
                   {selectedVideo?.lectureTitle}
                 </h3>
                 <p className="italic">{selectedVideo?.lectureDescription}</p>
@@ -286,8 +286,8 @@ const LectureView: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col order-1 sm:order-2 w-full sm:w-1/3 lg:w-1/4 bg-slate-100 border border-l-slate-300">
-        <h1 className="text-lg font-medium bg-white py-3 pl-1 ">
+      <div className="flex flex-col order-1 sm:order-2 w-full sm:w-1/3 lg:w-1/4 bg-slate-100 dark:bg-slate-800 border border-l-slate-300 dark:border-l-slate-700">
+        <h1 className="text-lg font-medium bg-white dark:bg-slate-900 py-3 pl-1 ">
           Table of contents
         </h1>
         <div className="flex">
@@ -302,10 +302,10 @@ const LectureView: React.FC = () => {
                     onOpenChange={() => toggleLecture(lecture._id)}
                   >
                     <CollapsibleTrigger
-                      className={`w-full flex gap-2 items-center justify-between border border-b-gray-300 h-12 px-2 cursor-pointer ${
+                      className={`w-full flex gap-2 items-center justify-between border border-b-gray-300 dark:border-b-slate-700 h-12 px-2 cursor-pointer ${
                         lecture._id === selectedVideo?.lectureId
                           ? "text-blue-600 bg-blue-100"
-                          : "bg-slate-200"
+                          : "bg-slate-200 dark:bg-slate-700"
                       }`}
                     >
                       <div className="flex gap-2 items-center">
@@ -339,8 +339,8 @@ const LectureView: React.FC = () => {
                             key={video._id}
                             className={`flex gap-2 items-center p-2 pl-6 cursor-pointer w-full ${
                               selectedVideo?.video._id === video._id
-                                ? "bg-blue-600 border shadow-md text-white hover:bg-blue-500"
-                                : "bg-white hover:bg-slate-100"
+                                ? "bg-blue-600 border dark:bg-blue-700 dark:hover:bg-blue-600 shadow-md text-white hover:bg-blue-500"
+                                : "bg-white dark:bg-slate-600 hover:bg-slate-100 dark:hover:bg-slate-500"
                             }`}
                             onClick={() =>
                               setSelectedVideo({

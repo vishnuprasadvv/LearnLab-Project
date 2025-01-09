@@ -138,27 +138,27 @@ const InstructorCourses = () => {
           {/* Search bar */}
           <div className="w-max ml-auto mb-2">
             <Link to={"create"} className=" ml-auto">
-              <Button className="bg-blue-600 rounded-full hover:bg-blue-700">
+              <Button className="bg-blue-600 rounded-full hover:bg-blue-700 dark:text-gray-100">
                 Create course
               </Button>
             </Link>
           </div>
           <div className=" relative sm:w-1/2 w-full">
-            <IoSearchOutline className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 place-content-center justify-center text-lg" />
+            <IoSearchOutline className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-gray-300 place-content-center justify-center text-lg" />
             <Input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search courses"
-              className="pl-10 border w-full border-blue-100 place-self-center
-              rounded-full h-10 shadow-md shadow-blue-100"
+              className="pl-10 border w-full border-blue-100 dark:border-slate-700 place-self-center
+              rounded-full h-10 shadow-md shadow-blue-100 dark:shadow-slate-800"
             />
           </div>
           {paginatedData?.length ? (
-            <div className=" bg-blue-100 mt-2 overflow-auto">
+            <div className=" bg-blue-100 dark:bg-blue-400 mt-2 overflow-auto">
               <table className="text-sm text-left w-full rtl:text-right text-gray-500 dark:text-gray-400 overflow-x-scroll">
-                <thead className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr className="bg-blue-200">
+                <thead className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-100">
+                  <tr className="bg-blue-200 dark:bg-blue-700 ">
                     <th scope="col" className="lg:px-6 px-1 py-4">
                       Title
                     </th>
@@ -185,8 +185,8 @@ const InstructorCourses = () => {
                     <tr
                       onClick={() => handleOpenCourse(item._id)}
                       key={item._id}
-                      className="odd:bg-white  odd:dark:bg-gray-900 hover:bg-gray-100 even:bg-gray-50
-       even:dark:bg-gray-800 border-b dark:border-gray-700 "
+                      className="odd:bg-white  odd:dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-slate-700 even:bg-gray-50
+       even:dark:bg-gray-800 border-b dark:border-gray-700 dark:text-gray-300"
                     >
                       <td
                         scope="row"

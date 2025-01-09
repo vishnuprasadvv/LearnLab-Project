@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaginationComponent from "@/components/common/Pagination/Pagination";
 import { COURSES_PER_PAGE } from "@/config/paginationConifig";
 import BreadCrumb from "@/components/common/BreadCrumb/BreadCrumb";
+import { Separator } from "@/components/ui/separator";
 
 interface Filters {
   categories: string[];
@@ -112,11 +113,11 @@ const CoursesPage = () => {
       <div className="my-6">
         <form
           onSubmit={handleSearch}
-          className="flex items-center  dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6"
+          className="flex items-center rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6"
         >
           <Input
             type="text"
-            className="focus-visible:ring-0 bg-white rounded-r-none rounded-l-full text-gray-900 dark:gray-800"
+            className="focus-visible:ring-0 bg-white dark:bg-slate-600 rounded-r-none rounded-l-full text-gray-900 dark:text-gray-200"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -136,6 +137,8 @@ const CoursesPage = () => {
 
         {/* Filter page  */}
         <Filter onFilterChange={handleFilterChange} />
+
+        <Separator orientation="vertical" className="h-auto dark:bg-slate-700" />
         <div className=" flex flex-col w-full">
         
         <div className="flex-1">
@@ -170,7 +173,7 @@ export default CoursesPage;
 
 const CourseNotFound = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-32 dark:bg-gray-900 p-6">
+    <div className="flex flex-col items-center justify-center min-h-32 p-6">
       <AlertCircle className="text-red-500 h-16 w-16 mb-4" />
       <h1 className="font-bold text-2xl md:text-4xl text-gray-800 dark:text-gray-200 mb-2">
         Course Not Found
@@ -178,7 +181,7 @@ const CourseNotFound = () => {
       <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
         Sorry, we couldn't find the course you're looking for.
       </p>
-      <Link to="/courses" className="italic">
+      <Link to='/courses' className="italic">
         <Button variant="link">Browse All Courses</Button>
       </Link>
     </div>

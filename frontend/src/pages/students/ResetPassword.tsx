@@ -103,7 +103,7 @@ function ResetPassword() {
 
   return (
     <div className=' min-h-[90vh]'>
-    <form onSubmit={formik.handleSubmit} className='md:w-1/3 lg:w-1/4  sm:w-1/2 items-center mx-auto  border rounded-md p-8 mt-10 '>
+    <form onSubmit={formik.handleSubmit} className='md:w-1/3 lg:w-1/4  sm:w-1/2 items-center mx-auto  border rounded-md p-8 mt-10 dark:bg-slate-800'>
       <h1 className='text-2xl font-bold text-blue-600 text-center p-4 '>Reset Password</h1>
       <p className='text-center'>Please enter the 4-digit OTP sent to your email.</p>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }} className="pt-5">
@@ -116,14 +116,7 @@ function ResetPassword() {
             onKeyDown={(e) => handleKeyDown(index, e)}
             maxLength={1}
             ref={(el) => (inputRefs.current[index] = el)}
-            style={{
-              width: "50px",
-              height: "50px",
-              textAlign: "center",
-              fontSize: "1.5rem",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
+            className="dark:bg-slate-700 w-[50px] h-[50px] text-2xl text-center border rounded-md border-gray-300 dark:border-slate-600"
           />
         ))}
       </div>
@@ -141,10 +134,10 @@ function ResetPassword() {
       </div>
 
       <div className='flex justify-center pt-5'>
-        <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700' type='submit'  >Reset Password</Button>
+        <Button className='bg-blue-600 rounded-full w-full hover:bg-blue-700 dark:text-white dark:bg-blue-700 dark:hover:bg-blue-600' type='submit'  >Reset Password</Button>
       </div>
       <div className='flex justify-center pt-5'>
-        <button onClick={handleBackToLoginButton} className='pl-2 text-gray-500 flex items-center'>
+        <button onClick={handleBackToLoginButton} className='pl-2 dark:text-gray-400 dark:hover:text-gray-300 text-gray-500 flex items-center'>
           <IoArrowBack className='size-6 self-center pr-2' />
           <span >Back to login</span>
         </button>

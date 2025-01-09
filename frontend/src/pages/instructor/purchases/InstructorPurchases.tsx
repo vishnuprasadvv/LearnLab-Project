@@ -63,7 +63,7 @@ const InstructorPurchases = () => {
 <div className=" bg-blue-100 overflow-auto mt-2">
           <table className="text-sm text-left w-full rtl:text-right text-gray-500 dark:text-gray-400 overflow-x-scroll">
             <thead className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr className="bg-blue-200">
+              <tr className="bg-blue-200 dark:bg-blue-600 dark:text-gray-100">
                 <th scope="col" className="lg:px-6 px-1 py-4">
                   Title
                 </th>
@@ -92,7 +92,7 @@ const InstructorPurchases = () => {
                 <tr
                   key={order._id}
                   className="odd:bg-white  odd:dark:bg-gray-900 hover:bg-gray-100 even:bg-gray-50
-             even:dark:bg-gray-800 border-b dark:border-gray-700"
+             even:dark:bg-gray-800 border-b dark:border-gray-700 dark:hover:bg-slate-700"
                 >
                   <td
                     scope="row"

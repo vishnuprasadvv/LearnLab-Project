@@ -1,9 +1,7 @@
-import { getDashboardDataApi } from "@/api/adminApi";
+
 import { getDashboardMetricsApi } from "@/api/instructorApi";
-import { IDashboardStatistics } from "@/types/adminDashboard";
 import { IInstructorDashboardMetrics } from "@/types/instructor";
 import { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
 import SalesChartInstructor from "./SalesChart";
 
 const Dashboard = () => {
@@ -29,15 +27,15 @@ const Dashboard = () => {
 
     {/* Metrics Section */}
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <div className="bg-white shadow p-4 rounded">
+      <div className="bg-white dark:bg-slate-800  shadow p-4 rounded">
         <h3 className="text-lg font-semibold">Total Students</h3>
         <p className="text-2xl font-bold">{data?.totalStudents || 'NA'}</p>
       </div>
-      <div className="bg-white shadow p-4 rounded">
+      <div className="bg-white dark:bg-slate-800 shadow p-4 rounded">
         <h3 className="text-lg font-semibold">Courses</h3>
         <p className="text-2xl font-bold">{data?.totalCourses || 'NA'}</p>
       </div>
-      <div className="bg-white shadow p-4 rounded">
+      <div className="bg-white dark:bg-slate-800 shadow p-4 rounded">
         <h3 className="text-lg font-semibold">Earnings</h3>
         <p className="text-2xl font-bold">₹ {data?.totalEarnings || 0}</p>
       </div>
@@ -46,7 +44,7 @@ const Dashboard = () => {
      {/* Graph Section */}
      <div className="mt-6">
             <h2 className="text-xl font-semibold mb-4">Earnings Overview</h2>
-            <div className="bg-white shadow p-4 rounded">
+            <div className="bg-white dark:bg-slate-800 shadow p-4 rounded">
              <SalesChartInstructor/>
             </div>
           </div>

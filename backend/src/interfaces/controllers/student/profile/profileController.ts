@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { ChangePasswordProfileUseCase } from "../../application/use-cases/student/changePassword";
-import { CustomError } from "../middlewares/errorMiddleWare";
-import { EditProfileUseCase } from "../../application/use-cases/student/editProfile";
-import { UpdateProfileImageUseCase } from "../../application/use-cases/student/updateProfileImage";
-import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
-import { EditProfileEmailUseCase } from "../../application/use-cases/student/editEmail";
+import { UserRepositoryImpl } from "../../../../infrastructure/repositories/userRepositoryImpl";
+import { CustomError } from "../../../middlewares/errorMiddleWare";
+import { ChangePasswordProfileUseCase } from "../../../../application/use-cases/student/changePassword";
+import { EditProfileUseCase } from "../../../../application/use-cases/student/editProfile";
+import { EditProfileEmailUseCase } from "../../../../application/use-cases/student/editEmail";
+import { UpdateProfileImageUseCase } from "../../../../application/use-cases/student/updateProfileImage";
 
 
 const userRepository = new UserRepositoryImpl()

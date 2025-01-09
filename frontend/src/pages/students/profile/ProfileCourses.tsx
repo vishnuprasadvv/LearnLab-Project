@@ -67,7 +67,7 @@ const ProfileCourses = () => {
                       ))
                     : limitedOrders.map((order, index) => (
                         <div
-                          className="hover:bg-blue-50 p-1 rounded-md bg-slate-50 shadow-md"
+                          className="hover:bg-blue-50 p-1 rounded-md bg-slate-50 dark:bg-slate-800 dark:hover-bg-slate-700 shadow-md"
                           key={index}
                         >
                           <h3 className="font-semibold">

@@ -60,10 +60,10 @@ const ProfileSidebar = () => {
 
   return (
     <div className="flex bg-slate min-h-screen">
-      <div className="flex flex-col gap-2 border p-3 bg-gray-50 bg-opacity-50 w-1/4 h-screen">
+      <div className="flex flex-col gap-2 border p-3 bg-gray-50 dark:bg-slate-700 bg-opacity-50 w-1/4 h-screen">
       {user?.role === 'instructor' && (<NavLink
           to={"/instructor/dashboard"}
-          className="flex gap-3 items-center justify-center sm:justify-start mb-2 text-white font-bold  bg-blue-600 hover:bg-blue-500 rounded-md p-2 py-5 w-full"
+          className="flex gap-3 items-center justify-center sm:justify-start mb-2 text-white font-bold  bg-blue-600 dark:bg-teal-500 dark:hover:bg-teal-400 hover:bg-blue-500 rounded-md p-2 py-5 w-full"
         >
           <RxDashboard className="text-2xl" />
           <span className="hidden sm:block">INSTRUCTOR PANEL</span>
@@ -75,8 +75,8 @@ const ProfileSidebar = () => {
             key={index}
             className={({ isActive }) =>
               `${
-                isActive ? "bg-blue-300" : ""
-              } flex gap-3 items-center justify-center sm:justify-start hover:bg-gray-200  rounded-md p-2 py-5 w-full`
+                isActive ? "bg-blue-300 dark:bg-blue-500" : " hover:bg-gray-200 dark:hover:bg-slate-800"
+              } flex gap-3 items-center justify-center sm:justify-start  rounded-md p-2 py-5 w-full`
             }
           >
             <span className="text-2xl">{tab.icon}</span>

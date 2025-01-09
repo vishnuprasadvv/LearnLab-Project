@@ -127,7 +127,7 @@ const MessageInput = () => {
           onClick={() => setShowEmojiPicker((prev) => !prev)}
           className="emoji-button"
         >
-         <MdOutlineEmojiEmotions size={25} className={ !showEmojiPicker ? 'text-zinc-400': 'text-zinc-800'}/>
+         <MdOutlineEmojiEmotions size={25} className={ !showEmojiPicker ? 'text-zinc-400 hover:text-blue-400': 'text-blue-500 dark:text-blue-500 '}/>
         </button>
          
           <Input
@@ -148,7 +148,7 @@ const MessageInput = () => {
           <button
             type="button"
             className={`hidden sm:flex btn btn-circle
-                     ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+                     ${imagePreview ? "text-emerald-500" : "text-zinc-400 hover:text-blue-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image size={25} />
@@ -159,7 +159,7 @@ const MessageInput = () => {
           className="btn btn-sm btn-circle"
           disabled={!text.trim() && !imageFile || isLoading}
         >
-          <Send size={22} className={`${isLoading || !text.trim() && !imageFile && 'text-gray-400'}`}/>
+          <Send size={22} className={`${isLoading || !text.trim() && !imageFile ? 'text-gray-400' : 'dark:hover:text-blue-600 hover:text-blue-400'}`}/>
         </button>
         </div>
       

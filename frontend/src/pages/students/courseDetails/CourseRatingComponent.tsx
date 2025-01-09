@@ -181,6 +181,11 @@ const CourseRatingComponent: React.FC<{
                   value={rating}
                   precision={0.5}
                   onChange={(e, newValue) => setRating(newValue)}
+                  sx={{
+                    "& .MuiRating-iconEmpty": {
+                      color: "rgba(128, 128, 128, 1)", // Dark mode and light mode colors
+                    },
+                  }}
                 />
               </div>
             </div>

@@ -57,7 +57,7 @@ const VideoUpload:React.FC<VideoUploadProps> = ({ lectureIndex, videoIndex, cont
             <FormLabel>Upload Video</FormLabel>
             <FormControl>
               <Input
-                className="bg-white"
+                className="bg-white dark:bg-slate-700"
                 type="file"
                 accept="video/*"
                 onChange={(e) => {
@@ -74,7 +74,7 @@ const VideoUpload:React.FC<VideoUploadProps> = ({ lectureIndex, videoIndex, cont
         )}
       />
       {videoPreviewUrl && (
-        <div className="bg-gray-100 p-2 rounded-md">
+        <div className="bg-gray-100 dark:bg-slate-800 p-2 rounded-md">
           <h2 className="pb-1">Newly chosen video:</h2>
           <video controls width="300" key={videoPreviewUrl}>
             <source src={videoPreviewUrl} />

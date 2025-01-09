@@ -107,7 +107,7 @@ const SalesChartInstructor: React.FC = () => {
 };
   return (
         <div className="w-full max-w-4xl mx-auto p-4">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
         Total Earnings: ₹{totalEarnings || ''}
       </h2>
     <div className="h-80 rounded-lg items-center justify-center border p-1">
@@ -121,7 +121,7 @@ const SalesChartInstructor: React.FC = () => {
             value={filter}
             onChange={handleFilterChange}
             id="timeFrame"
-            className="border rounded px-2 py-1 text-xs"
+            className="border rounded px-2 py-1 text-xs dark:bg-slate-700"
           >
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>

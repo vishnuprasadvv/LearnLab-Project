@@ -184,11 +184,11 @@ const CourseDetails = () => {
   return (
     <div className="mt-10 space-y-5 max-w-7xl w-full place-self-center">
       <BreadCrumb />
-      <div className="bg-blue-500 bg-gradient-to-r from-blue-500 to-sky-400 text-white ">
+      <div className="bg-gradient-to-r from-blue-500 to-sky-400 dark:from-blue-900 dark:to-indigo-800 text-white ">
         <div className="max-w-7xl flex flex-col md:flex-row mx-auto py-8 px-4 md:px-8 justify-between">
           
           <div className="flex flex-col gap-2">
-            <div className="text-xs bg-blue-200 text-blue-600 w-max h-max py-1 rounded-full px-2">
+            <div className="text-xs bg-blue-200 text-blue-600 dark:bg-blue-600 dark:text-gray-100 w-max h-max py-1 rounded-full px-2">
               {course?.category?.name || "category"}
             </div>
             <h1 className="font-bold text-2xl md:text-3xl">{course?.title}</h1>
@@ -233,12 +233,12 @@ const CourseDetails = () => {
         <div className="flex items-center justify-center pb-3 md:w-1/2 px-5">
         <div className="flex space-x-5 w-full justify-between">
         {userCoursePurchaseStatus ? (
-                <Link to={"lectures"} className="w-1/2 text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1">
+                <Link to={"lectures"} className="w-1/2 text-slate-800 dark:text-white dark:bg-slate-800 dark:hover:bg-slate-900 dark:hover:text-blue-700 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1">
                   <button>Continue course</button>
                 </Link>
               ) : (
                 <button
-                  className="w-1/2 text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1"
+                  className="w-1/2 text-slate-800  dark:text-white dark:bg-slate-800 dark:hover:bg-slate-900 dark:hover:text-blue-700 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1"
                   onClick={handleCheckout}
                   disabled={loading}
                 >
@@ -250,7 +250,7 @@ const CourseDetails = () => {
           {userCourseWishlistedStatus ? (
             <button
               onClick={handleRemoveFromWishlist}
-              className="w-1/2 text-slate-800 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1"
+              className="w-1/2 text-slate-800  dark:text-white dark:bg-slate-800 dark:hover:bg-slate-900 dark:hover:text-blue-700 bg-white hover:bg-gray-100 hover:text-blue-600 flex justify-center items-center font-medium rounded-md shadow-md px-3 py-2 gap-1"
             >
               <IoMdHeart className="text-red-500 text-2xl" />
               Remove from wishlist
@@ -258,7 +258,7 @@ const CourseDetails = () => {
           ) : (
             <button
               onClick={handleAddToWishlist}
-              className="w-1/2 text-slate-800 flex justify-center items-center font-medium rounded-md hover:bg-gray-100 hover:text-blue-600 bg-white shadow-md px-3 py-2 gap-1"
+              className="w-1/2 text-slate-800  dark:text-white dark:bg-slate-800 dark:hover:bg-slate-900 dark:hover:text-blue-700 flex justify-center items-center font-medium rounded-md hover:bg-gray-100 hover:text-blue-600 bg-white shadow-md px-3 py-2 gap-1"
             >
               <IoMdHeartEmpty className="text-2xl" />
               Add to wishlist

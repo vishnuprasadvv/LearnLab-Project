@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -55,7 +55,7 @@ function RegisterInstructor() {
         //     }),
     });
     return (
-        <div className='md:w-1/3 lg:w-1/3 sm:w-1/2 items-center mx-auto border rounded-md p-6 mt-10 max-w-full'>
+        <div className='md:w-1/3 lg:w-1/3 sm:w-1/2 items-center mx-auto border rounded-md p-6 mt-10 max-w-full dark:bg-slate-950'>
             <div className="instructor-register-form ">
                 <h2 className='text-2xl font-bold text-blue-600 text-center p-4 '>Instructor Registration</h2>
 
@@ -83,7 +83,7 @@ function RegisterInstructor() {
 
                                     <div>
                                         <label htmlFor="experience" className='text font-bold'>Experience in teaching in years :</label>
-                                        <Field as={Input} type='number' name="experience" id="experience" placeholder="Experience" />
+                                        <Field as={Input} type='number' name="experience" id="experience" placeholder="Experience" className="dark:bg-slate-800" />
                                         <ErrorMessage name="experience" component="div" className="text-red-500 text-sm mt-1" />
                                     </div>
                                     <div>
@@ -92,13 +92,13 @@ function RegisterInstructor() {
                                     </div>
                                     <div>
                                         <label htmlFor="comment" className='font-bold'>Why do you want to be an Instructor? :</label>
-                                        <Field as={Textarea} name="comment" className="text-sm" id="comment" placeholder="Type here..." />
+                                        <Field as={Textarea} name="comment" className="text-sm dark:bg-slate-800" id="comment" placeholder="Type here..."  />
                                         <ErrorMessage name="comment" component="div" className="text-red-500 text-sm mt-1" />
                                     </div>
 
                                     <div className='flex gap-10 justify-center mt-5'>
-                                        <Button variant={'outline'} className='w-full bg-white text-blue-600  hover:bg-gray-100 rounded-full' type="button" onClick={() => navigate(-1)}>Cance</Button>
-                                        <Button className='w-full bg-blue-600 rounded-full hover:bg-blue-700' type="button" disabled={!dirty} onClick={nextStep}>Next</Button>
+                                        <Button variant={'outline'} className='w-full bg-white dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 text-blue-600  hover:bg-gray-100 rounded-full' type="button" onClick={() => navigate(-1)}>Cance</Button>
+                                        <Button className='w-full bg-blue-600 rounded-full hover:bg-blue-700 dark:text-white dark:bg-blue-700 dark:hover:bg-blue-600' type="button" disabled={!dirty} onClick={nextStep}>Next</Button>
                                     </div>
 
                                     
@@ -126,8 +126,8 @@ function RegisterInstructor() {
                                         <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
                                     </div>
                                     <div className='flex gap-10 justify-center mt-5'>
-                                        <Button variant={'outline'} className='w-full bg-white text-blue-600  hover:bg-gray-100 rounded-full' type="button" onClick={prevStep}>Back</Button>
-                                        <Button className='w-full bg-blue-600 rounded-full hover:bg-blue-700' type="submit" disabled={isSubmitting} >Submit</Button>
+                                        <Button variant={'outline'} className='w-full bg-white dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 text-blue-600  hover:bg-gray-1000 rounded-full' type="button" onClick={prevStep}>Back</Button>
+                                        <Button className='w-full bg-blue-600 rounded-full hover:bg-blue-700 dark:text-white dark:bg-blue-700 dark:hover:bg-blue-600' type="submit" disabled={isSubmitting} >Submit</Button>
                                     </div>
                                 </div>
                             )}

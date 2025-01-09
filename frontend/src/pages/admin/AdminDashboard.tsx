@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   IoIosArrowBack,
   IoIosArrowForward,
-  IoMdNotificationsOutline,
 } from "react-icons/io";
 import { LiaBookReaderSolid, LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { RxDashboard } from "react-icons/rx";
@@ -58,11 +57,6 @@ const AdminPage = () => {
       path: "categories",
       name: "Category Management",
       icon: <MdOutlineCategory />,
-    },
-    {
-      path: "notifications",
-      name: "Notifications",
-      icon: <IoMdNotificationsOutline />,
     },
   ];
 

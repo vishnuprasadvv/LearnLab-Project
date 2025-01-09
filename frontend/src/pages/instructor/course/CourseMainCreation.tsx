@@ -171,18 +171,18 @@ const CourseMainCreation = () => {
                 name="title"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800  rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course title
                     </div>
                     <FormControl className="w-full">
                       <Input
                         {...field}
-                        className="bg-white"
+                        className="bg-white dark:bg-slate-700"
                         placeholder="e.g. 'Advanced web development'"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600"/>
                   </FormItem>
                 )}
               />
@@ -191,7 +191,7 @@ const CourseMainCreation = () => {
                 name="description"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course description
                     </div>
@@ -199,11 +199,11 @@ const CourseMainCreation = () => {
                       <Textarea
                         rows={4}
                         {...field}
-                        className="bg-white"
+                        className="bg-white dark:bg-slate-700"
                         placeholder="e.g. 'This course is about...'"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -212,7 +212,7 @@ const CourseMainCreation = () => {
                 name="category"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course category
                     </div>
@@ -227,7 +227,7 @@ const CourseMainCreation = () => {
                         />
                       )}
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -236,7 +236,7 @@ const CourseMainCreation = () => {
                 name="price"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course price
                     </div>
@@ -245,11 +245,11 @@ const CourseMainCreation = () => {
                         {...field}
                         type="number"
                         step="0.01"
-                        className="bg-white"
+                        className="bg-white dark:bg-slate-700"
                         placeholder="Set a price for your course"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -266,7 +266,7 @@ const CourseMainCreation = () => {
                   name="image"
                   control={control}
                   render={({ field }) => (
-                    <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                    <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course image
                       </div>
@@ -283,6 +283,7 @@ const CourseMainCreation = () => {
                                 shouldValidate: true,
                               });
                             }}
+                            className="dark:bg-slate-700"
                           />
                         </div>
                       </FormControl>
@@ -296,7 +297,7 @@ const CourseMainCreation = () => {
                           />
                         </div>
                       )}
-                      <FormMessage />
+                      <FormMessage className="dark:text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -305,7 +306,7 @@ const CourseMainCreation = () => {
                   name="duration"
                   control={control}
                   render={({ field }) => (
-                    <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                    <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course duration
                       </div>
@@ -314,11 +315,11 @@ const CourseMainCreation = () => {
                           {...field}
                           type="number"
                           step="0.01"
-                          className="bg-white"
+                          className="bg-white dark:bg-slate-700"
                           placeholder="e.g. '20 hours'"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="dark:text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -327,7 +328,7 @@ const CourseMainCreation = () => {
                   name="level"
                   control={control}
                   render={({ field }) => (
-                    <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                    <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course level
                       </div>
@@ -360,7 +361,7 @@ const CourseMainCreation = () => {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="dark:text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -370,7 +371,7 @@ const CourseMainCreation = () => {
           <div className="flex justify-end gap-2 pt-5 ">
             <Button
               disabled={loading}
-              className="border border-slate-200 bg-white text-blue-600 rounded-full  hover:bg-slate-100"
+              className="border border-slate-200 bg-white dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-700 text-blue-600 rounded-full  hover:bg-slate-100"
               type="button"
               onClick={() => navigate(-1)}
             >
@@ -378,7 +379,7 @@ const CourseMainCreation = () => {
             </Button>
             <Button
               disabled={loading}
-              className="bg-blue-600 rounded-full  hover:bg-blue-700"
+              className="bg-blue-600 rounded-full dark:text-white  hover:bg-blue-700"
               type="submit"
             >
               Save

@@ -43,12 +43,12 @@ const SenderChatBubble: React.FC<ChatBubbleProps> = ({
         </div>
 
         <div className="flex gap-1 place-self-end">
-          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+          <span className="text-xs font-normal text-gray-500 dark:text-gray-300">
             {time || "NA"}
           </span>
 
           <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
-          {isRead ? (<CheckCheck className="text-blue-400" size={16}/>) : (<Check size={16}/> )}
+          {isRead ? (<CheckCheck className="text-blue-400 dark:text-blue-700" size={16}/>) : (<Check size={16} className="dark:text-gray-200"/> )}
           </span>
         </div>
       </div>

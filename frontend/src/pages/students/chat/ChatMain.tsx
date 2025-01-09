@@ -21,11 +21,11 @@ const ChatMain:React.FC = () => {
       }, [dispatch]);
     
   return (
-    <div className='h-screen bg-slate-100 '>
+    <div className='h-screen bg-slate-100 dark:bg-slate-800'>
       <h1 className='text-2xl font-bold text-center pt-2'>My Chats</h1>
         <div className='flex items-center justify-center pt-5 px-4'>
             <div className='bg-base-100 rounded-lg shadow-xl w-full max-w-6xl h-[calc(100vh-8rem)]'>
-                <div className='bg-white flex h-full rounded-lg overflow-hidden'>
+                <div className='bg-white dark:bg-slate-900 flex h-full rounded-lg overflow-hidden'>
 
                     <ChatSidebar  />
 

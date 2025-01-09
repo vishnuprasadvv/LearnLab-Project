@@ -48,7 +48,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious className={`${currentPage === 1 || totalPages === 0 ? 'cursor-not-allowed opacity-50 ' : 'hover:bg-blue-50'} `}
+          <PaginationPrevious className={`${currentPage === 1 || totalPages === 0 ? 'cursor-not-allowed opacity-50 ' : 'hover:bg-blue-50 dark:hover:bg-slate-800'} `}
             href="#"
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           />
@@ -65,7 +65,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
                 href="#"
                 isActive={page === currentPage}
                 onClick={() => onPageChange(Number(page))}
-                className="hover:bg-blue-50"
+                className="hover:bg-blue-50 dark:hover:bg-slate-800"
               >
                 {page}
               </PaginationLink>
@@ -76,7 +76,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
           <PaginationNext
             href="#"
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-            className={`${currentPage === totalPages || totalPages === 0 ? 'cursor-not-allowed opacity-50 ' : 'hover:bg-blue-50'} `}
+            className={`${currentPage === totalPages || totalPages === 0 ? 'cursor-not-allowed opacity-50 ' : 'hover:bg-blue-50 dark:hover:bg-slate-800'} `}
           />
         </PaginationItem>
       </PaginationContent>

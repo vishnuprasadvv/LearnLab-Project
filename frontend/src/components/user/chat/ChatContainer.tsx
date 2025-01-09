@@ -130,7 +130,7 @@ const ChatContainer = () => {
       ref={messageEndRef}
       >
         {messages.length === 0 ? (
-          <div className="text-lg font-bold text-slate-800 text-center">
+          <div className="text-lg font-bold text-slate-800 dark:text-gray-200 text-center">
             No messages
           </div>
         ) : (

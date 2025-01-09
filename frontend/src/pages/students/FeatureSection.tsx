@@ -31,27 +31,27 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="w-full  px-4 py-16 md:py-24 dark:bg-slate-300">
+    <section className="w-full px-4 py-16 md:py-24">
       <div className="container max-w-7xl place-self-center">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div className="max-w-2xl p-6">
             <h2 className="mb-4 text-3xl font-bold text-slate-800 dark:text-white">
               Why choose our classes
             </h2>
-            <p className="text-slate-800 dark:text-white">
+            <p className="text-slate-800 dark:text-gray-100">
             Our classes provide expert-led learning with flexible schedules, ensuring you can learn at your own pace. Whether you want to advance your career, develop new skills, or explore a passion, our courses are designed to guide you every step of the way.
             </p>
           </div>
           {features.map((feature, index) => (
-            <Card key={index} className="bg-blue-50">
+            <Card key={index} className="bg-blue-50 dark:bg-slate-950">
               <CardContent className="p-6">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-                  <Play className="h-5 w-5 fill-blue-600 text-blue-600" />
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-700">
+                  <Play className="h-5 w-5 fill-blue-600 dark:fill-blue-100 text-blue-600 dark:text-blue-100" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-blue-600">
+                <h3 className="mb-2 text-xl font-semibold text-blue-600 dark:text-blue-100">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
               </CardContent>
             </Card>
           ))}

@@ -17,7 +17,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { duration, FormControl } from "@mui/material";
+import { FormControl } from "@mui/material";
 import toast from "react-hot-toast";
 import { editCourseApi, getCourseById } from "@/api/instructorApi";
 import { useEffect, useState } from "react";
@@ -249,18 +249,18 @@ const CourseMainEdit = () => {
                 name="title"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course title
                     </div>
                     <FormControl className="w-full">
                       <Input
                         {...field}
-                        className="bg-white"
+                        className="bg-white dark:bg-slate-700"
                         placeholder="e.g. 'Advanced web development'"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -269,7 +269,7 @@ const CourseMainEdit = () => {
                 name="description"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course description
                     </div>
@@ -277,11 +277,11 @@ const CourseMainEdit = () => {
                       <Textarea
                         rows={4}
                         {...field}
-                        className="bg-white"
+                        className="bg-white dark:bg-slate-700"
                         placeholder="e.g. 'This course is about...'"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -290,7 +290,7 @@ const CourseMainEdit = () => {
                 name="category"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course category
                     </div>
@@ -305,7 +305,7 @@ const CourseMainEdit = () => {
                         />
                       )}
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -314,7 +314,7 @@ const CourseMainEdit = () => {
                 name="price"
                 control={control}
                 render={({ field }) => (
-                  <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                  <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                     <div className="font-medium flex items-center justify-between">
                       Course price
                     </div>
@@ -323,11 +323,11 @@ const CourseMainEdit = () => {
                         {...field}
                         type="number"
                         step="0.01"
-                        className="bg-white"
+                        className="bg-white dark:bg-slate-700"
                         placeholder="Set a price for your course"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="dark:text-red-600" />
                   </FormItem>
                 )}
               />
@@ -344,7 +344,7 @@ const CourseMainEdit = () => {
                   name="image"
                   control={control}
                   render={({ field }) => (
-                    <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                    <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course image
                       </div>
@@ -380,7 +380,7 @@ const CourseMainEdit = () => {
                           />
                         </div>
                       )}
-                      <FormMessage />
+                      <FormMessage className="dark:text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -389,7 +389,7 @@ const CourseMainEdit = () => {
                   name="duration"
                   control={control}
                   render={({ field }) => (
-                    <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                    <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course duration
                       </div>
@@ -398,11 +398,11 @@ const CourseMainEdit = () => {
                           {...field}
                           type="number"
                           step="0.01"
-                          className="bg-white"
+                          className="bg-white dark:bg-slate-700"
                           placeholder="e.g. '20 hours'"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="dark:text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -411,7 +411,7 @@ const CourseMainEdit = () => {
                   name="level"
                   control={control}
                   render={({ field }) => (
-                    <FormItem className="mt-6 border bg-slate-100 rounded-md p-4">
+                    <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course level
                       </div>
@@ -444,7 +444,7 @@ const CourseMainEdit = () => {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="dark:text-red-600" />
                     </FormItem>
                   )}
                 />

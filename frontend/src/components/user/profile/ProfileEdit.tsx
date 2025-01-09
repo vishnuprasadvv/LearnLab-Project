@@ -19,8 +19,6 @@ import {
   editProfileThunk,
   getUserDataThunk,
   sendOtp,
-  setError,
-  verifyAccount,
 } from "@/features/authSlice";
 import { User } from "@/types/userTypes";
 import { useFormik } from "formik";
@@ -370,7 +368,7 @@ const ProfileEdit = () => {
                         className={`${
                           !formik.isValid || !formik.dirty
                             ? "bg-blue-300"
-                            : "bg-blue-500"
+                            : "bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600"
                         }   text-white p-2 font-semibold rounded-lg py-2`}
                         disabled={!formik.isValid || !formik.dirty}
                       >

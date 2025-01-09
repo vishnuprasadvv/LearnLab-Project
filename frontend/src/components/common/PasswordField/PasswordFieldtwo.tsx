@@ -41,8 +41,8 @@ const PasswordFieldTwo = forwardRef<HTMLInputElement, PasswordFieldProps>(
           <Input
             ref={ref}
             type={isPasswordVisible ? "text" : "password"}
-            className={`input ${className || ""} ${
-              touched && error ? "border-red-500" : ""
+            className={`input dark:border-slate-600 dark:bg-slate-700 ${className || ""} ${
+              touched && error ? "border-red-500 dark:border-red-600" : ""
             }`}
             {...props} // Spread all other props (onChange, value, onBlur, etc.)
           />
@@ -57,7 +57,7 @@ const PasswordFieldTwo = forwardRef<HTMLInputElement, PasswordFieldProps>(
           )}
         </div>
         {touched && error && (
-          <span className="text-xs text-red-500">{error}</span>
+          <span className="text-xs text-red-500 dark:text-red-600">{error}</span>
         )}
       </div>
     );

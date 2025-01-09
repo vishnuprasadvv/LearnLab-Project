@@ -1,9 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { getUserDataThunk } from "@/features/authSlice"
 import { User } from "@/types/userTypes"
-import { CalendarDays, Mail,PencilIcon,Phone } from 'lucide-react'
+import { CalendarDays, Mail,Phone } from 'lucide-react'
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -66,7 +65,7 @@ export default function UserProfile() {
             </div>
             <div className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4 opacity-70" />
-              <span>{new Date(user?.createdAt).toDateString()}</span>
+              <span>{new Date(user.createdAt!).toDateString() || 'NA'}</span>
             </div>
           </CardFooter>
         </Card>
