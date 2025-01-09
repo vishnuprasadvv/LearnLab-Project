@@ -133,7 +133,7 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
         callbacks: {
           // Custom tooltip label
           label: function (tooltipItem: any) {
-            const { datasetIndex, dataIndex } = tooltipItem;
+            const { dataIndex } = tooltipItem;
             const data = filteredData[dataIndex];
             const revenue = data.revenue;
             const count = data.orderCount;

@@ -15,7 +15,7 @@ export function formatMessageTime(date: any) {
   });
 }
 
-const ChatContainer = () => {
+const ChatContainer:React.FC = () => {
   const messageEndRef: any = useRef(null);
   const authUser = useAppSelector((state) => state.auth.user);
   const [messages, setMessages] = useState<any[]>([]);

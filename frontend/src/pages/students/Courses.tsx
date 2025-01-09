@@ -1,4 +1,4 @@
-import { getAllCoursesUserApi, getTopRatedCoursesApi } from "@/api/student";
+import { getTopRatedCoursesApi } from "@/api/student";
 import Course from "@/components/common/Course/Course";
 import CourseSkeleton from "@/components/common/courseSkeleton/CourseSkeleton";
 import { ICourses } from "@/types/course";

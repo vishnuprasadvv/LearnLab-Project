@@ -1,4 +1,4 @@
-import { ImageIcon, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,14 +20,12 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { FormControl } from "@mui/material";
 import toast from "react-hot-toast";
 import { createCourseApi } from "@/api/instructorApi";
-import { useAppSelector } from "@/app/hooks";
 import { useEffect, useState } from "react";
 import { getAllCategoriesAtOnce } from "@/api/adminApi";
 import { Category } from "@/types/categories";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 const CourseMainCreation = () => {
-  const { user } = useAppSelector((state) => state.auth);
   const [categories, setCategories] = useState<Category[] | null>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -265,7 +263,7 @@ const CourseMainCreation = () => {
                 <FormField
                   name="image"
                   control={control}
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="mt-6 border bg-slate-100 dark:bg-slate-800 rounded-md p-4">
                       <div className="font-medium flex items-center justify-between">
                         Course image

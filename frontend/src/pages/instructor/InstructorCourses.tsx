@@ -28,10 +28,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { IoSearchOutline } from "react-icons/io5";
 import PaginationComponent from "@/components/common/Pagination/Pagination";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 
 const InstructorCourses = () => {
   const [courses, setCourses] = useState<ICourses[] | []>([]);
@@ -126,7 +126,9 @@ const InstructorCourses = () => {
   );
   console.log(courses);
 
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <div className="flex flex-col min-h-[90vh] w-full mx-auto">
       <div className="container mx-auto sm:px-4 lg:px-8 px-2 py-8 w-full">
         <div className="flex flex-col w-full">
@@ -195,7 +197,10 @@ const InstructorCourses = () => {
                       >
                         {item.title}
                       </td>
-                      <td scope="row" className="lg:px-6 px-1 py-4">{`${item.instructor?.firstName} ${item.instructor?.lastName}`}</td>
+                      <td
+                        scope="row"
+                        className="lg:px-6 px-1 py-4"
+                      >{`${item.instructor?.firstName} ${item.instructor?.lastName}`}</td>
                       <td className="lg:px-6 px-1 py-4">
                         {new Date(item.createdAt).toDateString()}
                       </td>

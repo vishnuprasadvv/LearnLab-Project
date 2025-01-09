@@ -7,7 +7,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { divide } from "lodash";
 
 interface PaginationComponentProps {
   currentPage: number;

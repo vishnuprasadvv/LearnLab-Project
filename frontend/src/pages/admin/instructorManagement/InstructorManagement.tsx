@@ -1,11 +1,9 @@
 import { useAppDispatch } from '@/app/hooks'
 import ResultsNotFound from '@/components/common/NoResults/ResultsNotFound'
 import { getInstructorsThunk } from '@/features/adminSlice'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-
-
 
 export default function InstructorManagement() {
 
@@ -31,9 +29,7 @@ export default function InstructorManagement() {
   }, [])
 
   
-
   const handleViewApplication = (id: string) => {
-
     navigate(`/admin/instructors/application/${id}`)
   }
 

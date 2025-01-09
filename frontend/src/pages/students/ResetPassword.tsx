@@ -1,7 +1,6 @@
 import { useAppDispatch } from '@/app/hooks';
 import PasswordFieldTwo from '@/components/common/PasswordField/PasswordFieldtwo';
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input';
 import { resetPasswordThunk, sendOtp, setError, startLoading } from '@/features/authSlice';
 import { formikPasswordValidation } from '@/utils/formikPasswordValidator';
 import { useFormik } from 'formik';

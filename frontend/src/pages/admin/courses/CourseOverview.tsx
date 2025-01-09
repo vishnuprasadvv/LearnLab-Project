@@ -21,6 +21,7 @@
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";
 import { deleteCourseAdminApi, getCourseByIdAdminApi, publishCourseAdminApi } from "@/api/adminApi";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
   
   const CourseOverviewAdmin = () => {
     const [course, setCourse] = useState<ICourses | null>(null);
@@ -87,7 +88,9 @@ import { deleteCourseAdminApi, getCourseByIdAdminApi, publishCourseAdminApi } fr
     };
   
     return (
-      <div className="container mx-auto px-4 md:px-10 py-2 w-full max-w-4xl">
+
+      loading ? ( <LoadingScreen />) : (
+<div className="container mx-auto px-4 md:px-10 py-2 w-full max-w-4xl">
       <div
         className="flex gap-1 items-center hover:text-blue-600 cursor-pointer"
         onClick={handleBackToCourses}
@@ -348,6 +351,8 @@ import { deleteCourseAdminApi, getCourseByIdAdminApi, publishCourseAdminApi } fr
         </div>
       </div>
     </div>
+      )
+      
     );
   };
   

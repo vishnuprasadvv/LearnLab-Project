@@ -1,19 +1,11 @@
 import { getPurchasesApi } from '@/api/adminApi';
 import ResultsNotFound from '@/components/common/NoResults/ResultsNotFound';
-import PaginationComponent from '@/components/common/Pagination/Pagination';
-import { Input } from '@/components/ui/input';
-import { ITEMS_PER_PAGE } from '@/config/paginationConifig';
 import { IOrder } from '@/types/orders';
 import React, { useEffect, useState } from 'react'
-import { IoSearchOutline } from 'react-icons/io5';
 
-const AdminPurchases = () => {
+const AdminPurchases:React.FC = () => {
    //search and pagination
-    const [searchQuery, setSearchQuery] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const [totalCourses, setTotalCourses] = useState("");
-    const itemsPerPage = ITEMS_PER_PAGE;
+
     const [purchases, setPurchases] = useState<IOrder[] | []>([])
     useEffect(() => {
       const fetchOrders = async() => {
@@ -21,7 +13,7 @@ const AdminPurchases = () => {
             const response = await getPurchasesApi()
             console.log(response)
             setPurchases(response.data)
-            setTotalCourses(response.data.length || 0)
+            // setTotalCourses(response.data.length || 0)
         } catch (error) {
           console.error('order fetching error', error)
         }
@@ -54,7 +46,7 @@ const AdminPurchases = () => {
             {/* <CourseFilter onFilterChange={handleFilterChange} /> */}
           </div>
         </div>
-          <div className="font-medium pt-2">TOTAL : {totalCourses} no/s</div>
+          <div className="font-medium pt-2">TOTAL : {purchases.length} no/s</div>
 
 
       {
@@ -125,13 +117,6 @@ const AdminPurchases = () => {
         
       </div>
         </div>
-      <div className="mt-auto pt-5">
-        <PaginationComponent
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
-      </div>
     </div>
   )
 }

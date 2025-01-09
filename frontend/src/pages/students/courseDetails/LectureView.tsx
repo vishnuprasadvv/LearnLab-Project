@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/collapsible";
 import { getVideoUrl } from "@/utils/getVideoUrl";
 import { Progress } from "@/components/ui/progress";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 
 interface ProgressVideo {
   videoId: string;
@@ -199,7 +200,9 @@ const LectureView: React.FC = () => {
     ? getVideoUrl(id, selectedVideo.video._id)
     : "";
 
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <div className="flex flex-col sm:flex-row min-h-[90vh] max-w-7xl place-self-center w-full ">
       <div className="flex w-full sm:w-2/3 lg:w-3/4 h-full order-2 sm:order-1 pb-10">
         <div className="flex flex-col w-full">
@@ -219,7 +222,14 @@ const LectureView: React.FC = () => {
                   <span>Your progress : </span>
                   {progress?.progressPercentage?.toFixed(2) || 0} %
                 </h2>
-                <Progress className="bg-white" value={ progress?.progressPercentage ? parseFloat(progress.progressPercentage.toFixed(2)) : 0} />
+                <Progress
+                  className="bg-white"
+                  value={
+                    progress?.progressPercentage
+                      ? parseFloat(progress.progressPercentage.toFixed(2))
+                      : 0
+                  }
+                />
               </div>
             </div>
             {progress?.progressPercentage == 100 ? (
@@ -310,19 +320,21 @@ const LectureView: React.FC = () => {
                     >
                       <div className=" gap-2 items-center flex">
                         <div className="w-max">
-                        {userCoursePurchaseStatus ? (
-                          <IoLogoYoutube size={16} />
-                        ) : lecture.isFree ? (
-                          <IoLogoYoutube size={16} />
-                        ) : (
-                          <Lock size={16} />
-                        )}
+                          {userCoursePurchaseStatus ? (
+                            <IoLogoYoutube size={16} />
+                          ) : lecture.isFree ? (
+                            <IoLogoYoutube size={16} />
+                          ) : (
+                            <Lock size={16} />
+                          )}
                         </div>
-                        
 
-                        <h2 className="font-medium max-w-52 text-start">{lecture.title}</h2>
+                        <h2 className="font-medium max-w-52 text-start">
+                          {lecture.title}
+                        </h2>
                       </div>
-                      <ChevronDown size={16}
+                      <ChevronDown
+                        size={16}
                         className={`transition-transform duration-200 ${
                           openLecture === lecture._id
                             ? "rotate-180"

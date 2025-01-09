@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ICourses } from "@/types/course";
 import toast from "react-hot-toast";
@@ -32,6 +32,7 @@ import { ITEMS_PER_PAGE } from "@/config/paginationConifig";
 import PaginationComponent from "@/components/common/Pagination/Pagination";
 import CourseFilter from "@/components/Admin/courses/CourseFilter";
 import ResultsNotFound from "@/components/common/NoResults/ResultsNotFound";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 
 interface Filters {
   categories: string[];
@@ -186,7 +187,9 @@ const AdminCourseManagement = () => {
           </div>
           <div className="font-medium pt-2">TOTAL : {totalCourses} no/s</div>
 
-          {courses.length !== 0 ? (
+          {loading ? (
+            <LoadingScreen />
+          ) : courses.length !== 0 ? (
             <div className=" bg-blue-100 overflow-auto mt-2">
               <table className="text-sm text-left w-full rtl:text-right text-gray-500 dark:text-gray-400 overflow-x-scroll">
                 <thead className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -215,7 +218,7 @@ const AdminCourseManagement = () => {
                       onClick={() => handleOpenCourse(item._id)}
                       key={item._id}
                       className="odd:bg-white  odd:dark:bg-gray-900 hover:bg-gray-100 even:bg-gray-50
-             even:dark:bg-gray-800 border-b dark:border-gray-700"
+     even:dark:bg-gray-800 border-b dark:border-gray-700"
                     >
                       <td
                         scope="row"

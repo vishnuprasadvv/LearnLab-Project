@@ -13,7 +13,6 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
   const [email, setEmail] = useState<string>('')
 
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
-  const [message, setMessage] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   //set email 
   useEffect(() => {
@@ -46,7 +45,6 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
 
   // Combine OTP and send it for verification
   const handleVerify = async () => {
-    setMessage('')
     const otpValue = otp.join("");
     if (otpValue.length === 4) {
 
@@ -58,13 +56,10 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
         }
         setPopUp(false)
       } catch (error:any ) {
-        const errorMessage = error?.message || 'An error occured during verification'
-        setMessage( errorMessage);
         toast.error(error?.message || 'OTP verification failed')
         console.error('error',error)
       }
     } else {
-      setMessage("Please enter a valid 4-digit OTP.");
       toast.error("Please enter a valid 4-digit OTP.");
     }
   };
@@ -82,7 +77,7 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
           })
           console.log('resend otp front end',await response)
       } catch (error:any) {
-        setMessage(error?.error || 'Error sending OTP')
+        toast.error('Error sending OTP')
         console.log(error)
       }
   }

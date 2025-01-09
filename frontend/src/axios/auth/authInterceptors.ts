@@ -1,4 +1,3 @@
-import { persistor } from "@/app/store";
 import { config } from "@/config/config";
 import { clearSpecificPersistedData } from "@/utils/clearPersist";
 import axios from "axios";

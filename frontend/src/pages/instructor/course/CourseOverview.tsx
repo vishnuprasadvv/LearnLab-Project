@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 
 const CourseOverview = () => {
   const [course, setCourse] = useState<ICourses | null>(null);
@@ -89,7 +90,9 @@ const CourseOverview = () => {
     }
   };
 
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <div className="container mx-auto px-4 md:px-10 py-2 w-full max-w-4xl">
       <div
         className="flex gap-1 items-center hover:text-blue-600 cursor-pointer"
@@ -104,7 +107,7 @@ const CourseOverview = () => {
           <div className="space-x-2">
             {course && !course.isPublished ? (
               <AlertDialog>
-                <AlertDialogTrigger className="bg-blue-600 rounded-full hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 font-medium p-2 px-4 text-white"> 
+                <AlertDialogTrigger className="bg-blue-600 rounded-full hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 font-medium p-2 px-4 text-white">
                   Publish
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -209,7 +212,11 @@ const CourseOverview = () => {
                 </div>
                 <div className="font-bold ">Price ₹{course?.price}</div>
                 <div className="space-x-1 place-self-end flex">
-                  <Button size="icon" onClick={() => handleEditCourse()} className="dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700">
+                  <Button
+                    size="icon"
+                    onClick={() => handleEditCourse()}
+                    className="dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700"
+                  >
                     <PiNotePencil />
                   </Button>
                   <AlertDialog>
@@ -255,7 +262,9 @@ const CourseOverview = () => {
           </div>
           {!course?.lectures || course.lectures.length == 0 ? (
             <div>
-              <h1 className="text-xl text-slate-800 font-bold">No Lectures available</h1>
+              <h1 className="text-xl text-slate-800 font-bold">
+                No Lectures available
+              </h1>
             </div>
           ) : (
             <div className="mt-4 text-slate-800 dark:text-gray-100">
@@ -265,7 +274,10 @@ const CourseOverview = () => {
                   {course?.lectures
                     ?.sort((a, b) => a.order - b.order)
                     .map((lecture) => (
-                      <div className="bg-white dark:bg-slate-700 p-2 pl-5 rounded-lg" key={lecture._id}>
+                      <div
+                        className="bg-white dark:bg-slate-700 p-2 pl-5 rounded-lg"
+                        key={lecture._id}
+                      >
                         <li className="list-decimal space-y-3">
                           <div className="flex justify-between">
                             <h4 className="font-semibold text-lg">
@@ -323,7 +335,7 @@ const CourseOverview = () => {
                                     width="250"
                                     className="rounded-lg"
                                   >
-                                    <source src={video.url || ''} />
+                                    <source src={video.url || ""} />
                                   </video>
                                 </div>
                               ))}

@@ -14,7 +14,7 @@ interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement>
     onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void; 
 
 }
-const PasswordField: React.FC<PasswordFieldProps> = ({label, value, onchange, name,className,onBlur,  placeholder= 'Enter Password', error, touched}) => {
+const PasswordField: React.FC<PasswordFieldProps> = ({label, value, onchange, name,className,onBlur,  placeholder= 'Enter Password',}) => {
 
      //setup password visibility
   const [isPasswordVisible, setPasswordVisible] = useState(false);

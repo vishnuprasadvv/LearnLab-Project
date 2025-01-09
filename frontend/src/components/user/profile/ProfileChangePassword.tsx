@@ -1,9 +1,9 @@
 
 import { useAppDispatch } from "@/app/hooks";
+import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 import PasswordFieldTwo from "@/components/common/PasswordField/PasswordFieldtwo";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { changePasswordThunk } from "@/features/authSlice";
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -68,9 +68,17 @@ const ProfileChangePassword = () => {
       }
     },
   });
+
+  
   return (
+
+  
     <div className="container mx-auto px-4 py-8">
       <div className="grid gap-6 md:grid-cols-1">
+      {
+      loading ? (
+        <LoadingScreen />
+      ) : (
         <Card className="w-full flex flex-col items-center">
           <CardHeader className="text-center">
             <div className="text-xl">Edit Password</div>
@@ -168,6 +176,9 @@ const ProfileChangePassword = () => {
             </CardContent>
           </form>
         </Card>
+      )
+    }
+        
       </div>
     </div>
   );

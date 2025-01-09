@@ -10,7 +10,7 @@ import React, { useEffect, } from 'react'
 const ChatMain:React.FC = () => {
   const currentUser = useAppSelector((state) => state.auth.user)
   const dispatch = useAppDispatch()
-  const socket = useSocket(currentUser)
+  useSocket(currentUser)
   const selectedChat = useAppSelector((state) => state.chat.selectedChat) || null;
       useEffect(() => {
         // Cleanup action to reset selected chat when component unmounts

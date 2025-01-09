@@ -7,7 +7,7 @@ import TopInstructors from "../../../components/Admin/dashboard/TopInstructors";
 import UserRegistrationChart from "@/components/Admin/dashboard/UserRegistrationChart";
 import CompanySalesChart from "@/components/Admin/dashboard/CompanySalesChart";
 
-const Dashboard = () => {
+const Dashboard:React.FC = () => {
   const [data, setData] = useState<IDashboardStatistics | null>(null);
 
   useEffect(() => {

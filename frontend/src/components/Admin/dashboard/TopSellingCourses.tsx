@@ -1,5 +1,5 @@
 import { getBestSellingCoursesApi } from "@/api/adminApi";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BEST_SELLING_COURSES_LIMIT_ADMIN } from "@/config/paginationConifig";
 import { ICourses } from "@/types/course";
 import React, { useEffect, useState } from "react";

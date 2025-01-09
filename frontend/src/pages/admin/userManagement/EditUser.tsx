@@ -21,7 +21,6 @@ import {
 import {  editUserGet, editUserPost } from '@/api/adminApi';
 
 function EditUser() {
-  const [userStatus, setUserStatus] = useState<string>('active')
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
@@ -48,7 +47,6 @@ function EditUser() {
           role: userData.role || 'student',
           userStatus: userData.status || 'active',
         });
-        setUserStatus(userData.userStatus || 'active'); // Update userStatus state
         
         setLoading(false)
       } catch (err) {

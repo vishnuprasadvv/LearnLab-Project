@@ -71,7 +71,7 @@ const UserRegistrationChart:React.FC = () => {
             callbacks: {
               // Custom tooltip label
               label: function (tooltipItem: any) {
-                const { datasetIndex, dataIndex } = tooltipItem;
+                const { dataIndex } = tooltipItem;
                 const data = filteredData[dataIndex];
     
                 // You can customize the tooltip data here

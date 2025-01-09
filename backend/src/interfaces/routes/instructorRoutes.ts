@@ -8,7 +8,7 @@ import { getInstructorDashboardMetricsController, getInstructorEarningsControlle
 
 const instructorRouter = Router();
 
-instructorRouter.use(upload.single('courseImage'),isAuthenticated, authorizeRole(['instructor']),)
+instructorRouter.use(isAuthenticated, authorizeRole(['instructor']),)
     .post('/courses/create', upload.single('courseImage'), createCourseController )
     .post('/courses/create/:courseId/lecture', uploadVideo.any() ,addLectureController )
     .get('/courses', getAllCoursesController)

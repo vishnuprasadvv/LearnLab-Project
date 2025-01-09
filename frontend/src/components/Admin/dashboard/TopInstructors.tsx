@@ -1,5 +1,5 @@
 import { getTopInstructorsApi } from "@/api/adminApi";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TOP_INSTRUCTORS_LIMIT_ADMIN } from "@/config/paginationConifig";
 
 import React, { useEffect, useState } from "react";

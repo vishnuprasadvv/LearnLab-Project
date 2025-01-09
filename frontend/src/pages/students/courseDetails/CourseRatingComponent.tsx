@@ -130,7 +130,7 @@ const CourseRatingComponent: React.FC<{
 
   const handleDelete = async(ratingId: string) => {
     try {
-      const response = await deleteRatingApi(ratingId)
+       await deleteRatingApi(ratingId)
       setCourseRatings((prev) => prev.filter((rating) => rating._id !== ratingId))
       toast.success('Your rating removed successfully')
       //change rating 
@@ -180,7 +180,7 @@ const CourseRatingComponent: React.FC<{
                   defaultValue={0}
                   value={rating}
                   precision={0.5}
-                  onChange={(e, newValue) => setRating(newValue)}
+                  onChange={(_, newValue) => setRating(newValue)}
                   sx={{
                     "& .MuiRating-iconEmpty": {
                       color: "rgba(128, 128, 128, 1)", // Dark mode and light mode colors
