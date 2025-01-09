@@ -29,12 +29,10 @@ router.post('/google', googleLogin )
 router.post('/instructor-register', registerInstuctorHandler)
 
 //user profile
-router.post('/profile/change-password', isAuthenticated, authorizeRole(['student','instructor']), changePasswordHandler)
-router.post('/profile/edit', isAuthenticated, authorizeRole(['student','instructor']), editProfileHandler)
-router.patch('/profile/edit/email', isAuthenticated, authorizeRole(['student','instructor']), editProfileEmailController)
-
-
-router.get('/user-data/:userId',isAuthenticated, authorizeRole(['student','instructor']), getUserDataController)
-
+router.use( isAuthenticated, authorizeRole(['student','instructor']),)
+    .post('/profile/change-password',changePasswordHandler)
+    .post('/profile/edit', editProfileHandler)
+    .patch('/profile/edit/email', editProfileEmailController)
+    .get('/user-data/:userId', getUserDataController )
 
 export default router;

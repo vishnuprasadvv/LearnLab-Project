@@ -6,16 +6,17 @@ import { upload } from "../../infrastructure/middlewares/multer";
 
 const chatRouter = Router();
 
-chatRouter.get('/chat/:chatId',isAuthenticated,authorizeRole(['student', 'instructor']), getChatHistoryController)
+chatRouter.use(isAuthenticated,authorizeRole(['student', 'instructor']), )
+    .get('/chat/:chatId', getChatHistoryController)
+    .post('/messages/send',upload.single('messageImage'), sendMessageController)
+    .post('/create',  createChatController)
+    .delete('/delete/:chatId',  deleteChatController)
 
-chatRouter.post('/messages/send',isAuthenticated,authorizeRole(['student', 'instructor']),upload.single('messageImage'), sendMessageController)
-chatRouter.post('/create', isAuthenticated,authorizeRole(['student', 'instructor']), createChatController)
-chatRouter.delete('/delete/:chatId', isAuthenticated,authorizeRole(['student', 'instructor']), deleteChatController)
+    .get('/users',  getChatUsersController)
+    .get('/chats', getChatsController)
+    .get('/messages/:chatId', getChatMessagesController)
+    .post('/messages/markAsRead', markMessageAsReadController)
 
-chatRouter.get('/users', isAuthenticated,authorizeRole(['student', 'instructor']), getChatUsersController)
-chatRouter.get('/chats', isAuthenticated,authorizeRole(['student', 'instructor']),getChatsController)
-chatRouter.get('/messages/:chatId', isAuthenticated,authorizeRole(['student', 'instructor']),getChatMessagesController)
-chatRouter.post('/messages/markAsRead', isAuthenticated,authorizeRole(['student', 'instructor']),markMessageAsReadController)
 
 
 export default chatRouter;

@@ -8,16 +8,17 @@ import { getInstructorDashboardMetricsController, getInstructorEarningsControlle
 
 const instructorRouter = Router();
 
-instructorRouter.post('/courses/create', upload.single('courseImage'),isAuthenticated, authorizeRole(['instructor']), createCourseController )
-instructorRouter.post('/courses/create/:courseId/lecture', uploadVideo.any() ,isAuthenticated, authorizeRole(['instructor']),addLectureController )
+instructorRouter.use(upload.single('courseImage'),isAuthenticated, authorizeRole(['instructor']),)
+    .post('/courses/create', upload.single('courseImage'), createCourseController )
+    .post('/courses/create/:courseId/lecture', uploadVideo.any() ,addLectureController )
+    .get('/courses', getAllCoursesController)
+    .get('/courses/:id', getCourseController)
+    .patch('/courses/:id/delete', deleteCourseController)
+    .patch('/courses/:id/edit', upload.single('courseImage'), editCourseController)
+    .patch('/courses/:courseId/edit/lecture', uploadVideo.any(), editLectureController)
+    .patch('/courses/:courseId/publish', publishCourseController)
+    .get('/purchases', getPurchasesController)
 
-instructorRouter.get('/courses',isAuthenticated, authorizeRole(['instructor']), getAllCoursesController)
-instructorRouter.get('/courses/:id',isAuthenticated, authorizeRole(['instructor']), getCourseController)
-instructorRouter.patch('/courses/:id/delete',isAuthenticated, authorizeRole(['instructor']), deleteCourseController)
-instructorRouter.patch('/courses/:id/edit', upload.single('courseImage'),isAuthenticated, authorizeRole(['instructor']), editCourseController)
-instructorRouter.patch('/courses/:courseId/edit/lecture', uploadVideo.any(),isAuthenticated, authorizeRole(['instructor']), editLectureController)
-instructorRouter.patch('/courses/:courseId/publish',isAuthenticated, authorizeRole(['instructor']), publishCourseController)
-instructorRouter.get('/purchases',isAuthenticated, authorizeRole(['instructor']), getPurchasesController)
 
 //instructor dashboard
 instructorRouter.use(isAuthenticated, authorizeRole(['instructor']),)

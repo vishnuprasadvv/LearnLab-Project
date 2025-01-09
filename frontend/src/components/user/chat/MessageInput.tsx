@@ -23,17 +23,19 @@ const MessageInput = () => {
 
     const handleSendMessage = async(e:React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true)
-        if(!text.trim() && !imageFile) {
-          toast.error('Message cannot be empty')
-          return;
-        }
-        if(!selectedChat?._id || !currentUser?._id){
-          return;
-        }
+       
         try {
+          setIsLoading(true)
+          if(!text.trim()) {
+            toast.error('Message cannot be empty')
+            return;
+          }
+          if(!selectedChat?._id || !currentUser?._id){
+            return;
+          }
+
           const response = await sendMessageApi({senderId: currentUser?._id, messageText: text, chatId: selectedChat?._id, image: imageFile})
-          console.log(response)
+         
 
           //emit the message to the server so it can be broadcasted to other user
           socket.emit('sendMessage',{
@@ -50,7 +52,7 @@ const MessageInput = () => {
           setImagePreview(null)
           setImageFile(null);
         } catch (error:any) {
-          toast.error(error.message || 'Error sending message')
+          toast.error(error.response.data.message || 'Error sending message')
           console.error('error sending message', error)
         }finally{
           setIsLoading(false)
