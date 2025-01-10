@@ -149,12 +149,3 @@ export const generateSignedUrl = (publicId : string) => {
     expires_at: Math.floor(Date.now() / 1000) + (60 * 60), //valid for one hour
   })
 }
-// export const generateSignedUrl = (publicId : string, expiryInSeconds: number) => {
-//   return cloudinary.url(publicId, {
-//     resource_type: 'video',
-//     type: 'authenticated',
-//     sign_url : true,
-//     secure : true,
-//     expires_at: Math.floor(Date.now() / 1000) + expiryInSeconds,
-//   })
-// }
