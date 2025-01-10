@@ -167,6 +167,17 @@ export const refreshTokenHandler = async (
     res.cookie("accessToken", accessToken, accessTokenOptions);
     res.status(200).json({ success: true, data: accessToken });
   } catch (error) {
+
+    res.clearCookie("accessToken", { httpOnly: true, 
+      sameSite: "strict", 
+      secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: config.app.ENVIRONMENT === 'production'
+    });
+
+
     next(error);
   }
 };
