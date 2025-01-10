@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { RegisterUserUseCase } from "../../application/use-cases/user/registerUser";
-import { generateOtp } from "../../infrastructure/services/otpService";
 import { LoginUserUseCase } from "../../application/use-cases/user/loginUser";
 import { verifyOtpCode } from "../../application/use-cases/user/verifyOtp";
 import { sendOtp } from "../../application/use-cases/user/sendOtp";
@@ -25,6 +24,7 @@ import { AdminLoginUseCase } from "../../application/use-cases/admin/adminLogin"
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { GetUserDataUseCase } from "../../application/use-cases/user/getUserData";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
+import { config } from "../../infrastructure/config/config";
 
 const userRepository = new UserRepositoryImpl();
 
@@ -163,7 +163,6 @@ export const refreshTokenHandler = async (
 ) => {
   try {
     const token = req.cookies.refreshToken;
-    console.log(token);
     const accessToken = await refreshAccessToken(token);
 
     res.cookie("accessToken", accessToken, accessTokenOptions);
@@ -180,16 +179,18 @@ export const refreshAdminTokenHandler = async (
 ) => {
   try {
     const token = req.cookies.adminRefreshToken;
-    console.log("adminrefreshtoken", token);
     const adminAccessToken = await refreshAccessToken(token);
 
     res.cookie("adminAccessToken", adminAccessToken, accessTokenOptions);
     res.status(200).json({ success: true, data: adminAccessToken });
   } catch (error) {
-    res.clearCookie("adminAccessToken", { httpOnly: true, sameSite: "strict" });
-    res.clearCookie("AdminRefreshToken", {
+    res.clearCookie("adminAccessToken", { httpOnly: true, 
+      sameSite: "none", 
+      secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("adminRefreshToken", {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: config.app.ENVIRONMENT === 'production'
     });
     next(error);
   }
@@ -204,8 +205,8 @@ export const logoutHandler = async (
 ) => {
   try {
     //clear cookies for access and refreshtoken
-    res.clearCookie("accessToken", { httpOnly: true, sameSite: "strict" });
-    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+    res.clearCookie("accessToken", { httpOnly: true, sameSite: "none", secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none", secure: config.app.ENVIRONMENT === 'production' });
 
     const message = logout();
 
@@ -223,10 +224,13 @@ export const adminLogoutHandler = async (
 ) => {
   try {
     //clear cookies for access and refreshtoken
-    res.clearCookie("adminAccessToken", { httpOnly: true, sameSite: "strict" });
+    res.clearCookie("adminAccessToken", { httpOnly: true, 
+      sameSite: "none", 
+      secure: config.app.ENVIRONMENT === 'production' });
     res.clearCookie("adminRefreshToken", {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: config.app.ENVIRONMENT === 'production'
     });
 
     const message = logout();
