@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { config } from "../config/config";
 import { IPaymentService } from "../../application/repositories/IPaymentService";
-const stripe = new Stripe(config.stripe.STRIPE_SECRET_KEY!, { apiVersion: "2024-11-20.acacia" });
+const stripe = new Stripe(config.stripe.STRIPE_SECRET_KEY!, { apiVersion: "2024-12-18.acacia" });
 
 export class StripeService implements IPaymentService{
  async createCheckOutSession (orderId: string, courses: any[], userId: string, uniqueOrderId:string) : Promise<string> {

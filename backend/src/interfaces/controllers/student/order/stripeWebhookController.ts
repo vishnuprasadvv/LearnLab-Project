@@ -4,7 +4,7 @@ import { OrderRepository } from "../../../../infrastructure/repositories/orderRe
 import { config } from "../../../../infrastructure/config/config";
 import { CourseRepositoryClass } from "../../../../infrastructure/repositories/courseRepository";
 
-const stripe = new Stripe(config.stripe.STRIPE_SECRET_KEY!, { apiVersion: "2024-11-20.acacia" });
+const stripe = new Stripe(config.stripe.STRIPE_SECRET_KEY!, { apiVersion: "2024-12-18.acacia" });
 const orderRepository = new OrderRepository();
 const courseRepository = new CourseRepositoryClass();
 
