@@ -7,8 +7,7 @@ const REFRESH_TOKEN_SECRET = config.jwt.REFRESH_TOKEN_SECRET;
 export const generateAccessToken = (payload : {id:string, role:string}) : string => {
    
     const access = jwt.sign(payload, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
-   const verify =  jwt.verify(access, ACCESS_TOKEN_SECRET)
-   console.log(verify)
+    jwt.verify(access, ACCESS_TOKEN_SECRET)
    return access
 }
 
@@ -21,7 +20,7 @@ export const verifyAccessToken = (token : string) : {id:string, role: string} | 
         return jwt.verify(token, ACCESS_TOKEN_SECRET) as {id: string, role: string}
          
     } catch (error: any) {
-        console.log('verifyAccessToken error:', error)
+        console.error('verifyAccessToken error:', error)
         throw error
     }
 }

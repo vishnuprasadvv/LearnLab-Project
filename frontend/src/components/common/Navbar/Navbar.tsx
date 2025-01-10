@@ -36,7 +36,7 @@ const Navbar = () => {
     } else {
       dispatch(clearWishlist());
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   let Links = [
     {

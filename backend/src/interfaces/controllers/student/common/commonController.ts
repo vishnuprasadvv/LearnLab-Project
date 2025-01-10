@@ -53,7 +53,6 @@ export const getFilteredCourses = async(req: Request, res: Response, next: NextF
             query: normalizedQuery
         })
 
-        console.log('couurse contrlelre,' , courses)
         res.status(200).json({message: 'All courses fetched successfully', success : true, data: courses})
     } catch (error) {
         next(error)

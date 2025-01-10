@@ -6,7 +6,6 @@ import User from "../../domain/models/User";
 export const isAuthenticated = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     const accessToken = req.cookies?.accessToken;
     const refreshToken = req.cookies?.refreshToken;
-    //console.log('isAuthMiddleware',accessToken)
     if(!accessToken && !refreshToken){
         res.status(401).json({message: 'AccessToken and refreshToken not found'})
         console.log('accessToken and refreshToken not found')
@@ -51,7 +50,6 @@ export const isAuthenticated = async(req: Request, res: Response, next: NextFunc
 export const isAdminAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
     const accessToken = req.cookies?.adminAccessToken;
     const refreshToken = req.cookies?.adminRefreshToken;
-    console.log('isAdminAuthMiddleware',accessToken)
     if(!accessToken && !refreshToken){
         res.status(401).json({message: 'Admin accessToken and refreshToken not found'})
         console.log('admin accesstoken and refresh token not found')
@@ -90,8 +88,6 @@ export const isAdminAuthenticated = (req: Request, res: Response, next: NextFunc
 export const authorizeRole = (roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction): void => {
         const authReq = req
-        console.log('from authorize role')
-        console.log(authReq.user)
         if (!authReq.user) {
             res.status(401).json({ message: 'Unauthorized' })
             return;

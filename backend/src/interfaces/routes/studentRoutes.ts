@@ -36,7 +36,9 @@ router.use(isAuthenticated, authorizeRole(['student','instructor']),)
     .post('/wishlist/add', addToWishlistController)
     .post('/wishlist/delete',deleteFromWishlistController)
     .get('/wishlist',getWishlistController)
-    .get('/wishlist/ids', getWishlistCountController)
+    
+//get wishlist count    
+router.get('/wishlist/ids', getWishlistCountController)
 
 //rating routes
 router.get('/rating/:courseId', getCourseRatingsController)
