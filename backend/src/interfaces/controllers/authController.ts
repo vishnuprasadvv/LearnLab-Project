@@ -162,6 +162,9 @@ export const refreshTokenHandler = async (
 ) => {
   try {
     const token = req.cookies.refreshToken;
+    if(!token) {
+      throw new CustomError('Refresh token not found')
+    }
     const accessToken = await refreshAccessToken(token);
 
     res.cookie("accessToken", accessToken, accessTokenOptions);
@@ -189,6 +192,9 @@ export const refreshAdminTokenHandler = async (
 ) => {
   try {
     const token = req.cookies.adminRefreshToken;
+    if(!token) {
+      throw new CustomError('Admin refresh token not found')
+    }
     const adminAccessToken = await refreshAccessToken(token);
 
     res.cookie("adminAccessToken", adminAccessToken, accessTokenOptions);
