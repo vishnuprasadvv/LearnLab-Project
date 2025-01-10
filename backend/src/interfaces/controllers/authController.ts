@@ -172,11 +172,11 @@ export const refreshTokenHandler = async (
   } catch (error) {
 
     // res.clearCookie("accessToken", { httpOnly: true, 
-    //   sameSite: "strict", 
+    //   sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
     //   secure: config.app.ENVIRONMENT === 'production' });
     // res.clearCookie("refreshToken", {
     //   httpOnly: true,
-    //   sameSite: "strict",
+    //  sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
     //   secure: config.app.ENVIRONMENT === 'production'
     // });
 
@@ -201,11 +201,11 @@ export const refreshAdminTokenHandler = async (
     res.status(200).json({ success: true, data: adminAccessToken });
   } catch (error) {
     // res.clearCookie("adminAccessToken", { httpOnly: true, 
-    //   sameSite: "strict", 
+    //  sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
     //   secure: config.app.ENVIRONMENT === 'production' });
     // res.clearCookie("adminRefreshToken", {
     //   httpOnly: true,
-    //   sameSite: "strict",
+    //   sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
     //   secure: config.app.ENVIRONMENT === 'production'
     // });
     next(error);
@@ -221,8 +221,12 @@ export const logoutHandler = async (
 ) => {
   try {
     //clear cookies for access and refreshtoken
-    res.clearCookie("accessToken", { httpOnly: true, sameSite: "strict", secure: config.app.ENVIRONMENT === 'production' });
-    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict", secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("accessToken", { httpOnly: true, 
+      sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
+      secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("refreshToken", { httpOnly: true, 
+      sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
+      secure: config.app.ENVIRONMENT === 'production' });
 
     const message = logout();
 
@@ -241,11 +245,11 @@ export const adminLogoutHandler = async (
   try {
     //clear cookies for access and refreshtoken
     res.clearCookie("adminAccessToken", { httpOnly: true, 
-      sameSite: "strict", 
+      sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
       secure: config.app.ENVIRONMENT === 'production' });
     res.clearCookie("adminRefreshToken", {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: config.app.ENVIRONMENT === 'production' ? "none" : "strict", 
       secure: config.app.ENVIRONMENT === 'production'
     });
 
