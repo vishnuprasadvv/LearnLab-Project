@@ -111,7 +111,6 @@ export const loginHandler = async (
     const loginUseCase = new LoginUserUseCase(userRepository);
     const response = await loginUseCase.execute(email, password);
     if (!response) throw new CustomError("Something went wrong", 400);
-    console.log(response);
     res.cookie("refreshToken", response.refreshToken, refreshTokenOptions);
     res.cookie("accessToken", response.accessToken, accessTokenOptions);
 
@@ -185,11 +184,11 @@ export const refreshAdminTokenHandler = async (
     res.status(200).json({ success: true, data: adminAccessToken });
   } catch (error) {
     res.clearCookie("adminAccessToken", { httpOnly: true, 
-      sameSite: "none", 
+      sameSite: "strict", 
       secure: config.app.ENVIRONMENT === 'production' });
     res.clearCookie("adminRefreshToken", {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "strict",
       secure: config.app.ENVIRONMENT === 'production'
     });
     next(error);
@@ -205,8 +204,8 @@ export const logoutHandler = async (
 ) => {
   try {
     //clear cookies for access and refreshtoken
-    res.clearCookie("accessToken", { httpOnly: true, sameSite: "none", secure: config.app.ENVIRONMENT === 'production' });
-    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none", secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("accessToken", { httpOnly: true, sameSite: "strict", secure: config.app.ENVIRONMENT === 'production' });
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict", secure: config.app.ENVIRONMENT === 'production' });
 
     const message = logout();
 
@@ -225,11 +224,11 @@ export const adminLogoutHandler = async (
   try {
     //clear cookies for access and refreshtoken
     res.clearCookie("adminAccessToken", { httpOnly: true, 
-      sameSite: "none", 
+      sameSite: "strict", 
       secure: config.app.ENVIRONMENT === 'production' });
     res.clearCookie("adminRefreshToken", {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "strict",
       secure: config.app.ENVIRONMENT === 'production'
     });
 
@@ -370,7 +369,6 @@ export const googleLoginSuccess = (
   res: Response
 ) => {
   const user = req.user;
-  console.log(user);
 
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
