@@ -51,7 +51,6 @@ const CoursesPage = () => {
       ...prevFilters,
       ...updatedFilters,
     }));
-    console.log("Active Filters:", updatedFilters);
   };
 
   const updateQueryParams = () => {
@@ -84,7 +83,6 @@ const CoursesPage = () => {
           limit: itemsPerPage,
           query: appliedSearchQuery,
         });
-        console.log(response);
         setCourses(response.data.courses);
         setTotalPages(response.data.totalPages)
         setTotalCourses(response.data.totalCourses)
@@ -102,7 +100,7 @@ const CoursesPage = () => {
     e.preventDefault();
     // Normalize the search query: remove extra spaces
   const normalizedSearchQuery = searchQuery.replace(/\s+/g, ' ').trim();
-  console.log(normalizedSearchQuery)
+  
     setAppliedSearchQuery(normalizedSearchQuery);
     setCurrentPage(1);
   };
