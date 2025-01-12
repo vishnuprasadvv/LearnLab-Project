@@ -33,7 +33,6 @@ import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { addIdToWishlist, removeIdFromWishlist } from "@/features/wishlistSlice";
 import CourseRatingComponent from "./CourseRatingComponent";
 import { Rating } from "@mui/material";
-import NotFound from "@/pages/NotFound";
 import LoadingScreen from "@/components/common/Loading/LoadingScreen";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -56,7 +55,7 @@ const CourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState<ICourses | null>(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const [userCoursePurchaseStatus, setUserCoursePurchaseStatus] =
     useState(false);
@@ -170,15 +169,15 @@ const CourseDetails = () => {
     }
   };
 
-  if(loading ) {
-    return <LoadingScreen/>
-  }
   if(course === null) {
-    return (<NotFound/>)
+    return 
   }
-
+   
   return (
-    <div className="mt-10 space-y-5 max-w-7xl w-full place-self-center">
+    loading ? (
+      <LoadingScreen/>
+    ) : (
+<div className="mt-10 space-y-5 max-w-7xl w-full place-self-center">
       <BreadCrumb />
       <div className="bg-gradient-to-r from-blue-500 to-sky-400 dark:from-blue-900 dark:to-indigo-800 text-white ">
         <div className="max-w-7xl flex flex-col md:flex-row mx-auto py-8 px-4 md:px-8 justify-between">
@@ -265,7 +264,7 @@ const CourseDetails = () => {
       </div>
 
       <div className="w-full p-10">
-              {course?.lectures?.some((lecture) => lecture.isFree) && (
+              {course?.lectures?.some((lecture) => lecture.isFree) && isAuthenticated && (
           <Card>
             <CardContent className="p-4 flex flex-col">
                 <div className="w-full place-self-center px-10">
@@ -367,6 +366,8 @@ const CourseDetails = () => {
         </Tabs>
       </div>
     </div>
+    )
+    
   );
 };
 
