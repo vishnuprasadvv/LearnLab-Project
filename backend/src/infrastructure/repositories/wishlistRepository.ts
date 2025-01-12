@@ -59,7 +59,6 @@ export class WishlistRepository implements IWishlistRepository {
     const userObjectId = new mongoose.Types.ObjectId(userId)
     const courseObjectId = new mongoose.Types.ObjectId(courseId)
     const wishlist = await Wishlist.findOne({userId:userObjectId, "items.courseId": courseObjectId})
-    console.log(wishlist)
     return wishlist ? true : false;
   }
 
@@ -74,7 +73,6 @@ export class WishlistRepository implements IWishlistRepository {
     if (wishlist) {
       throw new CustomError("Course already added to wishlist", 400);
     }
-    console.log(wishlist);
     const updatedWishlist = await Wishlist.updateOne(
       { userId: userObjectId },
       { $addToSet: { items: { courseId: courseObjectId } } },

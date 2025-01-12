@@ -37,7 +37,6 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
       try {
         const response = await getAllCategoriesApi();
         setCategories(response.data);
-        console.log(response);
       } catch (error) {
         console.error("error fetching categories", error);
       } finally {

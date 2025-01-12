@@ -44,7 +44,6 @@ const ProfileSidebar = () => {
   ];
 
   const { user } = useAppSelector((state) => state.auth);
-  console.log(user);
   const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
@@ -53,7 +52,6 @@ const ProfileSidebar = () => {
       dispatch(logoutSliceAction());
       toast.success(response.message || "Logout successful");
     } catch (err: any) {
-      console.log(err);
       toast.error(err.message || "Logout failed");
     }
   };

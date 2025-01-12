@@ -15,7 +15,6 @@ export default function InstructorManagement() {
     const fetchInstructors = async () => {
       try {
         const response = await dispatch(getInstructorsThunk()).unwrap();
-        console.log(response?.instructors)
         setInstructors(response?.instructors)
       } catch (error: any) {
         toast.error(error?.response?.data?.message || 'Failed fetching instructors applications list')

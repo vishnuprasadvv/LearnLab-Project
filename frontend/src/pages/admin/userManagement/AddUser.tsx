@@ -90,7 +90,6 @@ function AddUser() {
             return err?.response?.data?.message || "User creation failed";
           },
         });
-        console.log("user created", result);
       } catch (err: any) {
         console.error("User creation failed:", err);
       }

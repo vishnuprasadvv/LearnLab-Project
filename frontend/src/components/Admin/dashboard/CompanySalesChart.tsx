@@ -24,7 +24,7 @@ const CompanySalesChart:React.FC = () => {
                 const response = await getCompanyProfitDataApi(timeFrame)
                 setFilteredData(response.data)
             } catch (error) {
-                console.log('error fetching userRegisterData', error)
+                console.error('error fetching userRegisterData', error)
             }
         }
 

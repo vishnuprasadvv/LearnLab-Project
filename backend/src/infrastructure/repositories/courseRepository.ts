@@ -82,13 +82,10 @@ async addLectures(courseId: string, lectures: any[]): Promise<ICourses | null> {
 
   // Update lectures to the course
 async updateLecture(courseId: string, udpatedLectureData: any[]): Promise<ICourses | null> {
-  console.log('updtaelecute')
   const course = await Courses.findOne({_id: courseId, isDeleted: false});
   if(!course){
     throw new Error('Course not found')
   }
-  console.log('updated lecture data', udpatedLectureData)
-
   const updatedLectures =  [];
   for(let newData of udpatedLectureData){
     updatedLectures.push(newData)
@@ -100,7 +97,6 @@ async updateLecture(courseId: string, udpatedLectureData: any[]): Promise<ICours
     { $set: { lectures : updatedLectures  } },
     { new: true }
   );
-  console.log(updatedLecture)
   if(!updatedLecture) throw new Error('Lecture update failed')
   return updatedLecture;
 }

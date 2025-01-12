@@ -37,7 +37,6 @@ const Categories = () => {
         );
         setCategories(response.data.categories);
         setTotalPages(response.data.totalPages)
-        console.log(response);
       } catch (error) {
         console.error("error fetching categories", error);
       }

@@ -30,7 +30,6 @@ export const getInstructorEarningsController = async(req:Request, res: Response,
         }
         const useCase = new GetInstructorEarningsUseCase(orderRepository);
         const sales = await useCase.execute(instructorId);
-        console.log('earnings', sales)
         res.status(200).json({success: true, data: sales})
 
     } catch (error) {

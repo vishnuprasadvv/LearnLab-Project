@@ -44,7 +44,6 @@ const CourseMainEdit = () => {
       setLoading(true);
       const response = await getCourseById(courseId);
       setCourse(response.data);
-      console.log(response.data);
       const resultdata = response.data;
       methods.setValue("title", resultdata.title);
       methods.setValue("description", resultdata.description);
@@ -163,9 +162,6 @@ const CourseMainEdit = () => {
         },
         initialFormData
       );
-      if (isUnchanged) {
-        console.log("value not changed");
-      }
       if (isUnchanged) {
         toast("No Changes detected", { icon: "⚠️" });
         return;

@@ -14,11 +14,9 @@ export const useSocket = (currentUser: any) => {
 
     socket.on('updateUserStatus', (users: any) => {
       dispatch(setOnlineUsers(users));
-      console.log('onlineusers ',users)
     });
 
     return () => {
-        console.log('return chat main')
         socket.emit('setUserOffline', currentUser._id)
       socket.off('updateUserStatus');
       dispatch(resetOnlineUsers());

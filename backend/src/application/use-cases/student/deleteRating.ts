@@ -10,7 +10,6 @@ export class DeleteRatingUseCase {
             throw new CustomError('Rating not found', 404);
         }
         if(existingReview.userId.toString() !== userId) {
-            console.log(existingReview.userId, userId)
             throw new CustomError('You can only delete your own ratings', 403)
         }
         //delete the rating

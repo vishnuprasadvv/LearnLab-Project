@@ -71,7 +71,6 @@ const AdminCourseManagement = () => {
       ...prevFilters,
       ...updatedFilters,
     }));
-    console.log("Active Filters:", updatedFilters);
   };
 
   useEffect(() => {
@@ -89,7 +88,6 @@ const AdminCourseManagement = () => {
           query: searchQuery,
         });
         setCourses(response.data.courses);
-        console.log(response);
         //set values for pagination
         setTotalPages(response.data.totalPages);
         setTotalCourses(response.data.totalCourses);
@@ -126,7 +124,6 @@ const AdminCourseManagement = () => {
     if (!selectedCourseId) return;
     try {
       const response = await deleteCourseAdminApi(selectedCourseId);
-      console.log(response);
       toast.success(response.data.message || "Course deleted successfully");
       setCourses(
         (prev) =>

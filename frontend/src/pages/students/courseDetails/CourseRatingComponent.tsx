@@ -45,7 +45,6 @@ const CourseRatingComponent: React.FC<{
     const fetchRatings = async () => {
       try {
         const response = await getCourseRatingsApi(courseId);
-        console.log(response);
         setCourseRatings(response.data);
       } catch (error) {
         console.error("error fetching ratings", error);
@@ -70,12 +69,10 @@ const CourseRatingComponent: React.FC<{
 
         let previousRatingData = courseRatings.filter((rating)=> rating._id === editRatingId)
         //update review
-        console.log("edit mode");
-        const response = await updateRatingApi({
+        await updateRatingApi({
           ratingId: editRatingId,
           ...parsedData,
         });
-        console.log(response);
         setCourseRatings((prev) =>
           prev.map((item) =>
             item._id === editRatingId ? { ...item, ...parsedData } : item
@@ -93,7 +90,6 @@ const CourseRatingComponent: React.FC<{
       } else {
         //Add new review
         const response = await submitRatingApi({ courseId, ...parsedData });
-        console.log(response);
         toast.success("Rating submitted successfully");
         setCourseRatings((prev) => [...prev, response.data]);
 

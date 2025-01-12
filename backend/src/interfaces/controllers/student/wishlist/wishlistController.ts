@@ -61,7 +61,6 @@ export const getWishlistCountController = async(req:Request, res:Response, next:
         if(user){
              wishlistCount = await getWishlistCountUseCase.execute(user.id)
         }
-        console.log("wishlistCount" , wishlistCount)
         res.status(200).json({success:true, data: wishlistCount})
     } catch (error) {
         next(error)

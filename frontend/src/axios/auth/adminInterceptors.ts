@@ -21,12 +21,10 @@ adminInterceptorApi.interceptors.request.use(
 
 adminInterceptorApi.interceptors.response.use(
     (response) => {
-        console.log('response interceptor')
         return response
     },
     async(error) => {
         console.log('admin interceptor error::',error)
-        console.log(error.response.data.message)
         if(error.response?.status === 401){
             const errorMessage = error.response?.data?.message;
             if(errorMessage === 'Admin access token expired'){

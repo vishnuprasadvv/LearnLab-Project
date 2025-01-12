@@ -30,7 +30,7 @@ export class LoginUserUseCase {
     }
 
     if(!user.password){
-        console.log('password not found in user collection')
+        console.error('password not found in user collection')
         return ;
     }
     const isPasswordValid = await comparePassword(password, user.password);

@@ -5,7 +5,6 @@ const stripe = new Stripe(config.stripe.STRIPE_SECRET_KEY!, { apiVersion: "2024-
 
 export class StripeService implements IPaymentService{
  async createCheckOutSession (orderId: string, courses: any[], userId: string, uniqueOrderId:string) : Promise<string> {
-    console.log('stripeservice', courses)
     const lineItems = courses.map((course)=> ({
         price_data :  {
             currency: 'inr',

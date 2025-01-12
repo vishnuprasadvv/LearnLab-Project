@@ -17,12 +17,10 @@ export class SubmitRatingUseCase {
         rating.courseId.toString(),
         rating.userId.toString()
       );
-      console.log("existing rating", existingRating);
       if (existingRating) {
         throw new CustomError("You have already rated this course.", 400);
       }
 
-      console.log("new rating", rating);
       const newRating = await this.ratingRepository.submitRating(rating);
 
       //add rating to cousre

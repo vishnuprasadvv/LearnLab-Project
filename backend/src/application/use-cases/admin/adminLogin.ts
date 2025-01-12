@@ -24,7 +24,7 @@ export class AdminLoginUseCase{
         }
 
         if(!user.password){
-            console.log('password not found in user collection')
+            console.error('password not found in user collection')
             return ;
         }
 

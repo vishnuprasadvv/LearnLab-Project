@@ -24,8 +24,6 @@ const Navbar = () => {
       try {
         const response = await getWishlistCourseIds();
         const courseIds = response.data || [];
-        console.log("wishlistcount", response);
-        console.log(courseIds);
         dispatch(setWishlistIds({ courseIds: courseIds }));
       } catch (error) {
         console.error("getting wishlist course ids error", error);

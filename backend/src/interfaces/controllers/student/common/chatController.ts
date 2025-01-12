@@ -39,7 +39,6 @@ export const getChatHistoryController = async(req: Request, res: Response, next:
 export const sendMessageController = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const {senderId, replyToMessageId, messageText, chatId} = req.body;
-        console.log(req.body)
         if(!senderId || !chatId) {
             throw new CustomError('Sender ID and Chat ID are required', 400)
         }
@@ -83,8 +82,6 @@ export const getChatUsersController = async(req: Request, res: Response, next: N
 export const createChatController = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const {participants, chatType, chatName} = req.body;
-        console.log(participants, chatType, chatName)
-        console.log(req.body)
         if (!participants || !Array.isArray(participants) || participants.length < 2) {
             throw new CustomError("Participants array must contain at least 2 user IDs.", 400);
           }
@@ -109,7 +106,6 @@ export const getChatsController = async(req: Request, res: Response, next: NextF
         const user = req.user;
         if(!user) throw new CustomError('User not found', 400)
         const chat = await getUserChatUseCase.execute(user.id)
-    console.log('chats', chat)
         if(!chat) throw new CustomError('chat not found', 404)
             res.status(200).json({success: true, message:'fetching chats success', data:chat})
     } catch (error) {
@@ -137,7 +133,6 @@ try {
     if(!userId) throw new CustomError('User ID is required', 400)
     const markAsRead = await markAsReadUseCase.execute(chatId, userId)
     if(!markAsRead) throw new CustomError('Error marking messages as read', 400)
-        console.log('message read')
 
     io.to(chatId).emit('messagesRead', {chatId})
     

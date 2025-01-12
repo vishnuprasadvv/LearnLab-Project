@@ -44,14 +44,11 @@ const AdminLogin = () => {
       try {
         const {email, password} = values
         const result = await adminLogin(email, password )
-        //navigate(result.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
-        console.log(result)
         dispatch(
           adminLoginSuccess({
             user: result.user,
           })
         );
-        
         navigate(result.user.role ==='admin'? '/admin/dashboard': '/unauthorized')
         toast.success('Login success')
       } catch (err:any) {

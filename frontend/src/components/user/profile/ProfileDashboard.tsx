@@ -24,7 +24,6 @@ export default function UserProfile() {
       const fetchProfile = async () => {
         try {
           const response = await dispatch(getUserDataThunk(user._id)).unwrap();
-          console.log(response)
           setProfileData(response.user);
         } catch (error) {
           console.error('Failed to fetch profile:', error);

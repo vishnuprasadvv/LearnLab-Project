@@ -14,7 +14,6 @@ export const getUserChatsApi = async () => {
 }
 
 export const createChatApi = async (data:{participants:string[], chatType: string , chatName?: string} ) => {
-    console.log(data)
     const response = await api.post(`${API_URL}/chat/create`,{...data}, { withCredentials: true});
     return response.data;
 }

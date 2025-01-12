@@ -20,7 +20,6 @@ const TopInstructors: React.FC = () => {
         const getTopInstructors = async() => {
             try {
                 const response = await getTopInstructorsApi(limit)
-                console.log(response)
                 setTopInstructors(response.data)
             } catch (error) {
                 console.error('fetching top courses error', error)

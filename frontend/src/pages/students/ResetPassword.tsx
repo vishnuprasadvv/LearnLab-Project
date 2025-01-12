@@ -66,8 +66,7 @@ function ResetPassword() {
       if (otpInput.length === 4) {
         try {
           const response = await dispatch(resetPasswordThunk({ email, otp: otpInput, password: values.newPassword })).unwrap();
-          console.log(response)
-          toast.success('Reset password successful')
+          toast.success(response.message || 'Reset password successful')
           navigate(backToLoginPath, { replace: true })
 
         } catch (err: any) {
@@ -93,10 +92,8 @@ function ResetPassword() {
             return err?.message || 'Email verification failed'
           }
         })
-        console.log('resend otp front end',await response)
     } catch (error:any) {
       toast.error(error?.error || 'Error sending OTP')
-      console.log(error)
     }
 }
 

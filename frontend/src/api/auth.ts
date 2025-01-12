@@ -77,10 +77,8 @@ export const handleEditUserAPI = async (firstName: string, lastName : string, em
 
 
  export const handleGoogleLogin = async (token: string) => {
-    console.log(token)
     try {
       const response = await api.post(`${API_URL}/auth/google`, { token });
-      console.log("Login Success:", response.data);
       return response.data
     } catch (error: any) {
       console.error("Login Error:", error.response?.data || error.message);
@@ -91,22 +89,6 @@ export const handleEditUserAPI = async (firstName: string, lastName : string, em
 
 export const handleRegisterToInstructor = async (data : RegisterInstructorFormValues, userId: string) => {
     try {
-        // const formData = new FormData()
-        // console.log(data)
-       
-        // formData.append('userId', userId)
-        // formData.append('qualifications' , data.qualifications)
-        // formData.append('expertise', data.expertise)
-        // formData.append('experience', data.experience.toString())
-        // formData.append('comment', data.comment)
-        // formData.append('password', data.password)
-        // // if(data.resume){
-        // //     formData.append('resume', data.resume)
-        // // }
-        // console.log(formData)
-        // for (const pair of formData.entries()) {
-        //     console.log(`${pair[0]}: ${pair[1]}`);
-        //   }
         const response = await api.post(`${API_URL}/auth/instructor-register`, {formData: data, userId}  )
         return response.data;
     } catch (error: any) {

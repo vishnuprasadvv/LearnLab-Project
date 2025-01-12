@@ -9,9 +9,7 @@ const orderRepository = new OrderRepository();
 const courseRepository = new CourseRepositoryClass();
 
 export const handleWebhook = async (req: Request, res: Response): Promise<void> => {
-    console.log('handlewebhook', config.stripe.STRIPE_WEBHOOK_SECRET)
-    console.log("Webhook called with raw body type:", typeof req.body); // Should be 'object' or 'Buffer'
-  console.log("Raw body:", req.body);
+   
     const signature = req.headers["stripe-signature"]!;
     const webhookSecret = config.stripe.STRIPE_WEBHOOK_SECRET!;
 
@@ -92,7 +90,7 @@ const handleCheckoutSessionCompleted = async (event: Stripe.Event): Promise<void
 
 const handlePaymentFailed = async (event: Stripe.Event): Promise<void> => {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
-    console.log('Payment failed:', paymentIntent);
+    console.error('Payment failed:', paymentIntent);
 
     // Retrieve the order ID from metadata
     const orderId = paymentIntent.metadata?.orderId;

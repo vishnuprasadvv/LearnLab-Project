@@ -98,7 +98,6 @@ const Signup = () => {
         const response = await result;
         sessionStorage.setItem("userEmail", response.user.email);
         navigate("/verify-account");
-        console.log("user created", response.user);
       } catch (err: any) {
         dispatch(setError(err?.message));
         if (err.message === "Please verify your account") {

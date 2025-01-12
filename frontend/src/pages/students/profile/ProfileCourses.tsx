@@ -20,13 +20,11 @@ const ProfileCourses = () => {
     const fetchMyCourses = async () => {
       try {
         const response = await fetchMyCoursesApi();
-        console.log(response);
         setMyOrders(response.data);
         //calculate total pages
         const totalItems = response.data.length;
         setTotalPages(Math.ceil(totalItems / itemsPerPage));
       } catch (error: any) {
-        console.error("fetching course error", error);
         toast.error(error.message || "Fetching course failed");
       } finally {
         setIsLoading(false);

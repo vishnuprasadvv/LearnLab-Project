@@ -52,9 +52,7 @@ const ProfileEdit = () => {
     const fetchProfile = async () => {
       try {
         const response = await dispatch(getUserDataThunk(user._id)).unwrap();
-        console.log(response);
         setProfileData(response.user);
-
         setOriginalEmail(response.user.email);
       } catch (error) {
         console.error("Failed to fetch profile:", error);
@@ -103,7 +101,6 @@ const ProfileEdit = () => {
           success: (data: any) => {
             const updatedUser = data.user;
             dispatch(authSuccess({ user: updatedUser }));
-            console.log("user state ", user);
             return data.message || "Profile updated successfully";
           },
           error: (err) => {
@@ -139,7 +136,6 @@ const ProfileEdit = () => {
     const file = e.target.files?.[0];
     if (file) {
       setProfileImage(file);
-      console.log("Selected file:", file);
       // Generate a preview URL for the selected file
       const previewURL = URL.createObjectURL(file);
       setPreviewImage(previewURL);
@@ -157,7 +153,6 @@ const ProfileEdit = () => {
   };
 
   const handleChangeProfileImage = async () => {
-    console.log(user);
     try {
       if (!profileImage) {
         setError("Please select an image to upload");
@@ -173,7 +168,6 @@ const ProfileEdit = () => {
       const response = dispatch(
         changeProfileImageThunk({ userId: user._id, formData })
       ).unwrap();
-      console.log("profileimage upload", await response);
 
       await toast.promise(response, {
         loading: "Uploading profile image...",
@@ -188,7 +182,7 @@ const ProfileEdit = () => {
       setIsUploading(false);
       setProfileImage(null);
     } catch (error) {
-      console.log("error changing profile image", error);
+      toast.error('Failed to change profile image')
     } finally {
       setIsUploading(false);
     }

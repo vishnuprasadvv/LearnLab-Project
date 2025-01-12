@@ -6,7 +6,6 @@ const userRepository = new UserRepositoryImpl()
 
 export const getAllUsersController = async (req: Request, res: Response) => {
         const {search, page = '1', limit = '10' } = req.query;
-        console.log(search, page, limit)
 
     try {
         const searchQuery = typeof search === 'string' ? search : '';
@@ -17,7 +16,7 @@ export const getAllUsersController = async (req: Request, res: Response) => {
         const {users, total} = await useCase.execute({search:searchQuery, page:pageNum, limit:limitNum})
         res.status(200).json({users, total})
     } catch (error) {
-        console.log('getuser error', error)
+        console.error('getuser error', error)
         res.status(400).json({ message: 'Error fetching data' })
     }
 }

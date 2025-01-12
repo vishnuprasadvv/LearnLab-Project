@@ -25,7 +25,6 @@ interface CourseFromFrontEndProps {
 export const createOrderController = async(req:Request, res: Response, next:NextFunction) => {
     try {
         const user = req.user
-        console.log(user)
         if(!user){
             throw new CustomError('User not logged in', 401)
         }
@@ -44,7 +43,7 @@ export const createOrderController = async(req:Request, res: Response, next:Next
         });
         res.status(200).json({sessionId: stripeCheckoutSessionId })
     } catch (error) {
-        console.log('create order' , error)
+        console.error('create order' , error)
         next(error)
     }
 }

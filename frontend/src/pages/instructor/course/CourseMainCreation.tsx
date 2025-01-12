@@ -35,7 +35,6 @@ const CourseMainCreation = () => {
       try {
         const response = await getAllCategoriesAtOnce();
         setCategories(response.categories);
-        console.log(response);
       } catch (error) {
         console.error("error fetching categories", error);
       }
@@ -102,7 +101,6 @@ const CourseMainCreation = () => {
   const { control, handleSubmit, watch, setValue } = methods;
 
   const onSubmit = async (data: any) => {
-    console.log("create course", data);
     setLoading(true);
 
     try {
@@ -130,7 +128,6 @@ const CourseMainCreation = () => {
         success: (data: any) => {
           navigate(`/instructor/courses/create/${data.data._id}/lecture`);
           sessionStorage.setItem("courseTitle", data.data.title);
-          console.log(data);
           return data.message || "Course created successfully";
         },
         error: (err) => {

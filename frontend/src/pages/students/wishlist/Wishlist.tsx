@@ -26,14 +26,12 @@ const Wishlist: React.FC = () => {
       try {
         dispatch(startLoading());
         const response = await getWishlistApi();
-        console.log(response)
         setWishlist(response.data);
         const totalItems = response.data.length;
         setTotalPages(Math.ceil(totalItems / itemsPerPage));
         paginatedData(response.data, currentPage)
       } catch (error: any) {
         toast.error(error.response.data.message || "Something went wrong");
-        console.error("fetching wishlist failed", error);
       } finally {
         dispatch(endLoading());
       }

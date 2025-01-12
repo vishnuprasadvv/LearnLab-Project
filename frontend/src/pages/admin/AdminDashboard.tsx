@@ -61,7 +61,6 @@ const AdminPage = () => {
   ];
 
   const { user } = useAppSelector((state) => state.admin);
-  console.log(user);
   const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
@@ -70,7 +69,6 @@ const AdminPage = () => {
       dispatch(adminLogoutSliceAction());
       toast.success(response.message || "Logout successful");
     } catch (err: any) {
-      console.log(err);
       toast.error(err.message || "Logout failed");
     }
   };

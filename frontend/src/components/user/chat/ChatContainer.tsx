@@ -59,23 +59,18 @@ const ChatContainer:React.FC = () => {
 
   useEffect(() => {
     socket.on('newMessage', (message) => {
-      console.log('new message received', message)
-      console.log('selected chat', selectedChat?._id)
       if(selectedChat?._id === message.chatId){
-        console.log('same chat')
         setMessages((prev) => 
         {
           const messageIds = new Set(prev.map((m) => m._id));
     
           if(messageIds.has(message._id)){
-            console.log('message already exists')
             return prev
           }
           return [...prev, message]
         }
       )
       }
-
     })
 
     socket.on('messagesRead', (data) => {
@@ -87,7 +82,6 @@ const ChatContainer:React.FC = () => {
           )
         );
       }
-     
     });
 
     if(selectedChat?._id) {

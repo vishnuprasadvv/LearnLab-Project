@@ -12,7 +12,6 @@ export const registerInstuctorHandler = async (
   next: NextFunction
 ) => {
   const { userId, formData } = req.body;
-  console.log(userId, formData);
   try {
     const useCase = new InstructorRegisterUseCase(
       userRepository,
@@ -25,7 +24,6 @@ export const registerInstuctorHandler = async (
         400
       );
     }
-    console.log(result);
     res
       .status(200)
       .json({

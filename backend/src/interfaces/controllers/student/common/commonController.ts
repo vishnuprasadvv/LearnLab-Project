@@ -31,8 +31,6 @@ export const getAllCoursesController = async(req: Request, res: Response, next: 
 export const getFilteredCourses = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const {categories, sortBy, rating, level, page =1,  limit = 5, query = ''} = req.query;
-
-        console.log(req.query)
         const normalizedCategories = typeof categories === 'string' ? categories : 
                 Array.isArray(categories) ? categories.join(',') : undefined;
         

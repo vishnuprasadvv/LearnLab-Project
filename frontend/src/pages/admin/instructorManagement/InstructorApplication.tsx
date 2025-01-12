@@ -32,10 +32,9 @@ const InstructorApplication = () => {
       const getApplication = async() => {
         try {
           const response = await getInstructorApplicationAPI(id)
-          console.log(response)
           setApplication(response?.application)
         } catch (error:any) {
-          console.log(error)
+          console.error(error)
           toast.error('Error getting data')
         }
       }
@@ -50,7 +49,6 @@ const InstructorApplication = () => {
   const handleAcceptRequest = async() => {
     try {
       const response = await acceptInstructorApplicationAPI(id);
-      console.log(response)
       toast.success(response.message || response.data.message || 'Application request accepted')
       setApplication(response.application  )
       navigate(-1)
@@ -62,7 +60,6 @@ const InstructorApplication = () => {
   const handleRejectRequest = async() => {
     try {
       const response = await rejectInstructorApplicationAPI(id);
-      console.log(response)
       toast.success(response.message || response.data.message || 'Application request accepted')
       setApplication(response.application  )
       navigate(-1)

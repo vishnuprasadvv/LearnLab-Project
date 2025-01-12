@@ -13,9 +13,7 @@ import { useNavigate } from 'react-router-dom';
       onSuccess: async (tokenResponse : any) => {
         try {
           // Send the Google OAuth token to your backend
-          console.log(tokenResponse)
           const response = await dispatch(googleLoginThunk({token:tokenResponse.access_token})).unwrap()
-          console.log(response.user)
 
         //    // Optionally, store the token in localStorage
         // localStorage.setItem("token", response.token);

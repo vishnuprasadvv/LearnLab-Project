@@ -87,7 +87,6 @@ const LectureView: React.FC = () => {
             lectureDescription: response.data.lectures[0].description,
           });
         }
-        console.log(response.data);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch course");
         navigate("/home");
@@ -102,7 +101,6 @@ const LectureView: React.FC = () => {
     const getProgress = async () => {
       try {
         const response = await getCourseProgressApi(id!);
-        console.log(response);
         setProgress(response.data);
       } catch (error) {
         console.error("Failed to fetch progress", error);
@@ -173,7 +171,6 @@ const LectureView: React.FC = () => {
       const response = await markAsIncompletedApi(id);
       toast.success(response.message);
       setProgress(response.data);
-      console.log(response);
     } catch (error) {
       console.error("failed to mark progress as incompleted", error);
     }
@@ -182,7 +179,6 @@ const LectureView: React.FC = () => {
     if (!id) return "course id not found";
     try {
       const response = await markAsCompletedApi(id);
-      console.log(response);
       toast.success(response.message);
       setProgress(response.data);
     } catch (error) {

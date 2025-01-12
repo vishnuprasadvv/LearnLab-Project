@@ -14,7 +14,6 @@ const Dashboard:React.FC = () => {
     const getData = async () => {
       try {
         const response = await getDashboardDataApi();
-        console.log(response);
         setData(response.data);
       } catch (error) {
         console.error("fetching dashboard data error", error);

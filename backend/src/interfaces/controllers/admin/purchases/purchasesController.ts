@@ -8,7 +8,6 @@ const getPurchasesUseCase = new GetPurchasesUseCase(orderRepository)
 export const getPurchasesController = async(req:Request, res: Response, next:NextFunction) => {
     try {
         const purchases = await getPurchasesUseCase.execute()
-        console.log(purchases)
         if(!purchases) throw new CustomError('Orders not found', 400)
             res.status(200).json({success: true, message: "All orders fetching success", data: purchases})
     } catch (error) {

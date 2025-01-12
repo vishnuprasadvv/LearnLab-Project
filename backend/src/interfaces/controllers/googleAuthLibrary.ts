@@ -9,7 +9,6 @@ import { UserRepositoryImpl } from "../../infrastructure/repositories/userReposi
 const userRepo = new UserRepositoryImpl()
 
 export const googleLogin = async (req: Request, res: Response , next: NextFunction): Promise<any | void> => {
-    console.log('googlelogin')
     
     try {
         const { token } = req.body;
@@ -23,8 +22,6 @@ export const googleLogin = async (req: Request, res: Response , next: NextFuncti
         })
 
         const payload = googleUserResponse.data; // This contains the user data
-        
-        console.log('google user reponse data',googleUserResponse.data)
       if (!payload) {
         return res.status(400).json({ message: "Invalid token" });
       }

@@ -15,7 +15,6 @@ const isLoading = false;
       const getAllCourses = async () => {
         try {
           const response = await getTopRatedCoursesApi(limit);
-          console.log(response);
           setCourses(response.data)
           setDisplyedCourses(response.data.slice(0, limit))
         } catch (error) {

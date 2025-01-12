@@ -47,8 +47,6 @@ export class CourseProgressRepository {
         const completedVideos = progress.completedLectures.reduce(
             (acc, l) => acc + l.completedVideos.filter((v) => v.isCompleted).length, 0 
         )
-        console.log((completedVideos / totalVideos) * 100)
-        console.log(lecture)
 
         progress.progressPercentage = (completedVideos / totalVideos) * 100;
         return await progress.save(); 

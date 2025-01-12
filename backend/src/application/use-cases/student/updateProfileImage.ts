@@ -25,12 +25,9 @@ export class UpdateProfileImageUseCase {
             }
      
             const uploadedImage = await uploadToCloudinary(fileBuffer);
-            console.log('upload image ', uploadedImage) 
             //update user profile with new image 
             user.profileImageUrl = uploadedImage.secure_url;
             user.profileImagePublicId = uploadedImage.public_id;
-     
-            console.log(user)
             const updatedUser = await this.userRepository.update(user)
 
             if(!updatedUser) {

@@ -75,10 +75,9 @@ const EmailOtpVerification : React.FC <EmailVerificationProps> = ({setPopUp}) =>
               return err?.message || 'Email verification failed'
             }
           })
-          console.log('resend otp front end',await response)
       } catch (error:any) {
         toast.error('Error sending OTP')
-        console.log(error)
+        console.error(error)
       }
   }
 

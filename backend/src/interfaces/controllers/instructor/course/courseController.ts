@@ -39,7 +39,6 @@ export const createCourseController = async( req: Request, res: Response, next :
         const newCourse = await createCourseUseCase.execute({title, description, category, price, duration, level,
             instructor: instructor.id}, courseImage.buffer)
             
-        console.log(newCourse)
         res.status(200).json({success: true, message : "Course created successfully", data: newCourse})
         
     } catch (error) {
@@ -60,8 +59,6 @@ export const editCourseController = async( req: Request, res: Response, next : N
 
 
         const updatedCourse = await updateCourseUseCase.execute(id,req.body,  courseImage?.buffer)
-            
-        console.log('update course contrl',updatedCourse)
         res.status(200).json({success: true, message : "Course updated successfully", data: updatedCourse})
         
     } catch (error) {
@@ -114,7 +111,6 @@ export const publishCourseController = async(req: Request, res: Response, next: 
     try {
       const {courseId} = req.params;
       const {publishValue} = req.body
-      console.log(req.body)
       if(!courseId) {
         throw new CustomError('course id not provided', 400)
       } 
@@ -146,11 +142,6 @@ export const addLectureController = async (
     }
 
     const { body, files } = req;
-
-      console.log('body', body)
-      console.log('files', files)
-    // Parse lectures and videos
-
 
     const lecturesData: any[] = [];
     Object.keys(body).forEach((key) => {
@@ -216,7 +207,6 @@ export const addLectureController = async (
         };
       })
     );
-    console.log('processedlecture', processedLectures)
     const createLectureUseCase = new AddLectureUseCase(courseRepository)
     const updatedCourse = await Promise.all(
       processedLectures.map((lecture) => createLectureUseCase.execute(courseId, lecture))
@@ -244,11 +234,6 @@ export const editLectureController = async (
     }
 
     const { body, files } = req;
-
-      console.log('body', body)
-      console.log('files', files)
-    // Parse lectures and videos
-
 
     const lecturesData: any[] = [];
     Object.keys(body).forEach((key) => {
@@ -303,8 +288,6 @@ export const editLectureController = async (
           const processedVideos = await Promise.all(
             lecture.videos.map(async (video: any) => {
 
-              console.log(video.file)
-
               if (video.file &&  typeof video.file === "object" &&
                 "buffer" in video.file &&
                 "originalname" in video.file) {
@@ -329,11 +312,8 @@ export const editLectureController = async (
           };
         })
       );
-    //console.log('processedlecture', processedLectures)
     const updateLectureUseCase = new UpdateLectureUseCase(courseRepository)
     const updatedCourse = await updateLectureUseCase.execute(courseId, processedLectures)
-
-    console.log('updated course data' , updatedCourse)
 
     res.status(201).json({
       success: true,

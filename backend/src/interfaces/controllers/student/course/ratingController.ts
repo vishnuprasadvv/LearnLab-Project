@@ -33,7 +33,6 @@ export const addRatingController = async(req:Request, res:Response, next:NextFun
 export const getCourseRatingsController = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {courseId} = req.params;
-        console.log(courseId)
         if(!courseId) throw new CustomError('Course ID is required',400);
         const courseRatings = await getCourseRatingsUseCase.execute(courseId)
         res.status(200).json({success:true, message:'fetching rating success', data:courseRatings || []})
@@ -46,7 +45,6 @@ export const updateRatingController = async (req:Request, res:Response, next:Nex
     try {
         const {ratingId} = req.params;
         const {rating, review } = req.body
-        console.log(ratingId, rating, review)
         const userId = req.user?.id
         if(!userId) throw new CustomError('User ID is required', 400)
         if(!ratingId) throw new CustomError('Rating ID is required',400);

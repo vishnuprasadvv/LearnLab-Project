@@ -84,7 +84,6 @@ const CourseDetails = () => {
         setCourse(response.data);
         setUserCoursePurchaseStatus(response.purchaseStatus);
         setUserCourseWishlistedStatus(response.wishlisted);
-        console.log(response);
       } catch (error: any) {
         toast.error(error.message || "failed to fetch course");
         navigate("/home");
@@ -121,7 +120,6 @@ const CourseDetails = () => {
       };
       const response = await purchaseCourseApi([courseProps]);
       const sessionId = response.sessionId;
-      console.log("checkouturl", sessionId);
 
       if (sessionId) {
         const stripe = await stripePromise;
@@ -145,7 +143,6 @@ const CourseDetails = () => {
     }
     try {
       const response = await addToWishlistApi(id);
-      console.log("adding wishlist", response);
       toast.success(response.message || "Course added to wishlist");
       setUserCourseWishlistedStatus(true)
       dispatch(addIdToWishlist({courseId: id}))
@@ -162,7 +159,6 @@ const CourseDetails = () => {
     }
     try {
       const response = await removeFromWishlistApi(id);
-      console.log("removing from wishlist", response);
       toast.success(response.message || "Course removed from wishlist");
       setUserCourseWishlistedStatus(false)
       dispatch(removeIdFromWishlist({courseId:id}))

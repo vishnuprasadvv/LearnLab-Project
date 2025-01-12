@@ -48,11 +48,9 @@ const ChatSidebar: React.FC = () => {
   const selectedChat = useAppSelector((state) => state.chat.selectedChat);
 
   useEffect(() => {
-    console.log("chatsidebar");
     const fetchChats = async () => {
       try {
         const response = await getUserChatsApi();
-        console.log(response.data);
         setChats(response.data);
       } catch (error) {
         console.error("fetching user error", error);
@@ -63,7 +61,6 @@ const ChatSidebar: React.FC = () => {
     //initiailize socket for chat order rearrange when new message came
 
     const handleNewMessage = (message: any) => {
-      console.log("New message received:", message);
 
       setChats((prevChats) => {
         return prevChats
@@ -93,10 +90,8 @@ const ChatSidebar: React.FC = () => {
 
     socket.on("messagesRead", (data) => {
       setChats((prevChat) => {
-        console.log("set unread count", data);
         const updatedChat = prevChat.map((p) => {
           if (data.chatId === selectedChat?._id) {
-            console.log("set unreadcoutnzero");
             return { ...p, unReadCount: 0 };
           }
           return p;
@@ -115,7 +110,6 @@ const ChatSidebar: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const response = await getChatUsersApi();
-        console.log(response);
         setUsers(response.data);
       } catch (error) {
         console.error("fetching user error", error);
@@ -136,7 +130,6 @@ const ChatSidebar: React.FC = () => {
       setChats((prevChats) => [response.data, ...prevChats]); // Add new chat to chat list
       setShowPopup(false); // Close the popup
       setSelectedUser(null); // Reset selected user
-      console.log(response);
     } catch (error: any) {
       console.error("Error creating chat", error.response.data.message);
       toast.error(error.response.data.message || "Error creating chat");

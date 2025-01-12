@@ -164,10 +164,6 @@ const SalesGraph: React.FC<ISalesGraphProps> = ({ revenueByMonth }) => {
     },
   };
 
-  useEffect(() => {
-    console.log("Filtered Data:", filteredData);
-    console.log("revenue Data:", revenueByMonth);
-  }, [filteredData]);
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">

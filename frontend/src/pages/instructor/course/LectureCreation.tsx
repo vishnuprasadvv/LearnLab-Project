@@ -149,7 +149,6 @@ const LectureCreation: React.FC = () => {
         formData,
         courseId,
         (progressEvent: AxiosProgressEvent) => {
-          console.log(progressEvent);
           if (progressEvent.total) {
             const percent =
               Math.floor((progressEvent.loaded / progressEvent.total) * 100) |

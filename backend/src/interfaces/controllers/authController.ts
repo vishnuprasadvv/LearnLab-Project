@@ -46,7 +46,6 @@ export const signUp = async (
     const { password: removedPassword, ...rest } = registeredUser.toObject();
     //send otp
     const sentOTP = await sendOtp(registeredUser.email);
-    console.log(sentOTP);
     res.status(201).json({ success: true, user: rest });
   } catch (error: any) {
     next(error);
@@ -62,19 +61,18 @@ export const sendOtpHandler = async (req: Request, res: Response) => {
     res.status(200).json(sentOTP);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
 export const verifyOtpHandler = async (req: Request, res: Response) => {
   try {
-    const { email, otp } = req.body;
-    console.log(email, otp);
+    const { email, otp } = req.body;;
     const response = await verifyOtpCode(email, otp);
     res.status(200).json(response);
   } catch (error: any) {
     res.status(400).json({ success: false, message: error.message });
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -138,7 +136,6 @@ export const adminLoginHandler = async (
     if (!response) {
       throw new CustomError("Something went wrong", 400);
     }
-    // console.log(response)
     res.cookie("adminRefreshToken", response.refreshToken, refreshTokenOptions);
     res.cookie("adminAccessToken", response.accessToken, accessTokenOptions);
 
@@ -318,7 +315,6 @@ export const resetPasswordOtpSendHandler = async (
     if (!email) throw new CustomError("Email required", 404);
 
     const sendOtp = await sendResetOtp(email);
-    console.log(email, sendOtp);
 
     res.status(200).json(sendOtp.message);
   } catch (error) {
@@ -342,7 +338,6 @@ export const resetPasswordOtpVerifyHandler = async (
     }
 
     const verifyOtpResponse = await verifyResendOtp(email, otp);
-    console.log(email, otp);
     res.status(200).json(verifyOtpResponse);
   } catch (error) {
     next(error);

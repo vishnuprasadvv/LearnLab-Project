@@ -6,7 +6,6 @@ interface CustomToggleButtonProps {
 const CustomToggleButton:React.FC<CustomToggleButtonProps> = ({isChecked, onToggle}) => {
   const handleToggle= () => {
     onToggle(!isChecked)
-    console.log('toggle', !isChecked)
 }
 
   return (

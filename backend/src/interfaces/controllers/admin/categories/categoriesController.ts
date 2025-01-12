@@ -7,6 +7,8 @@ import { CustomError } from "../../../middlewares/errorMiddleWare";
 import { GetAllCategoriesAtOnceUseCase } from "../../../../application/use-cases/admin/category/getAllCategoriesAtOnce";
 
 
+
+
 const categoryRepository = new CategoryRespository();
 const getCategoriesUseCase = new GetCategoriesUseCase(categoryRepository);
 const createCategoryUseCase = new CreateCategoryUseCase(categoryRepository)
@@ -26,7 +28,6 @@ export const getCategories = async (req: Request, res: Response, next:NextFuncti
 export const getAllCategoriesAtOnceController = async (req: Request, res: Response, next:NextFunction) => {
     try{
         const categories = await getAllCategoriesAtOnce.execute()
-        console.log(categories)
         res.status(200).json({categories, success: true, message: 'Fetch courses success'});
     }catch(error){
         next(error)
@@ -37,7 +38,6 @@ export const getAllCategoriesAtOnceController = async (req: Request, res: Respon
 export const createCategoryController = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const {name, description, parentCategoryId, isActive} = req.body;
-        console.log(name,description, parentCategoryId, isActive)
         if (Object.keys({name, description, parentCategoryId, isActive}).length === 0) {
             throw new CustomError("No input provided for update", 400);
           }

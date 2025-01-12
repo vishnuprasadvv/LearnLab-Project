@@ -6,10 +6,8 @@ export class GetSecureVideoUrlService{
 
     async execute(courseId: string, videoId: string): Promise<string | null> {
         const videoPublicId = await this.courseRepository.getVideoPublicUrl(courseId, videoId) ;
-        console.log('Retrieved Public ID:', videoPublicId);
         if(!videoPublicId) return null;
         const secureUrl = generateSignedUrl(videoPublicId)
-        console.log('secureurl' , secureUrl)
         if(!secureUrl) return null;
         return secureUrl;
     }

@@ -19,10 +19,9 @@ const UserRegistrationChart:React.FC = () => {
         const fetchData = async() => {
             try {
                 const response = await getJoinedUsersDataApi(timeFrame)
-                console.log(response)
                 setFilteredData(response.data)
             } catch (error) {
-                console.log('error fetching userRegisterData', error)
+                console.error('error fetching userRegisterData', error)
             }
         }
 

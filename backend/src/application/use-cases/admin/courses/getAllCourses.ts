@@ -42,7 +42,6 @@ export class GetAllCoursesAdminUseCase {
     else if (sortBy === "a-z") sort.title = 1;
     else if (sortBy === "z-a") sort.title = -1;
     else if (sortBy === "" || sortBy === undefined) sort.createdAt = -1;
-    console.log(sort);
 
     const pagination: Pagination | null =
       page && limit ? { page, limit } : null;

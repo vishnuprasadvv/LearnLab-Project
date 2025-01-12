@@ -14,13 +14,10 @@ const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) =>
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
 
-    console.log('role;' , user,isAuthenticated)
   useEffect(() => {
     const checkAuth = async () => {
       try {
-          const res = await validateAdminAuth();
-          console.log('admin user auth check',res)
-        
+        await validateAdminAuth();
         setLoading(false);
       } catch (error) {
         setLoading(false); 

@@ -61,7 +61,6 @@ export const getCompanyProfitController = async (req: Request, res: Response, ne
       const {timeFrame = ''} = req.query;
       const useCase = new GetCompanyProfitDataUseCase(orderRepository)
         const data = await useCase.execute(timeFrame.toString())
-        console.log('company profit', data)
         res.status(200).json({data: data, success:true, message: 'Fetching company profit analytics success'})
     } catch (error) {
      next(error)

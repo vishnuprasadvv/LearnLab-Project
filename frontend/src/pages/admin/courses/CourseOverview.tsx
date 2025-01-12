@@ -61,7 +61,6 @@ import LoadingScreen from "@/components/common/Loading/LoadingScreen";
       }
       try {
         const response = await deleteCourseAdminApi(courseId);
-        console.log(response);
         toast.success(response.message || "Course deleted successfully");
         navigate("/admin/courses");
       } catch (error) {
@@ -76,7 +75,6 @@ import LoadingScreen from "@/components/common/Loading/LoadingScreen";
       try {
         setLoading(true);
         const response = await publishCourseAdminApi(courseId, publishValue);
-        console.log(response);
         toast.success(response.message || "Course publish status changed");
         setCourse((prev: any) => ({ ...prev, isPublished: publishValue }));
       } catch (error: any) {

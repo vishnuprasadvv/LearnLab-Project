@@ -64,7 +64,6 @@ const CourseOverview = () => {
     }
     try {
       const response = await deleteCourseApi(courseId);
-      console.log(response);
       toast.success(response.message || "Course deleted successfully");
       navigate("/instructor/courses");
     } catch (error) {
@@ -79,7 +78,6 @@ const CourseOverview = () => {
     try {
       setLoading(true);
       const response = await publishCourseApi(courseId, publishValue);
-      console.log(response);
       toast.success(response.message || "Course publish status changed");
       setCourse((prev: any) => ({ ...prev, isPublished: publishValue }));
     } catch (error: any) {

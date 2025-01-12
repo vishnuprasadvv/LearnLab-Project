@@ -38,11 +38,15 @@ export const actionInstructorApplication = async (
     throw new CustomError("Status not provided", 400);
   }
   if (status === "approved") {
-    const updateRole = await userRepository.updateUserRoleAdmin(
-      instructor.instructorId.toString(),
-      "instructor"
-    );
-    console.log("user role updated");
+      const updateRole = await userRepository.updateUserRoleAdmin(
+        instructor.instructorId.toString(),
+        "instructor"
+      );
+
+      if(!updateRole) {
+        throw new CustomError('Error updating user status', 400)
+      }
+      console.log("user role updated");
   }
   instructor.status = status;
   const updatedDoc = await instructorRequestRepository.update(instructor);

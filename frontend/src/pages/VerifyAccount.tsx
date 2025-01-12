@@ -49,14 +49,12 @@ const OTPVerification = () => {
     if (otpValue.length === 4) {
 
       try {
-        const response = await dispatch(verifyAccount({email : email ,otp:otpValue})).unwrap()
-        console.log(response)
+        await dispatch(verifyAccount({email : email ,otp:otpValue})).unwrap()
         toast.success('Account verification successfull')
         navigate('/login')
         
       } catch (error:any ) {
         toast.error(error?.message || 'OTP verification failed')
-        console.error('error',error)
       }
 
     } else {
@@ -75,10 +73,8 @@ const OTPVerification = () => {
               return err?.message || 'Signup failed'
             }
           })
-          console.log('resend otp front end',await response)
       } catch (error:any) {
         toast.error('Resending otp failed')
-        console.log(error)
       }
   }
 

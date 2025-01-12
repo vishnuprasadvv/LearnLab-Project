@@ -11,7 +11,6 @@ const InstructorPurchases: React.FC = () => {
     const fetchOrders = async () => {
       try {
         const response = await getInstructorPurchsesApi();
-        console.log(response);
         setPurchases(response.data);
         setTotalCourses(response.data.length || 0);
       } catch (error) {

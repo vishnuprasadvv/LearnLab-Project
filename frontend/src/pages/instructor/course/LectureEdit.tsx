@@ -145,9 +145,6 @@ const LectureEdit: React.FC = () => {
     }
     const isUnchanged = _.isEqual(data, initialFormData);
     if (isUnchanged) {
-      console.log("value not changed");
-    }
-    if (isUnchanged) {
       toast("No Changes detected", { icon: "⚠️" });
       return;
     }
@@ -202,7 +199,6 @@ const LectureEdit: React.FC = () => {
         formData,
         courseId,
         (progressEvent: AxiosProgressEvent) => {
-          console.log(progressEvent);
           if (progressEvent.total) {
             const percent =
               Math.floor((progressEvent.loaded / progressEvent.total) * 100) |

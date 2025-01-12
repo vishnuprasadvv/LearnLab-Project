@@ -21,8 +21,7 @@ export const changePasswordHandler = async(req: Request, res: Response, next : N
             throw new CustomError('User not found, Unauthorized', 400)
         }
         const useCase = new ChangePasswordProfileUseCase(userRepository)
-        const response = await useCase.execute({userId:user.id,oldPassword, newPassword})
-        console.log('change password handler' ,response)
+        await useCase.execute({userId:user.id,oldPassword, newPassword})
         res.status(200).json({success: true, message: 'Password changed successfully'})
     } catch (error) {
         next(error)
@@ -63,7 +62,6 @@ export const editProfileEmailController = async(req: Request, res: Response, nex
 
 
 export const updateProfileImageController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log('updateprofileimge',req.file)
     try {
         const userId = req.params.id;
         const file = req.file?.buffer;

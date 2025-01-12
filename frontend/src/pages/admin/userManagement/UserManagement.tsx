@@ -43,7 +43,6 @@ const UserManagement = () => {
           currentPage,
           itemsPerPage
         );
-        console.log(response);
         setUsers(response.users);
         setTotalPages(Math.ceil(response.total / itemsPerPage));
       } catch (error: any) {

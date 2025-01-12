@@ -44,7 +44,6 @@ const InstructorCourses = () => {
         setLoading(true);
         const response = await getAllCoursesListApi();
         setCourses(response.data);
-        console.log(response.data);
       } catch (error: any) {
         toast.error(
           error.response.data || error.message || "failed to fetch courses"
@@ -67,7 +66,6 @@ const InstructorCourses = () => {
     if (!selectedCourseId) return;
     try {
       const response = await deleteCourseApi(selectedCourseId);
-      console.log(response);
       toast.success(response.data.message || "Course deleted successfully");
       setCourses(
         (prev) =>
@@ -124,7 +122,6 @@ const InstructorCourses = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  console.log(courses);
 
   return loading ? (
     <LoadingScreen />

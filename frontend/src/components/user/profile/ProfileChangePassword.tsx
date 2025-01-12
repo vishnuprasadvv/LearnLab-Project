@@ -53,7 +53,6 @@ const ProfileChangePassword = () => {
     validationSchema: validationSchema,
     onSubmit: async (values,{resetForm}) => {
       setLoading(true)
-      console.log(values)
      const {oldPassword, newPassword} = values
 
       try{
@@ -61,7 +60,7 @@ const ProfileChangePassword = () => {
         toast.success(response.message || 'Password changed successfully')
         resetForm()
       }catch(error:any){
-        console.log('change password error',error.message)
+        console.error('change password error',error.message)
         toast.error(error.message || 'Change password failed')
       }finally{
         setLoading(false)

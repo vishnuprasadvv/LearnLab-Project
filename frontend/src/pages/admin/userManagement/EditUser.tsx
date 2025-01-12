@@ -34,7 +34,6 @@ function EditUser() {
       setLoading(true);
       try {
         const response = await editUserGet(id as string)// Populate form with existing user data
-        console.log(await response.user)
         const userData = response.user;
 
         formik.setValues({
@@ -106,7 +105,6 @@ function EditUser() {
     
               }
             )
-            console.log('user edited',await result)
           } catch (err: any) {
             dispatch(setError(err?.message))
             console.error('User Edit failed:', err);

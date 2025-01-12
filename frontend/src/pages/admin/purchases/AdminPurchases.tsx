@@ -11,7 +11,6 @@ const AdminPurchases:React.FC = () => {
       const fetchOrders = async() => {
         try {
             const response = await getPurchasesApi()
-            console.log(response)
             setPurchases(response.data)
             // setTotalCourses(response.data.length || 0)
         } catch (error) {

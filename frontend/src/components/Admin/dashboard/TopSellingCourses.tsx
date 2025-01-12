@@ -12,7 +12,6 @@ const TopSellingCourses: React.FC = () => {
         const getTopCourses = async() => {
             try {
                 const response = await getBestSellingCoursesApi(limit)
-                console.log(response)
                 setBestCourses(response.data)
             } catch (error) {
                 console.error('fetching top courses error', error)

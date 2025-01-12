@@ -42,7 +42,6 @@ const Login = () => {
       const { email, password } = values
       try {
         const result = await dispatch(login({ email, password, role: 'student' })).unwrap();
-        console.log(result)
         dispatch(
           authSuccess({
             user: result.user
@@ -60,7 +59,6 @@ const Login = () => {
             toast.success(verifyAccountResponse.message || 'OTP sent successfully, Check your email')
             navigate('/verify-account')
           } catch (error) {
-            console.log(error)
             toast.error('Error sending OTP')
           }
           //navigate('/verify-account')

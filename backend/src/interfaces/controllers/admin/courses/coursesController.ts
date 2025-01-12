@@ -26,7 +26,6 @@ export const getAllCoursesController = async (
       rating,
       level,
     } = req.query;
-    console.log(req.query);
     const normalizedCategories =
       typeof categories === "string"
         ? categories
@@ -114,7 +113,6 @@ export const publishCourseController = async (
   try {
     const { courseId } = req.params;
     const { publishValue } = req.body;
-    console.log(req.body);
     if (!courseId) {
       throw new CustomError("course id not provided", 400);
     }
@@ -125,7 +123,6 @@ export const publishCourseController = async (
     if (!publishedCourse) {
       throw new CustomError("Failed to publish course", 400);
     }
-    console.log(publishedCourse.isPublished);
     res.status(200).json({
       message: `Course ${
         publishedCourse.isPublished ? "published" : "unpublished"

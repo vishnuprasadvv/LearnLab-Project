@@ -16,7 +16,6 @@ export class UpdateCategoryUseCase {
     }
         if(data.name){
             const existsCategory = await this.categoryRepository.getCategoryByName(data.name)
-            console.log(existsCategory, category)
             if(existsCategory && existsCategory._id === category._id){
                 throw new CustomError('Category with same name is already exist', 400)
             }

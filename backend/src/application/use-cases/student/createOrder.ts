@@ -21,9 +21,6 @@ export class CreateOrderUseCase {
         const courseIdsArray = order.courses.map((course)=> course.courseId.toString())
         //check if user has already purchased the course
         const alreadyPurchasedCourses = await this.checkCoursesAlreadyPurchased(order.userId.toString(), courseIdsArray)
-        console.log(courseIdsArray)
-        console.log(order.userId)
-        console.log(alreadyPurchasedCourses)
 
         if(alreadyPurchasedCourses.length> 0){
             throw new CustomError(`You have already purchased the following courses: ${alreadyPurchasedCourses}`, 400)
@@ -43,7 +40,6 @@ export class CreateOrderUseCase {
         order.userId.toString(),
         order.orderId
        )
-       console.log(order)
         return stripeCheckoutUrl;
     }
 
