@@ -56,6 +56,7 @@ const Login = () => {
           toast.error('Please verify your account')
           try {
             const verifyAccountResponse = await dispatch(sendOtp({ email })).unwrap()
+            sessionStorage.setItem("userEmail", email);
             toast.success(verifyAccountResponse.message || 'OTP sent successfully, Check your email')
             navigate('/verify-account')
           } catch (error) {

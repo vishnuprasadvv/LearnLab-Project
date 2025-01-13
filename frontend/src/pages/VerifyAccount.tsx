@@ -51,6 +51,7 @@ const OTPVerification = () => {
       try {
         await dispatch(verifyAccount({email : email ,otp:otpValue})).unwrap()
         toast.success('Account verification successfull')
+        sessionStorage.removeItem("userEmail");
         navigate('/login')
         
       } catch (error:any ) {
@@ -70,11 +71,11 @@ const OTPVerification = () => {
           success:(data) => {
             return data.message || 'OTP sent successfully'},
             error: (err) => {
-              return err?.message || 'Signup failed'
+              return err?.message || 'Resending OTP failed'
             }
           })
       } catch (error:any) {
-        toast.error('Resending otp failed')
+        console.error('Resending otp failed')
       }
   }
 
