@@ -31,7 +31,7 @@ export class GetAllFilteredCoursesUseCase {
 
     const filter: Record<string, any> = {
       ...(categories && { category: { $in: categories.split(",") } }),
-      ...(rating !== undefined && { rating: { $gte: rating } }),
+      ...(rating !== undefined && { averageRating: { $gte: rating } }),
       ...(level && { level }),
       ...(query && searchCriteria),
     };
@@ -39,8 +39,8 @@ export class GetAllFilteredCoursesUseCase {
     const sort: Record<string, number> = {};
     if (sortBy === "priceLowToHigh") sort.price = 1;
     else if (sortBy === "priceHighToLow") sort.price = -1;
-    else if (sortBy === "ratingLowToHigh") sort.rating = 1;
-    else if (sortBy === "ratingHghToLow") sort.rating = -1;
+    else if (sortBy === "ratingLowToHigh") sort.averageRating = 1;
+    else if (sortBy === "ratingHghToLow") sort.averageRating = -1;
     else if (sortBy === "a-z") sort.title = 1;
     else if (sortBy === "z-a") sort.title = -1;
     else if (sortBy === "" || sortBy === undefined) sort.createdAt = -1;

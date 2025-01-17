@@ -205,7 +205,7 @@ const CourseDetails = () => {
             </div>
             <p>Students enrolled : {course?.enrolledCount}</p>
             <div className="flex gap-1 items-center">
-            <Rating value={course?.averageRating || 0} readOnly/>
+            <Rating value={course?.averageRating || 0} precision={0.5} readOnly/>
             <span>({course?.ratingsCount || 0})</span>
             </div>
             <div className="flex gap-2 items-center">

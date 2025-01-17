@@ -33,7 +33,7 @@ const WishlistCourseList:React.FC<IWishlistCourseListProps> = ({item, handleRemo
                 <span>Instructor : {course.instructor.name}</span>
               </div>
               <div className="flex gap-1 items-center">
-          <Rating size="small" value={course.averageRating || 0} 
+          <Rating size="small" precision={0.5} value={course.averageRating || 0} 
           sx={{
             "& .MuiRating-iconEmpty": {
               color: "rgba(128, 128, 128, 1)", // Dark mode and light mode colors
