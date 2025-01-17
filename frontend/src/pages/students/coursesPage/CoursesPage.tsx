@@ -86,7 +86,6 @@ const CoursesPage = () => {
         setCourses(response.data.courses);
         setTotalPages(response.data.totalPages)
         setTotalCourses(response.data.totalCourses)
-        console.log(response.data.courses)
       } catch (error) {
         console.error("error fetching courses", error);
       }finally{
