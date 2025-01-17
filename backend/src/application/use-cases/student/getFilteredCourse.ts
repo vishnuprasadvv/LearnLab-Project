@@ -40,7 +40,7 @@ export class GetAllFilteredCoursesUseCase {
     if (sortBy === "priceLowToHigh") sort.price = 1;
     else if (sortBy === "priceHighToLow") sort.price = -1;
     else if (sortBy === "ratingLowToHigh") sort.averageRating = 1;
-    else if (sortBy === "ratingHghToLow") sort.averageRating = -1;
+    else if (sortBy === "ratingHighToLow") sort.averageRating = -1;
     else if (sortBy === "a-z") sort.title = 1;
     else if (sortBy === "z-a") sort.title = -1;
     else if (sortBy === "" || sortBy === undefined) sort.createdAt = -1;
